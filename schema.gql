@@ -1,0 +1,21 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""tape"""
+type Tape {
+  tapeId: ID!
+  originalTitle: String!
+}
+
+type Query {
+  recipe(imdbNumber: Float!): Tape!
+}
+
+type Mutation {
+  importTape(imdbNumber: Float!): Tape!
+}
+
+type Subscription {
+  recipeAdded: Tape!
+}

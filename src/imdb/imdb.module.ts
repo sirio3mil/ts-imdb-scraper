@@ -5,4 +5,4 @@ import { ImdbService } from './imdb.service';
 @Module({
   providers: [ImdbResolver, ImdbService],
 })
-export class RecipesModule {}
+export class ImdbModule {}
