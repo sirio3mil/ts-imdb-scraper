@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { Tape } from './models/tape.model';
+import { Injectable } from "@nestjs/common";
+import { Tape } from "./models/tape.model";
 
 @Injectable()
 export class ImdbService {
