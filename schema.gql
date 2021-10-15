@@ -9,7 +9,7 @@ type Tape {
 }
 
 type Query {
-  recipe(imdbNumber: Float!): Tape!
+  getTape(imdbNumber: Float!): Tape!
 }
 
 type Mutation {
@@ -17,5 +17,5 @@ type Mutation {
 }
 
 type Subscription {
-  recipeAdded: Tape!
+  tapeImported: Tape!
 }

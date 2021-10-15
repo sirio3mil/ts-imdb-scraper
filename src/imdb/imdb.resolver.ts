@@ -11,7 +11,7 @@ export class ImdbResolver {
   constructor(private readonly imdbService: ImdbService) {}
 
   @Query(returns => Tape)
-  async recipe(@Args('imdbNumber') imdbNumber: number): Promise<Tape> {
+  async getTape(@Args('imdbNumber') imdbNumber: number): Promise<Tape> {
     const tape = await this.imdbService.get(imdbNumber);
     if (!tape) {
       throw new NotFoundException(imdbNumber);
@@ -27,7 +27,7 @@ export class ImdbResolver {
   }
 
   @Subscription(returns => Tape)
-  recipeAdded() {
+  tapeImported() {
     return pubSub.asyncIterator('tapeImported');
   }
 }
