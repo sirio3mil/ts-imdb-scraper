@@ -1,0 +1,528 @@
+# This file was generated based on ".graphqlConfig". Do not edit manually.
+
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+"Class Country"
+type Country {
+  countryId: ID!
+  createdAt: DateTime!
+  isoCode: String
+  language: Language
+  officialName: String!
+}
+
+"Class File"
+type File {
+  createdAt: DateTime!
+  deletedAt: DateTime
+  extension: String!
+  fileId: ID!
+  fileType: FileType!
+  image: Image!
+  isDeleted: Boolean!
+  mime: String!
+  name: String!
+  object: GlobalUniqueObject!
+  path: String!
+  season: FileSeason
+  size: Int!
+  url: String!
+}
+
+"Class FileSeason"
+type FileSeason {
+  file: File!
+  season: Int!
+}
+
+"Class FileType"
+type FileType {
+  description: String!
+  fileTypeId: ID!
+}
+
+"Class Genre"
+type Genre {
+  createdAt: DateTime!
+  genreId: ID!
+  name: String!
+}
+
+"Class Object"
+type GlobalUniqueObject {
+  cover: File
+  files: [File!]
+  imdbNumber: ImdbNumber
+  objectId: ID!
+  people: People
+  permanentLink: PermanentLink!
+  ranking: Ranking
+  rowType: RowType!
+  searchValue(slug: String!): SearchValue
+  searchValues: [SearchValue!]
+  tape: Tape
+  thumbnail: File
+}
+
+"Class Image"
+type Image {
+  file: File!
+  height: Int!
+  width: Int!
+}
+
+"Class ImdbNumber"
+type ImdbNumber {
+  imdbNumber: Int!
+  object: GlobalUniqueObject!
+  url: String
+}
+
+"Class Language"
+type Language {
+  createdAt: DateTime!
+  languageId: ID!
+  name: String!
+}
+
+"Class Location"
+type Location {
+  createdAt: DateTime!
+  locationId: ID!
+  place: String!
+}
+
+"Class OauthUser"
+type OauthUser {
+  firstName: String
+  lastName: String
+  user: User!
+}
+
+"Class People"
+type People {
+  alias(alias: String!): PeopleAlias!
+  aliases: [PeopleAlias!]
+  createdAt: DateTime!
+  detail: PeopleDetail
+  fullName: String!
+  object: GlobalUniqueObject!
+  peopleId: ID!
+}
+
+"Class PeopleAlias"
+type PeopleAlias {
+  alias: String!
+  people: People!
+  peopleAliasId: ID!
+}
+
+"Class PeopleAliasTape"
+type PeopleAliasTape {
+  createdAt: DateTime!
+  peopleAlias: PeopleAlias!
+  peopleAliasTapeId: ID!
+  tape: Tape!
+}
+
+"Class PeopleDetail"
+type PeopleDetail {
+  birthDate: DateTime
+  birthPlace: String
+  country: Country
+  createdAt: DateTime!
+  deathDate: DateTime
+  deathPlace: String
+  gender: String
+  havePhoto: Boolean!
+  height: Int
+  people: People!
+  skip: Boolean!
+  updatedAt: DateTime!
+}
+
+"Class PermanentLink"
+type PermanentLink {
+  object: GlobalUniqueObject!
+  url: String!
+}
+
+"Class Place"
+type Place {
+  description: String!
+  placeId: ID!
+}
+
+type PlacePage {
+  elements: [Place]
+  pages: Int
+  total: Int
+}
+
+"Class Premiere"
+type Premiere {
+  country: Country
+  createdAt: DateTime!
+  date: DateTime!
+  detail(observation: String!): PremiereDetail
+  details: [PremiereDetail!]
+  place: String!
+  premiereId: ID!
+  tape: Tape!
+}
+
+"Class PremiereDetail"
+type PremiereDetail {
+  createdAt: DateTime!
+  observation: String!
+  premiere: Premiere!
+  premiereDetailId: ID!
+}
+
+"Class Producer"
+type Producer {
+  country: Country
+  name: String!
+  producerId: ID!
+}
+
+"Class Ranking"
+type Ranking {
+  calculatedScore: Float!
+  object: GlobalUniqueObject!
+  score: Float!
+  votes: Int!
+}
+
+"Class Role"
+type Role {
+  role: String!
+  roleId: ID!
+}
+
+"Class RowType"
+type RowType {
+  description: String!
+  rowTypeId: ID!
+}
+
+"Class SearchValue"
+type SearchValue {
+  object: GlobalUniqueObject!
+  primaryParam: Boolean!
+  searchParam: String!
+  searchValueId: ID!
+  slug: String!
+}
+
+"Class Sound"
+type Sound {
+  createdAt: DateTime!
+  description: String!
+  soundId: ID!
+}
+
+"Class Tag"
+type Tag {
+  createdAt: DateTime!
+  keyword: String!
+  tagId: ID!
+}
+
+"Class Tape"
+type Tape {
+  aliases: [PeopleAliasTape!]
+  certification(country: CountryID!): TapeCertification
+  certifications: [TapeCertification!]
+  countries: [Country!]!
+  createdAt: DateTime!
+  default: TapeDefaultValue
+  detail: TapeDetail
+  genres: [Genre!]!
+  languages: [Language!]
+  locations: [Location!]!
+  object: GlobalUniqueObject!
+  originalTitle: String!
+  people: [TapePeopleRole!]
+  peopleAliasTape(peopleAlias: PeopleAliasID!): PeopleAliasTape
+  plot: TapePlot
+  premiere(country: CountryID, date: DateTime!): Premiere
+  premieres: [Premiere!]
+  producers: [Producer!]!
+  sounds: [Sound!]!
+  tags: [Tag!]!
+  tapeId: ID!
+  tapePeopleRole(people: PeopleID!, role: RoleID!): TapePeopleRole
+  tapeUser(user: UserID!): TapeUser
+  title(country: CountryID, title: String!): TapeTitle
+  titles: [TapeTitle!]
+  tvShow: TvShow
+  tvShowChapter: TvShowChapter
+  users: [TapeUser!]!
+}
+
+"Class TapeCertification"
+type TapeCertification {
+  certification: String
+  country: Country
+  createdAt: DateTime!
+  tape: Tape!
+  tapeCertificationId: ID!
+}
+
+"Class TapeDefaultValue"
+type TapeDefaultValue {
+  cast: People
+  country: Country
+  director: People
+  tape: Tape!
+  title: SearchValue!
+}
+
+"Class TapeDetail"
+type TapeDetail {
+  budget: Float!
+  color: String
+  createdAt: DateTime!
+  currency: Int!
+  duration: Int
+  hasCover: Boolean!
+  isAdult: Boolean!
+  isTvShow: Boolean!
+  isTvShowChapter: Boolean!
+  tape: Tape!
+  updatedAt: DateTime!
+  year: Int
+}
+
+"Class TapePeopleRole"
+type TapePeopleRole {
+  character: TapePeopleRoleCharacter
+  createdAt: DateTime!
+  people: People!
+  role: Role!
+  tape: Tape!
+  tapePeopleRoleId: ID!
+}
+
+"Class TapePeopleRoleCharacter"
+type TapePeopleRoleCharacter {
+  character: String!
+  createdAt: DateTime!
+  tapePeopleRole: TapePeopleRole!
+}
+
+"Class TapePlot"
+type TapePlot {
+  plot: String!
+  tape: Tape!
+}
+
+"Class TapeTitle"
+type TapeTitle {
+  country: Country
+  language: Language
+  observations: String
+  tape: Tape!
+  tapeTitleId: ID!
+  title: String!
+}
+
+"Class TapeUser"
+type TapeUser {
+  createdAt: DateTime!
+  history: [TapeUserHistory!]!
+  historyByStatus(tapeUserStatus: TapeUserStatusID!): TapeUserHistory
+  score: TapeUserScore
+  tape: Tape!
+  tapeUserId: ID!
+  user: User!
+}
+
+"Class TapeUserHistory"
+type TapeUserHistory {
+  createdAt: DateTime!
+  deletedAt: DateTime
+  details: [TapeUserHistoryDetail!]!
+  isDeleted: Boolean!
+  tapeUser: TapeUser!
+  tapeUserHistoryId: ID!
+  tapeUserStatus: TapeUserStatus
+  updatedAt: DateTime!
+}
+
+"Class TapeUserHistoryDetail"
+type TapeUserHistoryDetail {
+  createdAt: DateTime!
+  exported: Boolean!
+  place: Place
+  tapeUserHistory: TapeUserHistory!
+  tapeUserHistoryDetailId: ID!
+  updatedAt: DateTime!
+  visible: Boolean!
+}
+
+type TapeUserPage {
+  elements: [TapeUser]
+  pages: Int
+  total: Int
+}
+
+"Class TapeUserScore"
+type TapeUserScore {
+  createdAt: DateTime!
+  exported: Boolean!
+  score: Float!
+  tapeUser: TapeUser!
+}
+
+"Class TapeUserStatus"
+type TapeUserStatus {
+  description: String!
+  tapeUserStatusId: ID!
+}
+
+type TapeUserStatusPage {
+  elements: [TapeUserStatus]
+  pages: Int
+  total: Int
+}
+
+"Class TvShow"
+type TvShow {
+  chapters: [TvShowChapter!]
+  chaptersBySeason(season: Int!): [TvShowChapter!]
+  createdAt: DateTime!
+  finished: Boolean!
+  lastChapter: TvShowChapter
+  summaries: [TvShowChapterSummary!]!
+  summaryByUser(user: UserID!): TvShowChapterSummary
+  tape: Tape!
+}
+
+"Class TvShowChapter"
+type TvShowChapter {
+  chapter: Int
+  createdAt: DateTime!
+  season: Int
+  tape: Tape!
+  tvShow: TvShow!
+}
+
+"Class TvShowChapterSummary"
+type TvShowChapterSummary {
+  importedChapter: TvShowChapter
+  tvShow: TvShow!
+  user: User!
+  viewedChapter: TvShowChapter
+}
+
+"Class User"
+type User {
+  createdAt: DateTime!
+  oauthUser: OauthUser!
+  token: String
+  updatedAt: DateTime!
+  userId: ID!
+  username: String!
+  wishList: [WishList!]!
+}
+
+"Class WishList"
+type WishList {
+  tape: Tape!
+  tapeUser: TapeUser!
+  tapeUserHistory: TapeUserHistory!
+  tapeUserStatus: TapeUserStatus!
+  user: User!
+}
+
+type Mutation {
+  createFile(file: Upload!, globalUniqueObjectId: GlobalUniqueObjectID!): File!
+  deleteTapeUserHistory(tapeUserHistoryId: TapeUserHistoryID!): TapeUser!
+  editSeasonUser(season: Int!, tapeUserStatusId: TapeUserStatusID!, tvShowId: TvShowID!, userId: UserID!, placeId: PlaceID): [TapeUser]!
+  editTapeUser(tapeId: TapeID!, tapeUserStatusId: TapeUserStatusID!, userId: UserID!, placeId: PlaceID): TapeUser!
+  editTapeUserHistoryDetail(input: TapeUserHistoryDetailPartialInput!, tapeUserHistoryDetailId: TapeUserHistoryDetailID!): TapeUserHistoryDetail!
+  editTvShow(input: TvShowPartialInput!): TvShow!
+  importFile(fileTypeId: FileTypeID, globalUniqueObjectId: GlobalUniqueObjectID!, url: String!): GlobalUniqueObject!
+  importImdbEpisodes(imdbNumber: Int!, seasonNumber: Int!): [TvShowChapter]!
+  importImdbMovie(imdbNumber: Int!): Tape!
+}
+
+type Query {
+  listPlace(page: Int!, pageSize: Int!): PlacePage!
+  listTapeUser(page: Int!, pageSize: Int!, userId: UserID!, placeId: PlaceID, tapeUserStatusId: TapeUserStatusID, finished: Boolean, isTvShow: Boolean, visible: Boolean): TapeUserPage!
+  listTapeUserStatus(page: Int!, pageSize: Int!): TapeUserStatusPage!
+  listTvShowChapter(season: Int!, tvShowId: TvShowID!): [TvShowChapter]!
+  login(password: String!, username: String!): User!
+  search(page: Int!, pageSize: Int!, pattern: String!, rowType: Int): [SearchValue]!
+  tape(tapeId: TapeID): Tape!
+}
+
+"Class TapeUserHistoryDetail"
+input TapeUserHistoryDetailPartialInput {
+  createdAt: DateTime
+  exported: Boolean
+  place: PlaceID
+  tapeUserHistoryDetailId: Int
+  updatedAt: DateTime
+  visible: Boolean
+}
+
+"Class TvShow"
+input TvShowPartialInput {
+  createdAt: DateTime
+  finished: Boolean
+  tape: TapeID
+}
+
+
+scalar DateTime
+
+"Automatically generated type to be used as input where an object of type `TapeUserStatus` is needed"
+scalar TapeUserStatusID
+
+"Automatically generated type to be used as input where an object of type `User` is needed"
+scalar UserID
+
+"Automatically generated type to be used as input where an object of type `People` is needed"
+scalar PeopleID
+
+"Automatically generated type to be used as input where an object of type `Role` is needed"
+scalar RoleID
+
+"Automatically generated type to be used as input where an object of type `PeopleAlias` is needed"
+scalar PeopleAliasID
+
+"Automatically generated type to be used as input where an object of type `Country` is needed"
+scalar CountryID
+
+"Automatically generated type to be used as input where an object of type `Tape` is needed"
+scalar TapeID
+
+"Automatically generated type to be used as input where an object of type `Place` is needed"
+scalar PlaceID
+
+"Automatically generated type to be used as input where an object of type `TvShow` is needed"
+scalar TvShowID
+
+"Automatically generated type to be used as input where an object of type `TapeUserHistoryDetail` is needed"
+scalar TapeUserHistoryDetailID
+
+"Automatically generated type to be used as input where an object of type `GlobalUniqueObject` is needed"
+scalar GlobalUniqueObjectID
+
+"Automatically generated type to be used as input where an object of type `FileType` is needed"
+scalar FileTypeID
+
+"""
+The `Upload` special type represents a file to be uploaded in the same HTTP request as specified by
+[graphql-multipart-request-spec](https://github.com/jaydenseric/graphql-multipart-request-spec).
+"""
+scalar Upload
+
+"Automatically generated type to be used as input where an object of type `TapeUserHistory` is needed"
+scalar TapeUserHistoryID
