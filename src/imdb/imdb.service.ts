@@ -3,10 +3,10 @@ import { Tape } from './models/tape.model';
 
 @Injectable()
 export class ImdbService {
-  async get(imdbNumber: number): Promise<Tape> {
+  async getTape(imdbNumber: number): Promise<Tape> {
     return {} as any;
   }
-  async import(imdbNumber: number): Promise<Tape> {
+  async importTape(imdbNumber: number): Promise<Tape> {
     return {} as any;
   }
 }
