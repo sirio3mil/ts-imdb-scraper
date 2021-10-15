@@ -2,14 +2,21 @@
   "name": "ts-imdb-scraper",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "nodemon",
-    "build": "rimraf ./dist && tsc",
-    "start": "npm run build && node dist/index.js",
-    "lint": "eslint . --ext .ts",
-    "fix": "eslint . --ext .ts --fix"
+    "prebuild": "rimraf dist",
+    "build": "nest build",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "start:prod": "node dist/main",
+    "lint": "eslint '{src,apps,libs,test}/**/*.ts' --fix",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:e2e": "echo 'No e2e tests implemented yet.'"
   },
   "repository": {
     "type": "git",
@@ -22,11 +29,17 @@
   },
   "homepage": "https://github.com/sirio3mil/ts-imdb-scraper#readme",
   "devDependencies": {
+    "@nestjs/cli": "^8.1.2",
+    "@nestjs/schematics": "^8.0.3",
+    "@nestjs/testing": "^8.1.1",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
     "eslint": "^8.0.1",
+    "eslint-config-prettier": "^8.3.0",
     "nodemon": "^2.0.13",
+    "prettier": "^2.4.1",
     "rimraf": "^3.0.2",
+    "ts-jest": "^27.0.6",
     "ts-node": "^10.3.0",
     "typescript": "^4.4.4"
   },
@@ -35,6 +48,7 @@
     "@nestjs/graphql": "^9.0.6",
     "apollo-server-express": "^3.4.0",
     "graphql": "^15.6.1",
+    "graphql-subscriptions": "^1.2.1",
     "ts-morph": "^12.0.0"
   }
 }
