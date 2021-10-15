@@ -6,11 +6,11 @@ import { ImdbService } from "./imdb.service";
 
 const pubSub = new PubSub();
 
-@Resolver((of) => Tape)
+@Resolver(() => Tape)
 export class ImdbResolver {
   constructor(private readonly imdbService: ImdbService) {}
 
-  @Query((returns) => Tape)
+  @Query(() => Tape)
   async getTape(@Args("imdbNumber") imdbNumber: number): Promise<Tape> {
     const tape = await this.imdbService.getTape(imdbNumber);
     if (!tape) {
@@ -19,14 +19,14 @@ export class ImdbResolver {
     return tape;
   }
 
-  @Mutation((returns) => Tape)
+  @Mutation(() => Tape)
   async importTape(@Args("imdbNumber") imdbNumber: number): Promise<Tape> {
     const tape = await this.imdbService.importTape(imdbNumber);
     pubSub.publish("tapeImported", { tapeImported: tape });
     return tape;
   }
 
-  @Subscription((returns) => Tape)
+  @Subscription(() => Tape)
   tapeImported() {
     return pubSub.asyncIterator("tapeImported");
   }
