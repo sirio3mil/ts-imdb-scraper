@@ -13,7 +13,7 @@ export class FileProvider extends AbstractProvider {
 
   async get(url: string): Promise<string> {
     const hash = createHash('md5').update(url).digest("hex");
-    const localPath = join(resolve('./'), 'files', `${hash}-main.html`);
+    const localPath = join(resolve('./'), 'files', `${hash}.html`);
     if (existsSync(localPath)) {
       return readFileSync(localPath, 'utf8');
     }
