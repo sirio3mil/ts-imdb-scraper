@@ -2,9 +2,21 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""tape details"""
+type TapeDetail {
+  budget: Float
+  colors: [String!]!
+  currency: Int
+  duration: Int!
+  isTvShow: Boolean!
+  isTvShowChapter: Boolean!
+  year: Int!
+}
+
 """tape"""
 type Tape {
   originalTitle: String!
+  detail: TapeDetail!
 }
 
 type Query {
