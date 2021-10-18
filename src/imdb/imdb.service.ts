@@ -13,9 +13,8 @@ export class ImdbService {
   }
 
   async getTape(imdbNumber: number): Promise<Tape> {
-    const mainUrl = this.createUrl(imdbNumber)
-    const htmlMain = await this.provider.get(mainUrl)
-    console.log(htmlMain.length)
+    const mainUrl = this.createUrl(imdbNumber);
+    const htmlMain = await this.provider.get(mainUrl);
     return {} as any;
   }
 
