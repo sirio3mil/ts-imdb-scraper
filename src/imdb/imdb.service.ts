@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { Tape } from "./models/tape.model";
-import { FileProvider } from "./providers/file.provider";
+import { AbstractProvider } from "./providers/abstract.provider";
 
 @Injectable()
 export class ImdbService {
-  constructor(private provider: FileProvider) {}
+  constructor(private provider: AbstractProvider) {}
   
   createUrl(imdbNumber: number): string {
     const imdbID: string = `${imdbNumber}`.padStart(7, "0")
