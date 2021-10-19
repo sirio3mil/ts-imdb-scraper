@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import * as cheerio from "cheerio";
 import { URL } from "url";
-import { GlobalUniqueObject } from "./models/guid.model";
 import { Ranking } from "./models/ranking.model";
 import { TapeDetail } from "./models/tape-detail.model";
 import { Tape } from "./models/tape.model";
@@ -15,14 +14,13 @@ export class ImdbService {
     const url = this.createUrl(imdbNumber);
     const tape = new Tape();
     tape.detail = new TapeDetail();
-    tape.object = new GlobalUniqueObject();
-    tape.object.imdbNumber = {
-      imdbNumber,
+    tape.imdb = {
+      ID: imdbNumber,
       url: url.toString(),
     };
     const [htmlMain, htmlCast] = await Promise.all([
       this.provider.get(url),
-      this.provider.get(new URL("fullcredits", tape.object.imdbNumber.url)),
+      this.provider.get(new URL("fullcredits", tape.imdb.url)),
     ]);
     this.setMainContent(htmlMain, tape);
     this.setCastContent(htmlCast, tape);
@@ -58,11 +56,9 @@ export class ImdbService {
             person: {
               fullName,
               alias,
-              object: {
-                imdbNumber: {
-                  imdbNumber: id,
-                  url: url.toString().replace(url.search, ""),
-                },
+              imdb: {
+                ID: id,
+                url: url.toString().replace(url.search, ""),
               },
             },
             role,
@@ -101,7 +97,7 @@ export class ImdbService {
         parseFloat(formattedVotes.replace(/[^0-9.]/g, "")) * 1000000;
       ranking.score = ranking.votes * ranking.calculatedScore;
     }
-    tape.object.ranking = ranking;
+    tape.ranking = ranking;
   }
 
   private setCountries($: cheerio.Root, tape: Tape) {

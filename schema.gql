@@ -2,23 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-"""imdb number"""
-type ImdbNumber {
-  imdbNumber: Int!
-  url: String
-}
-
 """ranking"""
 type Ranking {
   calculatedScore: Float!
   score: Float!
   votes: Int!
-}
-
-"""global unique object"""
-type GlobalUniqueObject {
-  imdbNumber: ImdbNumber!
-  ranking: Ranking
 }
 
 """tape details"""
@@ -49,10 +37,22 @@ type Genre {
   name: String!
 }
 
+"""imdb number"""
+type ImdbNumber {
+  imdbNumber: Int!
+  url: String
+}
+
+"""imdb number"""
+type Imdb {
+  ID: Int!
+  url: String
+}
+
 """person"""
 type Person {
   fullName: String!
-  object: GlobalUniqueObject!
+  imdb: Imdb!
   alias: String
 }
 
@@ -71,7 +71,8 @@ type Tape {
   languages: [Language!]!
   genres: [Genre!]!
   credits: [Credit!]!
-  object: GlobalUniqueObject!
+  imdb: Imdb!
+  ranking: Ranking
 }
 
 type Query {

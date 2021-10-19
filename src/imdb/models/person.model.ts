@@ -1,5 +1,5 @@
 import { Field, ObjectType } from "@nestjs/graphql";
-import { GlobalUniqueObject } from "./guid.model";
+import { Imdb } from "./imdb.model";
 
 @ObjectType({ description: "person" })
 export class Person {
@@ -7,7 +7,7 @@ export class Person {
   fullName: string;
 
   @Field()
-  object: GlobalUniqueObject;
+  imdb: Imdb;
 
   @Field({ nullable: true })
   alias?: string;

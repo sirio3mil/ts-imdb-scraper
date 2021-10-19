@@ -1,9 +1,9 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
 
 @ObjectType({ description: "imdb number" })
-export class ImdbNumber {
+export class Imdb {
   @Field(() => Int)
-  imdbNumber: number;
+  ID: number;
 
   @Field({ nullable: true })
   url?: string;
