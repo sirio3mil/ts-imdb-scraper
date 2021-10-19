@@ -13,10 +13,44 @@ type TapeDetail {
   year: Int!
 }
 
+"""language"""
+type Language {
+  name: String!
+}
+
+"""country"""
+type Country {
+  isoCode: String
+  language: Language
+  officialName: String!
+}
+
+"""ranking"""
+type Ranking {
+  calculatedScore: Float!
+  score: Float!
+  votes: Int!
+}
+
+"""imdb number"""
+type ImdbNumber {
+  imdbNumber: Int!
+  url: String
+}
+
+"""global unique object"""
+type GlobalUniqueObject {
+  imdbNumber: ImdbNumber!
+  ranking: Ranking!
+}
+
 """tape"""
 type Tape {
   originalTitle: String!
   detail: TapeDetail!
+  countries: [Country!]!
+  languages: [Language!]!
+  object: GlobalUniqueObject!
 }
 
 type Query {

@@ -3,16 +3,23 @@ import { Tape } from "./models/tape.model";
 import { AbstractProvider } from "./providers/abstract.provider";
 import * as cheerio from "cheerio";
 import { TapeDetail } from "./models/tape-detail.model";
+import { GlobalUniqueObject } from "./models/guid.model";
+import { Ranking } from "./models/ranking.model";
 
 @Injectable()
 export class ImdbService {
   constructor(private provider: AbstractProvider) {}
 
   async getTape(imdbNumber: number): Promise<Tape> {
+    const url = this.createUrl(imdbNumber);
     const tape = new Tape();
     tape.detail = new TapeDetail();
-    const mainUrl = this.createUrl(imdbNumber);
-    const htmlMain = await this.provider.get(mainUrl);
+    tape.object = new GlobalUniqueObject();
+    tape.object.imdbNumber = {
+      imdbNumber,
+      url
+    };
+    const htmlMain = await this.provider.get(url);
     const $ = cheerio.load(htmlMain);
     const titleBlock = $('[class^="TitleBlock__Container"]');
     this.setOriginalTitle(titleBlock, tape);
@@ -20,7 +27,40 @@ export class ImdbService {
     this.setYear(titleBlock, tape);
     this.setBudget($, tape);
     this.setColors($, tape);
+    this.setCountries($, tape);
+    this.setRanking($, tape);
     return tape;
+  }
+
+  private setRanking($: cheerio.Root, tape: Tape) {
+    const ranking = new Ranking();
+    ranking.calculatedScore = parseFloat($('[class^="AggregateRatingButton__RatingScore"]').first().text());
+    const formattedVotes = $('[class^="AggregateRatingButton__TotalRatingAmount"]').first().text();
+    if (formattedVotes.endsWith('M')) {
+      ranking.votes = parseFloat(formattedVotes.replace(/[^0-9.]/g, '')) * 1000000;
+      ranking.score = ranking.votes * ranking.calculatedScore;
+    }
+    tape.object.ranking = ranking;
+  }
+
+  private setCountries($: cheerio.Root, tape: Tape) {
+    const detailsBlock = $('section').find('[data-testid="Details"]').find('.ipc-metadata-list__item');
+    detailsBlock.each((i, elem) => {
+      const label = $(elem).find('.ipc-metadata-list-item__label').text();
+      if (label === "Countries of origin") {
+        $(elem).find('.ipc-metadata-list-item__list-content-item').each((i, elem) => {
+          tape.countries.push({
+            officialName: $(elem).text()
+          });
+        });
+      } else if (label === "Language") {
+        $(elem).find('.ipc-metadata-list-item__list-content-item').each((i, elem) => {
+          tape.languages.push({
+            name: $(elem).text()
+          });
+        });
+      }
+    });
   }
 
   private createUrl(imdbNumber: number): string {
