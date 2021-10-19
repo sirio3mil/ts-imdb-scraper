@@ -8,12 +8,12 @@ import { FileProvider } from "./providers/file.provider";
 @Module({
   imports: [HttpModule],
   providers: [
-    ImdbResolver, 
-    ImdbService, 
+    ImdbResolver,
+    ImdbService,
     {
       provide: AbstractProvider,
       useClass: FileProvider,
-    }
+    },
   ],
 })
 export class ImdbModule {}

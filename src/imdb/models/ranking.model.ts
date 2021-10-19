@@ -3,11 +3,11 @@ import { Field, Int, ObjectType } from "@nestjs/graphql";
 @ObjectType({ description: "ranking" })
 export class Ranking {
   @Field()
-  calculatedScore: number
+  calculatedScore: number;
 
   @Field()
-  score: number
+  score: number;
 
   @Field(() => Int)
-  votes: number
+  votes: number;
 }

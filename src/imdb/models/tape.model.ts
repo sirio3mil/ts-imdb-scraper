@@ -20,14 +20,14 @@ export class Tape {
   detail: TapeDetail;
 
   @Field(() => [Country])
-  countries: Country[]
-  
+  countries: Country[];
+
   @Field(() => [Language])
-  languages: Language[]
+  languages: Language[];
 
   @Field(() => [Genre])
-  genres: Genre[]
+  genres: Genre[];
 
   @Field()
-  object: GlobalUniqueObject
+  object: GlobalUniqueObject;
 }

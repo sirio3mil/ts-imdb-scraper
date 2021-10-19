@@ -3,8 +3,8 @@ import { Field, Int, ObjectType } from "@nestjs/graphql";
 @ObjectType({ description: "imdb number" })
 export class ImdbNumber {
   @Field(() => Int)
-  imdbNumber: number
-  
+  imdbNumber: number;
+
   @Field({ nullable: true })
-  url?: string
+  url?: string;
 }

@@ -5,8 +5,8 @@ import { Ranking } from "./ranking.model";
 @ObjectType({ description: "global unique object" })
 export class GlobalUniqueObject {
   @Field()
-  imdbNumber: ImdbNumber
+  imdbNumber: ImdbNumber;
 
   @Field()
-  ranking: Ranking
+  ranking: Ranking;
 }
