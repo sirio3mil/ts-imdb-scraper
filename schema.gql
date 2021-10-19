@@ -49,6 +49,19 @@ type Genre {
   name: String!
 }
 
+"""person"""
+type Person {
+  fullName: String!
+  alias: String
+}
+
+"""cast member"""
+type Member {
+  person: Person!
+  role: String
+  character: String
+}
+
 """tape"""
 type Tape {
   originalTitle: String!
@@ -56,6 +69,7 @@ type Tape {
   countries: [Country!]!
   languages: [Language!]!
   genres: [Genre!]!
+  cast: [Member!]!
   object: GlobalUniqueObject!
 }
 

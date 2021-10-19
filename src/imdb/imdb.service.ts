@@ -24,7 +24,42 @@ export class ImdbService {
       this.provider.get(url),
       this.provider.get(new URL("fullcredits", tape.object.imdbNumber.url)),
     ]);
-    const $ = cheerio.load(htmlMain);
+    this.setMainContent(htmlMain, tape);
+    this.setCastContent(htmlCast, tape);
+    return tape;
+  }
+
+  private setCastContent(html: string, tape: Tape) {
+    const $ = cheerio.load(html.replace(/(\r\n|\n|\r)/gm, ""));
+    const titles = $('#fullcredits_content').find('h4')
+    titles.each((i, title) => {
+      const table = $(title).next("table")
+      const simpleCreditsTable = table.hasClass("simpleCreditsTable")
+      const rows = table.find('tr');
+      const role = $(title).attr("id")
+      rows.each((i, row) => {
+        const cells = $(row).find('td');
+        const nameCellPosition = simpleCreditsTable ? 0 : 1;
+        const fullName = cells.eq(nameCellPosition).text().trim();
+        const lastCell = cells.last();
+        let character = lastCell.find('a').text()
+        const matchs = lastCell.text().replace(character, "").match(/\(as ([\w\s]+)\)/)
+        if (!character) character = null
+        const alias = (!!matchs) ? matchs[1] : null
+        tape.cast.push({
+          person: {
+            fullName,
+            alias
+          },
+          role,
+          character
+        })
+      });
+    });
+  }
+
+  private setMainContent(html: string, tape: Tape) {
+    const $ = cheerio.load(html);
     const titleBlock = $('[class^="TitleBlock__Container"]');
     this.setOriginalTitle(titleBlock, tape);
     this.setDuration(titleBlock, tape);
@@ -34,7 +69,6 @@ export class ImdbService {
     this.setCountries($, tape);
     this.setGenres($, tape);
     this.setRanking($, tape);
-    return tape;
   }
 
   private setRanking($: cheerio.Root, tape: Tape) {

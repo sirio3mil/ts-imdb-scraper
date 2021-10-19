@@ -3,6 +3,7 @@ import { Country } from "./country.model";
 import { Genre } from "./genre.model";
 import { GlobalUniqueObject } from "./guid.model";
 import { Language } from "./language.model";
+import { Member } from "./member.model";
 import { TapeDetail } from "./tape-detail.model";
 
 @ObjectType({ description: "tape" })
@@ -11,6 +12,7 @@ export class Tape {
     this.countries = [];
     this.languages = [];
     this.genres = [];
+    this.cast = [];
   }
 
   @Field()
@@ -27,6 +29,9 @@ export class Tape {
 
   @Field(() => [Genre])
   genres: Genre[];
+
+  @Field(() => [Member])
+  cast: Member[];
 
   @Field()
   object: GlobalUniqueObject;
