@@ -7,6 +7,6 @@ export class GlobalUniqueObject {
   @Field()
   imdbNumber: ImdbNumber;
 
-  @Field()
-  ranking: Ranking;
+  @Field({ nullable: true })
+  ranking?: Ranking;
 }

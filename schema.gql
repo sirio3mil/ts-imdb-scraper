@@ -2,9 +2,10 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-"""language"""
-type Language {
-  name: String!
+"""imdb number"""
+type ImdbNumber {
+  imdbNumber: Int!
+  url: String
 }
 
 """ranking"""
@@ -14,16 +15,10 @@ type Ranking {
   votes: Int!
 }
 
-"""imdb number"""
-type ImdbNumber {
-  imdbNumber: Int!
-  url: String
-}
-
 """global unique object"""
 type GlobalUniqueObject {
   imdbNumber: ImdbNumber!
-  ranking: Ranking!
+  ranking: Ranking
 }
 
 """tape details"""
@@ -35,6 +30,11 @@ type TapeDetail {
   isTvShow: Boolean!
   isTvShowChapter: Boolean!
   year: Int!
+}
+
+"""language"""
+type Language {
+  name: String!
 }
 
 """country"""
@@ -52,6 +52,7 @@ type Genre {
 """person"""
 type Person {
   fullName: String!
+  object: GlobalUniqueObject!
   alias: String
 }
 

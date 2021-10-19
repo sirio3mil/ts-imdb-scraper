@@ -40,20 +40,32 @@ export class ImdbService {
       rows.each((i, row) => {
         const cells = $(row).find('td');
         const nameCellPosition = simpleCreditsTable ? 0 : 1;
-        const fullName = cells.eq(nameCellPosition).text().trim();
-        const lastCell = cells.last();
-        let character = lastCell.find('a').text()
-        const matchs = lastCell.text().replace(character, "").match(/\(as ([\w\s]+)\)/)
-        if (!character) character = null
-        const alias = (!!matchs) ? matchs[1] : null
-        tape.cast.push({
-          person: {
-            fullName,
-            alias
-          },
-          role,
-          character
-        })
+        const nameCell = cells.eq(nameCellPosition);
+        const href = nameCell.find('a').attr('href');
+        const id = parseInt(href?.match(/nm([\d]+)/)[1])
+        if (!!id) {
+          const url = new URL(href, 'https://www.imdb.com')
+          const fullName = nameCell.text().trim();
+          const lastCell = cells.last();
+          let character = lastCell.find('a').text()
+          const matchs = lastCell.text().replace(character, "").match(/\(as ([\w\s]+)\)/)
+          if (!character) character = null
+          const alias = (!!matchs) ? matchs[1] : null
+          tape.cast.push({
+            person: {
+              fullName,
+              alias,
+              object: {
+                imdbNumber: {
+                  imdbNumber: id,
+                  url: url.toString().replace(url.search, "")
+                }
+              }
+            },
+            role,
+            character
+          })
+        }
       });
     });
   }
