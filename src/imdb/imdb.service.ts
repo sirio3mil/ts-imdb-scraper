@@ -20,7 +20,6 @@ export class ImdbService {
       imdbNumber,
       url: url.toString()
     };
-    console.log(tape.object.imdbNumber.url)
     const [htmlMain, htmlCast] = await Promise.all([
       this.provider.get(url),
       this.provider.get(new URL('fullcredits', tape.object.imdbNumber.url))
