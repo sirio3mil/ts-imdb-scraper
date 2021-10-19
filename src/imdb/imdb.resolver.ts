@@ -1,8 +1,8 @@
 import { NotFoundException } from "@nestjs/common";
 import { Args, Mutation, Query, Resolver, Subscription } from "@nestjs/graphql";
 import { PubSub } from "graphql-subscriptions";
-import { Tape } from "./models/tape.model";
 import { ImdbService } from "./imdb.service";
+import { Tape } from "./models/tape.model";
 
 const pubSub = new PubSub();
 

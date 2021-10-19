@@ -2,27 +2,9 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-"""tape details"""
-type TapeDetail {
-  budget: Float
-  colors: [String!]!
-  currency: Int
-  duration: Int!
-  isTvShow: Boolean!
-  isTvShowChapter: Boolean!
-  year: Int!
-}
-
 """language"""
 type Language {
   name: String!
-}
-
-"""country"""
-type Country {
-  isoCode: String
-  language: Language
-  officialName: String!
 }
 
 """ranking"""
@@ -42,6 +24,24 @@ type ImdbNumber {
 type GlobalUniqueObject {
   imdbNumber: ImdbNumber!
   ranking: Ranking!
+}
+
+"""tape details"""
+type TapeDetail {
+  budget: Float
+  colors: [String!]!
+  currency: Int
+  duration: Int!
+  isTvShow: Boolean!
+  isTvShowChapter: Boolean!
+  year: Int!
+}
+
+"""country"""
+type Country {
+  isoCode: String
+  language: Language
+  officialName: String!
 }
 
 """genre"""

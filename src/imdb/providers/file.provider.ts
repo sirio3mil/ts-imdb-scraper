@@ -1,10 +1,10 @@
 import { HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
-import { AbstractProvider } from "./abstract.provider";
-import { writeFile, existsSync, readFileSync } from "fs";
-import { join, resolve } from "path";
 import { createHash } from "crypto";
+import { existsSync, readFileSync, writeFile } from "fs";
+import { join, resolve } from "path";
 import { URL } from "url";
+import { AbstractProvider } from "./abstract.provider";
 
 @Injectable()
 export class FileProvider extends AbstractProvider {

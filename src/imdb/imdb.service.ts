@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
-import { Tape } from "./models/tape.model";
-import { AbstractProvider } from "./providers/abstract.provider";
 import * as cheerio from "cheerio";
-import { TapeDetail } from "./models/tape-detail.model";
+import { URL } from "url";
 import { GlobalUniqueObject } from "./models/guid.model";
 import { Ranking } from "./models/ranking.model";
-import { URL } from "url";
+import { TapeDetail } from "./models/tape-detail.model";
+import { Tape } from "./models/tape.model";
+import { AbstractProvider } from "./providers/abstract.provider";
 
 @Injectable()
 export class ImdbService {
