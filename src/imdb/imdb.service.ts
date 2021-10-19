@@ -28,6 +28,7 @@ export class ImdbService {
     this.setBudget($, tape);
     this.setColors($, tape);
     this.setCountries($, tape);
+    this.setGenres($, tape);
     this.setRanking($, tape);
     return tape;
   }
@@ -56,6 +57,20 @@ export class ImdbService {
       } else if (label === "Language") {
         $(elem).find('.ipc-metadata-list-item__list-content-item').each((i, elem) => {
           tape.languages.push({
+            name: $(elem).text()
+          });
+        });
+      }
+    });
+  }
+
+  private setGenres($: cheerio.Root, tape: Tape) {
+    const detailsBlock = $('section').find('[data-testid="Storyline"]').find('.ipc-metadata-list__item');
+    detailsBlock.each((i, elem) => {
+      const label = $(elem).find('.ipc-metadata-list-item__label').text();
+      if (label === "Genres") {
+        $(elem).find('.ipc-metadata-list-item__list-content-item').each((i, elem) => {
+          tape.genres.push({
             name: $(elem).text()
           });
         });

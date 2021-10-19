@@ -44,12 +44,18 @@ type GlobalUniqueObject {
   ranking: Ranking!
 }
 
+"""genre"""
+type Genre {
+  name: String!
+}
+
 """tape"""
 type Tape {
   originalTitle: String!
   detail: TapeDetail!
   countries: [Country!]!
   languages: [Language!]!
+  genres: [Genre!]!
   object: GlobalUniqueObject!
 }
 

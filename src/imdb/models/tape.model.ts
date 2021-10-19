@@ -1,5 +1,6 @@
 import { Field, ObjectType } from "@nestjs/graphql";
 import { Country } from "./country.model";
+import { Genre } from "./genre.model";
 import { GlobalUniqueObject } from "./guid.model";
 import { Language } from "./language.model";
 import { TapeDetail } from "./tape-detail.model";
@@ -9,6 +10,7 @@ export class Tape {
   constructor() {
     this.countries = [];
     this.languages = [];
+    this.genres = [];
   }
 
   @Field()
@@ -22,6 +24,9 @@ export class Tape {
   
   @Field(() => [Language])
   languages: Language[]
+
+  @Field(() => [Genre])
+  genres: Genre[]
 
   @Field()
   object: GlobalUniqueObject
