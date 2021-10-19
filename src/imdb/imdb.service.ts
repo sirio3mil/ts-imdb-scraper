@@ -5,6 +5,7 @@ import * as cheerio from "cheerio";
 import { TapeDetail } from "./models/tape-detail.model";
 import { GlobalUniqueObject } from "./models/guid.model";
 import { Ranking } from "./models/ranking.model";
+import { URL } from 'url';
 
 @Injectable()
 export class ImdbService {
@@ -17,9 +18,13 @@ export class ImdbService {
     tape.object = new GlobalUniqueObject();
     tape.object.imdbNumber = {
       imdbNumber,
-      url
+      url: url.toString()
     };
-    const htmlMain = await this.provider.get(url);
+    console.log(tape.object.imdbNumber.url)
+    const [htmlMain, htmlCast] = await Promise.all([
+      this.provider.get(url),
+      this.provider.get(new URL('fullcredits', tape.object.imdbNumber.url))
+    ]);
     const $ = cheerio.load(htmlMain);
     const titleBlock = $('[class^="TitleBlock__Container"]');
     this.setOriginalTitle(titleBlock, tape);
@@ -78,10 +83,10 @@ export class ImdbService {
     });
   }
 
-  private createUrl(imdbNumber: number): string {
+  private createUrl(imdbNumber: number): URL {
     const imdbID: string = `${imdbNumber}`.padStart(7, "0")
 
-    return `https://www.imdb.com/title/tt${imdbID}/`
+    return new URL(`title/tt${imdbID}/`, 'https://www.imdb.com')
   }
 
   private setOriginalTitle(titleBlock: cheerio.Cheerio, tape: Tape) {

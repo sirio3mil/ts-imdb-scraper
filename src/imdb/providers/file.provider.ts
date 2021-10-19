@@ -4,6 +4,7 @@ import { AbstractProvider } from "./abstract.provider";
 import { writeFile, existsSync, readFileSync } from "fs";
 import { join, resolve} from "path";
 import { createHash } from "crypto";
+import { URL } from 'url';
 
 @Injectable()
 export class FileProvider extends AbstractProvider {
@@ -11,8 +12,8 @@ export class FileProvider extends AbstractProvider {
     super(httpService)
   }
 
-  async get(url: string): Promise<string> {
-    const hash = createHash('md5').update(url).digest("hex");
+  async get(url: URL): Promise<string> {
+    const hash = createHash('md5').update(url.toString()).digest("hex");
     const localPath = join(resolve('./'), 'files', `${hash}.html`);
     if (existsSync(localPath)) {
       return readFileSync(localPath, 'utf8');
