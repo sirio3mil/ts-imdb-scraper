@@ -1,14 +1,14 @@
 import { Field, ObjectType } from "@nestjs/graphql";
 import { Person } from "./person.model";
 
-@ObjectType({ description: "cast member" })
-export class Member {
+@ObjectType({ description: "credit, cast and crew member" })
+export class Credit {
   @Field()
-  person: Person
+  person: Person;
 
   @Field({ nullable: true })
-  role?: string
+  role?: string;
 
   @Field({ nullable: true })
-  character?: string
+  character?: string;
 }

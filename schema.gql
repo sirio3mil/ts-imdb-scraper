@@ -56,8 +56,8 @@ type Person {
   alias: String
 }
 
-"""cast member"""
-type Member {
+"""credit, cast and crew member"""
+type Credit {
   person: Person!
   role: String
   character: String
@@ -70,7 +70,7 @@ type Tape {
   countries: [Country!]!
   languages: [Language!]!
   genres: [Genre!]!
-  cast: [Member!]!
+  credits: [Credit!]!
   object: GlobalUniqueObject!
 }
 

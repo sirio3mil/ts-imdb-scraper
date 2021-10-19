@@ -1,9 +1,9 @@
 import { Field, ObjectType } from "@nestjs/graphql";
 import { Country } from "./country.model";
+import { Credit } from "./credit.model";
 import { Genre } from "./genre.model";
 import { GlobalUniqueObject } from "./guid.model";
 import { Language } from "./language.model";
-import { Member } from "./member.model";
 import { TapeDetail } from "./tape-detail.model";
 
 @ObjectType({ description: "tape" })
@@ -12,7 +12,7 @@ export class Tape {
     this.countries = [];
     this.languages = [];
     this.genres = [];
-    this.cast = [];
+    this.credits = [];
   }
 
   @Field()
@@ -30,8 +30,8 @@ export class Tape {
   @Field(() => [Genre])
   genres: Genre[];
 
-  @Field(() => [Member])
-  cast: Member[];
+  @Field(() => [Credit])
+  credits: Credit[];
 
   @Field()
   object: GlobalUniqueObject;
