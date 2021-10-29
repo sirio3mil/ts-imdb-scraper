@@ -4,10 +4,12 @@ import { ImdbResolver } from "./imdb.resolver";
 import { ImdbService } from "./imdb.service";
 import { AbstractProvider } from "./providers/abstract.provider";
 import { FileProvider } from "./providers/file.provider";
+import { DateScalar } from "./scalars/date.scalar";
 
 @Module({
   imports: [HttpModule],
   providers: [
+    DateScalar,
     ImdbResolver,
     ImdbService,
     {

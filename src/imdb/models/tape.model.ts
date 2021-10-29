@@ -4,6 +4,7 @@ import { Credit } from "./credit.model";
 import { Genre } from "./genre.model";
 import { Imdb } from "./imdb.model";
 import { Language } from "./language.model";
+import { Premiere } from "./premiere.model";
 import { Ranking } from "./ranking.model";
 import { TapeDetail } from "./tape-detail.model";
 
@@ -14,6 +15,7 @@ export class Tape {
     this.languages = [];
     this.genres = [];
     this.credits = [];
+    this.premieres = [];
   }
 
   @Field()
@@ -33,6 +35,9 @@ export class Tape {
 
   @Field(() => [Credit])
   credits: Credit[];
+
+  @Field(() => [Premiere])
+  premieres: Premiere[]
 
   @Field()
   imdb: Imdb;

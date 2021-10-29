@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import * as cheerio from "cheerio";
 import { URL } from "url";
+import { Country } from "./models/country.model";
 import { Ranking } from "./models/ranking.model";
 import { TapeDetail } from "./models/tape-detail.model";
 import { Tape } from "./models/tape.model";
@@ -18,16 +19,42 @@ export class ImdbService {
       ID: imdbNumber,
       url: url.toString(),
     };
-    const [htmlMain, htmlCast] = await Promise.all([
+    const [home, fullCredits, releaseInfo] = await Promise.all([
       this.provider.get(url),
       this.provider.get(new URL("fullcredits", tape.imdb.url)),
+      this.provider.get(new URL("releaseinfo", tape.imdb.url)),
     ]);
-    this.setMainContent(htmlMain, tape);
-    this.setCastContent(htmlCast, tape);
+    this.setHomeContent(home, tape);
+    this.setFullCreditsContent(fullCredits, tape);
+    this.setReleaseInfoContent(releaseInfo, tape);
     return tape;
   }
 
-  private setCastContent(html: string, tape: Tape) {
+  private setReleaseInfoContent(html: string, tape: Tape) {
+    const $ = cheerio.load(html.replace(/(\r\n|\n|\r)/gm, ""));
+    $(".release-date-item").each((i, row) => {
+      const country = new Country($(row).find('.release-date-item__country-name').text());
+      const date = $(row).find('.release-date-item__date').text();
+      const details = $(row).find('.release-date-item__attributes').text();
+      const regExp = /\(([^)]+)\)/g;
+      const matches = details.match(regExp);
+      let detail, place: string
+      if (matches?.length === 1) {
+        detail = matches[0].substring(1, matches[0].length - 1)
+      } else if (matches?.length === 2) {
+        detail = matches[1].substring(1, matches[1].length - 1)
+        place = matches[0].substring(1, matches[0].length - 1)
+      }
+      tape.premieres.push({
+        country,
+        date: new Date(date),
+        detail,
+        place
+      })
+    });
+  }
+
+  private setFullCreditsContent(html: string, tape: Tape) {
     const $ = cheerio.load(html.replace(/(\r\n|\n|\r)/gm, ""));
     const titles = $("#fullcredits_content").find("h4");
     titles.each((i, title) => {
@@ -69,7 +96,7 @@ export class ImdbService {
     });
   }
 
-  private setMainContent(html: string, tape: Tape) {
+  private setHomeContent(html: string, tape: Tape) {
     const $ = cheerio.load(html);
     const titleBlock = $('[class^="TitleBlock__Container"]');
     this.setOriginalTitle(titleBlock, tape);
