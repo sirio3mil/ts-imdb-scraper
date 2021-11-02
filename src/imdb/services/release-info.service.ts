@@ -6,7 +6,7 @@ import { Premiere } from "../models/premiere.model";
 import { AbstractProvider } from "../providers/abstract.provider";
 
 @Injectable()
-export class PremiereService {
+export class ReleaseInfoService {
   constructor(private provider: AbstractProvider) {}
 
   async getPremieres(url: string): Promise<Premiere[]> {

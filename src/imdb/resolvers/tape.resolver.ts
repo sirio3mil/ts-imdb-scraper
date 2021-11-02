@@ -3,14 +3,14 @@ import { Args, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { TapeService } from "../services/tape.service";
 import { Tape } from "../models/tape.model";
 import { CreditService } from "../services/credit.service";
-import { PremiereService } from "../services/premiere.service";
+import { ReleaseInfoService } from "../services/release-info.service";
 
 @Resolver(() => Tape)
 export class TapeResolver {
   constructor(
     private readonly tapeService: TapeService,
     private readonly creditService: CreditService,
-    private readonly premiereService: PremiereService
+    private readonly premiereService: ReleaseInfoService
   ) {}
 
   @Query(() => Tape)

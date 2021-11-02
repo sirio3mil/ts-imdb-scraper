@@ -6,7 +6,7 @@ import { AbstractProvider } from "./providers/abstract.provider";
 import { FileProvider } from "./providers/file.provider";
 import { DateScalar } from "./scalars/date.scalar";
 import { CreditService } from "./services/credit.service";
-import { PremiereService } from "./services/premiere.service";
+import { ReleaseInfoService } from "./services/release-info.service";
 
 @Module({
   imports: [HttpModule],
@@ -15,7 +15,7 @@ import { PremiereService } from "./services/premiere.service";
     TapeResolver,
     TapeService,
     CreditService,
-    PremiereService,
+    ReleaseInfoService,
     {
       provide: AbstractProvider,
       useClass: FileProvider,
