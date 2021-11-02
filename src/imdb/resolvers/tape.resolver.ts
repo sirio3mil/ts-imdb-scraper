@@ -1,9 +1,9 @@
 import { NotFoundException } from "@nestjs/common";
 import { Args, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
-import { TapeService } from "../services/tape.service";
 import { Tape } from "../models/tape.model";
 import { CreditService } from "../services/credit.service";
 import { ReleaseInfoService } from "../services/release-info.service";
+import { TapeService } from "../services/tape.service";
 
 @Resolver(() => Tape)
 export class TapeResolver {

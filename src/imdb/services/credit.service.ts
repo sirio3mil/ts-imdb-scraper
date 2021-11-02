@@ -11,7 +11,7 @@ export class CreditService extends HtmlService {
   }
 
   async getCredits(url: string): Promise<Credit[]> {
-    const credits = []
+    const credits = [];
     const $ = await this.load(new URL("fullcredits", url));
     const titles = $("#fullcredits_content").find("h4");
     titles.each((i, title) => {
@@ -52,6 +52,6 @@ export class CreditService extends HtmlService {
       });
     });
 
-    return credits
+    return credits;
   }
 }

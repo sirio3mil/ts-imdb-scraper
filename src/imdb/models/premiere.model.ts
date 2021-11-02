@@ -7,11 +7,11 @@ export class Premiere {
   country: Country;
 
   @Field()
-  date: Date
+  date: Date;
 
   @Field({ nullable: true })
   detail?: string;
-  
+
   @Field({ nullable: true })
   place?: string;
 }

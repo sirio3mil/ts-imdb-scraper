@@ -39,7 +39,7 @@ export class Tape {
   credits: Credit[];
 
   @Field(() => [Premiere])
-  premieres: Premiere[]
+  premieres: Premiere[];
 
   @Field(() => [Title])
   titles: Title[];

@@ -48,8 +48,7 @@ export class TapeService extends HtmlService {
       ranking.votes =
         parseFloat(formattedVotes.replace(/[^0-9.]/g, "")) * 1000000;
     } else if (formattedVotes.endsWith("K")) {
-      ranking.votes =
-        parseFloat(formattedVotes.replace(/[^0-9.]/g, "")) * 1000;
+      ranking.votes = parseFloat(formattedVotes.replace(/[^0-9.]/g, "")) * 1000;
     }
     if (!!ranking.votes) {
       ranking.score = ranking.votes * ranking.calculatedScore;

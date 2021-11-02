@@ -2,13 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-"""ranking"""
-type Ranking {
-  calculatedScore: Float!
-  score: Float!
-  votes: Int!
-}
-
 """tape details"""
 type TapeDetail {
   budget: Float
@@ -67,6 +60,13 @@ type Premiere {
 
 """Date custom scalar type"""
 scalar Date
+
+"""ranking"""
+type Ranking {
+  calculatedScore: Float!
+  score: Float!
+  votes: Int!
+}
 
 """tape title"""
 type Title {

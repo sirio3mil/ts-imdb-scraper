@@ -19,6 +19,6 @@ export abstract class AbstractProvider {
   }
 
   protected cleanContent(html: string): string {
-    return html.replace(/(\r\n|\n|\r)/gm, "")
+    return html.replace(/(\r\n|\n|\r)/gm, "");
   }
 }

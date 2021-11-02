@@ -8,7 +8,7 @@ export abstract class HtmlService {
   constructor(protected provider: AbstractProvider) {}
 
   protected async load(url: URL): Promise<cheerio.Root> {
-    const html = await this.provider.get(url)
+    const html = await this.provider.get(url);
     return cheerio.load(html);
   }
 }
