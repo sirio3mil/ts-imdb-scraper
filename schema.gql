@@ -68,6 +68,14 @@ type Premiere {
 """Date custom scalar type"""
 scalar Date
 
+"""tape title"""
+type Title {
+  country: Country
+  language: Language
+  observations: String
+  title: String!
+}
+
 """tape"""
 type Tape {
   originalTitle: String!
@@ -77,6 +85,7 @@ type Tape {
   genres: [Genre!]!
   credits: [Credit!]!
   premieres: [Premiere!]!
+  titles: [Title!]!
   imdb: Imdb!
   ranking: Ranking
 }

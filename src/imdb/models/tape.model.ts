@@ -7,6 +7,7 @@ import { Language } from "./language.model";
 import { Premiere } from "./premiere.model";
 import { Ranking } from "./ranking.model";
 import { TapeDetail } from "./tape-detail.model";
+import { Title } from "./title.model";
 
 @ObjectType({ description: "tape" })
 export class Tape {
@@ -16,6 +17,7 @@ export class Tape {
     this.genres = [];
     this.credits = [];
     this.premieres = [];
+    this.titles = [];
   }
 
   @Field()
@@ -38,6 +40,9 @@ export class Tape {
 
   @Field(() => [Premiere])
   premieres: Premiere[]
+
+  @Field(() => [Title])
+  titles: Title[];
 
   @Field()
   imdb: Imdb;

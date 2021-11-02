@@ -33,4 +33,10 @@ export class TapeResolver {
     const { url } = tape.imdb;
     return this.premiereService.getPremieres(url);
   }
+
+  @ResolveField()
+  async titles(@Parent() tape: Tape) {
+    const { url } = tape.imdb;
+    return this.premiereService.getTitles(url);
+  }
 }
