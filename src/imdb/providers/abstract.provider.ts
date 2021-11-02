@@ -17,4 +17,8 @@ export abstract class AbstractProvider {
         .pipe(map((response) => response.data))
     );
   }
+
+  protected cleanContent(html: string): string {
+    return html.replace(/(\r\n|\n|\r)/gm, "")
+  }
 }

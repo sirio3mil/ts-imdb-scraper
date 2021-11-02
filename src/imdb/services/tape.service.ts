@@ -5,10 +5,13 @@ import { Ranking } from "../models/ranking.model";
 import { TapeDetail } from "../models/tape-detail.model";
 import { Tape } from "../models/tape.model";
 import { AbstractProvider } from "../providers/abstract.provider";
+import { HtmlService } from "./html.service";
 
 @Injectable()
-export class TapeService {
-  constructor(private provider: AbstractProvider) {}
+export class TapeService extends HtmlService {
+  constructor(protected provider: AbstractProvider) {
+    super(provider);
+  }
 
   async getTape(imdbNumber: number): Promise<Tape> {
     const url = this.createUrl(imdbNumber);
@@ -18,13 +21,7 @@ export class TapeService {
       ID: imdbNumber,
       url: url.toString(),
     };
-    const home = await this.provider.get(url);
-    this.setHomeContent(home, tape);
-    return tape;
-  }
-
-  private setHomeContent(html: string, tape: Tape) {
-    const $ = cheerio.load(html);
+    const $ = await this.load(url);
     const titleBlock = $('[class^="TitleBlock__Container"]');
     this.setOriginalTitle(titleBlock, tape);
     this.setDuration(titleBlock, tape);
@@ -34,6 +31,7 @@ export class TapeService {
     this.setCountries($, tape);
     this.setGenres($, tape);
     this.setRanking($, tape);
+    return tape;
   }
 
   private setRanking($: cheerio.Root, tape: Tape) {

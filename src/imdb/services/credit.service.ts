@@ -1,21 +1,18 @@
 import { Injectable } from "@nestjs/common";
-import * as cheerio from "cheerio";
 import { URL } from "url";
 import { Credit } from "../models/credit.model";
 import { AbstractProvider } from "../providers/abstract.provider";
+import { HtmlService } from "./html.service";
 
 @Injectable()
-export class CreditService {
-  constructor(private provider: AbstractProvider) {}
-
-  async getCredits(url: string): Promise<Credit[]> {
-    const html = await this.provider.get(new URL("fullcredits", url))
-    return this.getCreditsContent(html)
+export class CreditService extends HtmlService {
+  constructor(protected provider: AbstractProvider) {
+    super(provider);
   }
 
-  private getCreditsContent(html: string) : Credit[]{
+  async getCredits(url: string): Promise<Credit[]> {
     const credits = []
-    const $ = cheerio.load(html.replace(/(\r\n|\n|\r)/gm, ""));
+    const $ = await this.load(new URL("fullcredits", url));
     const titles = $("#fullcredits_content").find("h4");
     titles.each((i, title) => {
       const table = $(title).next("table");

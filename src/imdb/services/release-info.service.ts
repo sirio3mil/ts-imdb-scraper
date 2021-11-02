@@ -1,29 +1,23 @@
 import { Injectable } from "@nestjs/common";
-import * as cheerio from "cheerio";
 import { URL } from "url";
 import { Country } from "../models/country.model";
 import { Language } from "../models/language.model";
 import { Premiere } from "../models/premiere.model";
 import { Title } from "../models/title.model";
 import { AbstractProvider } from "../providers/abstract.provider";
+import { HtmlService } from "./html.service";
 
 @Injectable()
-export class ReleaseInfoService {
-  private $: cheerio.Root
-  constructor(private provider: AbstractProvider) {}
-
-  private async load(url: string) {
-    if (!this.$) {
-      const html = await this.provider.get(new URL("releaseinfo", url))
-      this.$ = cheerio.load(html.replace(/(\r\n|\n|\r)/gm, ""));
-    }
+export class ReleaseInfoService extends HtmlService{
+  constructor(protected provider: AbstractProvider) {
+    super(provider);
   }
 
   async getPremieres(url: string): Promise<Premiere[]> {
     const premieres = []
-    await this.load(url)
-    this.$(".release-date-item").each((i, row) => {
-      const row$ = this.$(row)
+    const $ = await this.load(new URL("releaseinfo", url))
+    $(".release-date-item").each((i, row) => {
+      const row$ = $(row)
       const country = new Country(row$.find('.release-date-item__country-name').text());
       const date = row$.find('.release-date-item__date').text();
       const details = row$.find('.release-date-item__attributes').text();
@@ -49,9 +43,9 @@ export class ReleaseInfoService {
 
   async getTitles(url: string): Promise<Title[]> {
     const titles = []
-    await this.load(url)
-    this.$(".aka-item").each((i, row) => {
-      const row$ = this.$(row)
+    const $ = await this.load(new URL("releaseinfo", url))
+    $(".aka-item").each((i, row) => {
+      const row$ = $(row)
       const title = row$.find('.aka-item__title').text();
       const details = row$.find('.aka-item__name').text();
       const regExp = /\(([^)]+)\)/g;
