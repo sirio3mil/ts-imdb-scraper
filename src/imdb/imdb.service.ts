@@ -2,6 +2,8 @@ import { Injectable } from "@nestjs/common";
 import * as cheerio from "cheerio";
 import { URL } from "url";
 import { Country } from "./models/country.model";
+import { Credit } from "./models/credit.model";
+import { Premiere } from "./models/premiere.model";
 import { Ranking } from "./models/ranking.model";
 import { TapeDetail } from "./models/tape-detail.model";
 import { Tape } from "./models/tape.model";
@@ -19,18 +21,18 @@ export class ImdbService {
       ID: imdbNumber,
       url: url.toString(),
     };
-    const [home, fullCredits, releaseInfo] = await Promise.all([
-      this.provider.get(url),
-      this.provider.get(new URL("fullcredits", tape.imdb.url)),
-      this.provider.get(new URL("releaseinfo", tape.imdb.url)),
-    ]);
+    const home = await this.provider.get(url);
     this.setHomeContent(home, tape);
-    this.setFullCreditsContent(fullCredits, tape);
-    this.setReleaseInfoContent(releaseInfo, tape);
     return tape;
   }
 
-  private setReleaseInfoContent(html: string, tape: Tape) {
+  async getPremieres(url: string): Promise<Premiere[]> {
+    const html = await this.provider.get(new URL("releaseinfo", url))
+    return this.getPremieresContent(html)
+  }
+
+  private getPremieresContent(html: string): Premiere[] {
+    const premieres = []
     const $ = cheerio.load(html.replace(/(\r\n|\n|\r)/gm, ""));
     $(".release-date-item").each((i, row) => {
       const country = new Country($(row).find('.release-date-item__country-name').text());
@@ -45,16 +47,24 @@ export class ImdbService {
         detail = matches[1].substring(1, matches[1].length - 1)
         place = matches[0].substring(1, matches[0].length - 1)
       }
-      tape.premieres.push({
+      premieres.push({
         country,
         date: new Date(date),
         detail,
         place
       })
     });
+
+    return premieres
   }
 
-  private setFullCreditsContent(html: string, tape: Tape) {
+  async getCredits(url: string): Promise<Credit[]> {
+    const html = await this.provider.get(new URL("fullcredits", url))
+    return this.getCreditsContent(html)
+  }
+
+  private getCreditsContent(html: string) : Credit[]{
+    const credits = []
     const $ = cheerio.load(html.replace(/(\r\n|\n|\r)/gm, ""));
     const titles = $("#fullcredits_content").find("h4");
     titles.each((i, title) => {
@@ -79,7 +89,7 @@ export class ImdbService {
             .match(/\(as ([\w\s]+)\)/);
           if (!character) character = null;
           const alias = !!matchs ? matchs[1] : null;
-          tape.credits.push({
+          credits.push({
             person: {
               fullName,
               alias,
@@ -94,6 +104,8 @@ export class ImdbService {
         }
       });
     });
+
+    return credits
   }
 
   private setHomeContent(html: string, tape: Tape) {
@@ -229,9 +241,5 @@ export class ImdbService {
         );
       }
     });
-  }
-
-  async importTape(imdbNumber: number): Promise<Tape> {
-    return {} as any;
   }
 }

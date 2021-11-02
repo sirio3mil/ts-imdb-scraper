@@ -84,11 +84,3 @@ type Tape {
 type Query {
   getTape(imdbNumber: Float!): Tape!
 }
-
-type Mutation {
-  importTape(imdbNumber: Float!): Tape!
-}
-
-type Subscription {
-  tapeImported: Tape!
-}
