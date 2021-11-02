@@ -7,6 +7,7 @@ import { AbstractProvider } from "../providers/abstract.provider";
 
 @Injectable()
 export class ReleaseInfoService {
+  private $: cheerio.Root
   constructor(private provider: AbstractProvider) {}
 
   async getPremieres(url: string): Promise<Premiere[]> {
@@ -14,16 +15,23 @@ export class ReleaseInfoService {
     return this.getPremieresContent(html)
   }
 
+  private load(html: string) {
+    if (!this.$) {
+      this.$ = cheerio.load(html.replace(/(\r\n|\n|\r)/gm, ""));
+    }
+  }
+
   private getPremieresContent(html: string): Premiere[] {
     const premieres = []
-    const $ = cheerio.load(html.replace(/(\r\n|\n|\r)/gm, ""));
-    $(".release-date-item").each((i, row) => {
-      const country = new Country($(row).find('.release-date-item__country-name').text());
-      const date = $(row).find('.release-date-item__date').text();
-      const details = $(row).find('.release-date-item__attributes').text();
+    this.load(html)
+    this.$(".release-date-item").each((i, row) => {
+      const row$ = this.$(row)
+      const country = new Country(row$.find('.release-date-item__country-name').text());
+      const date = row$.find('.release-date-item__date').text();
+      const details = row$.find('.release-date-item__attributes').text();
       const regExp = /\(([^)]+)\)/g;
       const matches = details.match(regExp);
-      let detail, place: string
+      let detail: string, place: string
       if (matches?.length === 1) {
         detail = matches[0].substring(1, matches[0].length - 1)
       } else if (matches?.length === 2) {
