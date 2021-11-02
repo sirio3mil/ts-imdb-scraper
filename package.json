@@ -55,6 +55,6 @@
     "graphql": "^15.7.2",
     "graphql-subscriptions": "^1.2.1",
     "memory-cache": "^0.2.0",
-    "ts-morph": "^12.1.0"
+    "ts-morph": "^12.2.0"
   }
 }
