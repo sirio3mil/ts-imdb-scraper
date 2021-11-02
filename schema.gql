@@ -2,18 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-"""language"""
-type Language {
-  name: String!
-}
-
-"""country"""
-type Country {
-  isoCode: String
-  language: Language
-  officialName: String!
-}
-
 """ranking"""
 type Ranking {
   calculatedScore: Float!
@@ -30,6 +18,18 @@ type TapeDetail {
   isTvShow: Boolean!
   isTvShowChapter: Boolean!
   year: Int!
+}
+
+"""language"""
+type Language {
+  name: String!
+}
+
+"""country"""
+type Country {
+  isoCode: String
+  language: Language
+  officialName: String!
 }
 
 """genre"""
