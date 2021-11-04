@@ -1,4 +1,5 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
+import { Certification } from "./certification.model";
 import { Credit } from "./credit.model";
 import { Premiere } from "./premiere.model";
 import { Ranking } from "./ranking.model";
@@ -45,14 +46,17 @@ export class Tape {
   @Field(() => [String], { nullable: true })
   locations?: string[];
 
-  @Field(() => [Credit])
-  credits: Credit[];
+  @Field(() => [Credit], { nullable: true })
+  credits?: Credit[];
 
-  @Field(() => [Premiere])
-  premieres: Premiere[];
+  @Field(() => [Premiere], { nullable: true })
+  premieres?: Premiere[];
 
-  @Field(() => [Title])
-  titles: Title[];
+  @Field(() => [Title], { nullable: true })
+  titles?: Title[];
+
+  @Field(() => [Certification], { nullable: true })
+  certifications?: Certification[];
 
   @Field(() => Int)
   ID: number;

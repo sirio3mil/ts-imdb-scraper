@@ -6,6 +6,7 @@ import { TapeResolver } from "./resolvers/tape.resolver";
 import { DateScalar } from "./scalars/date.scalar";
 import { CreditService } from "./services/credit.service";
 import { LocationService } from "./services/location.service";
+import { ParentalGuideService } from "./services/parental-guide.service";
 import { ReleaseInfoService } from "./services/release-info.service";
 import { TapeService } from "./services/tape.service";
 
@@ -18,6 +19,7 @@ import { TapeService } from "./services/tape.service";
     CreditService,
     LocationService,
     ReleaseInfoService,
+    ParentalGuideService,
     {
       provide: AbstractProvider,
       useClass: FileProvider,

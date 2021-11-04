@@ -3,6 +3,7 @@ import { Args, Int, Parent, Query, ResolveField, Resolver } from "@nestjs/graphq
 import { Tape } from "../models/tape.model";
 import { CreditService } from "../services/credit.service";
 import { LocationService } from "../services/location.service";
+import { ParentalGuideService } from "../services/parental-guide.service";
 import { ReleaseInfoService } from "../services/release-info.service";
 import { TapeService } from "../services/tape.service";
 
@@ -12,7 +13,8 @@ export class TapeResolver {
     private readonly tapeService: TapeService,
     private readonly creditService: CreditService,
     private readonly releaseInfoService: ReleaseInfoService,
-    private readonly locationService: LocationService
+    private readonly locationService: LocationService,
+    private readonly parentalGuideService: ParentalGuideService
   ) {}
 
   @Query(() => Tape)
@@ -46,5 +48,11 @@ export class TapeResolver {
   async locations(@Parent() tape: Tape) {
     const { url } = tape;
     return this.locationService.getLocations(url);
+  }
+
+  @ResolveField()
+  async certifications(@Parent() tape: Tape) {
+    const { url } = tape;
+    return this.parentalGuideService.getCertifications(url);
   }
 }

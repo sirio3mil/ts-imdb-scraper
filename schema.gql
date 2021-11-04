@@ -43,6 +43,12 @@ type Ranking {
   votes: Int!
 }
 
+"""parental guide tape certifications"""
+type Certification {
+  certification: String!
+  country: String!
+}
+
 """tape"""
 type Tape {
   originalTitle: String!
@@ -58,9 +64,10 @@ type Tape {
   genres: [String!]
   sounds: [String!]
   locations: [String!]
-  credits: [Credit!]!
-  premieres: [Premiere!]!
-  titles: [Title!]!
+  credits: [Credit!]
+  premieres: [Premiere!]
+  titles: [Title!]
+  certifications: [Certification!]
   ID: Int!
   url: String
   ranking: Ranking
