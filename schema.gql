@@ -65,5 +65,5 @@ type Tape {
 }
 
 type Query {
-  getTape(imdbNumber: Float!): Tape!
+  getTape(imdbNumber: Int!): Tape!
 }

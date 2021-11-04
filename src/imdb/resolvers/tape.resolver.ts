@@ -1,5 +1,5 @@
 import { NotFoundException } from "@nestjs/common";
-import { Args, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import { Args, Int, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { Tape } from "../models/tape.model";
 import { CreditService } from "../services/credit.service";
 import { ReleaseInfoService } from "../services/release-info.service";
@@ -14,7 +14,7 @@ export class TapeResolver {
   ) {}
 
   @Query(() => Tape)
-  async getTape(@Args("imdbNumber") imdbNumber: number): Promise<Tape> {
+  async getTape(@Args("imdbNumber", { type: () => Int }) imdbNumber: number): Promise<Tape> {
     const tape = await this.tapeService.getTape(imdbNumber);
     if (!tape) {
       throw new NotFoundException(imdbNumber);
