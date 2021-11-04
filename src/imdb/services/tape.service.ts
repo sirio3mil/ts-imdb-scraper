@@ -26,6 +26,7 @@ export class TapeService extends HtmlService {
     this.setCountries($, tape);
     this.setGenres($, tape);
     this.setRanking($, tape);
+    this.setSounds($, tape);
     return tape;
   }
 
@@ -58,12 +59,14 @@ export class TapeService extends HtmlService {
     detailsBlock.each((i, elem) => {
       const label = $(elem).find(".ipc-metadata-list-item__label").text();
       if (label === "Countries of origin") {
+        tape.countries = [];
         $(elem)
           .find(".ipc-metadata-list-item__list-content-item")
           .each((i, elem) => {
             tape.countries.push($(elem).text());
           });
       } else if (label === "Language") {
+        tape.languages = [];
         $(elem)
           .find(".ipc-metadata-list-item__list-content-item")
           .each((i, elem) => {
@@ -80,6 +83,7 @@ export class TapeService extends HtmlService {
     detailsBlock.each((i, elem) => {
       const label = $(elem).find(".ipc-metadata-list-item__label").text();
       if (label === "Genres") {
+        tape.genres = [];
         $(elem)
           .find(".ipc-metadata-list-item__list-content-item")
           .each((i, elem) => {
@@ -129,9 +133,22 @@ export class TapeService extends HtmlService {
 
   private setColors($: cheerio.Root, tape: Tape) {
     const colors = $('[href^="/search/title/?colors"]');
-    colors.each((i, elem) => {
-      tape.colors.push($(elem).text());
-    });
+    if (!!colors.length) {
+      tape.colors = [];
+      colors.each((i, elem) => {
+        tape.colors.push($(elem).text());
+      });
+    }
+  }
+
+  private setSounds($: cheerio.Root, tape: Tape) {
+    const sounds = $('[href^="/search/title/?sound_mixes"]');
+    if (!!sounds.length) {
+      tape.sounds = [];
+      sounds.each((i, elem) => {
+        tape.sounds.push($(elem).text());
+      });
+    }
   }
 
   private setBudget($: cheerio.Root, tape: Tape) {

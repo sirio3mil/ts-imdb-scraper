@@ -31,6 +31,7 @@ describe('TapeService', () => {
       ['colors', ['Color']],
       ['languages', ['English']],
       ['countries', ['United States', 'Australia']],
+      ['sounds', ['Dolby Digital', 'SDDS', 'Dolby Atmos']],
       ['genres', ['Action', 'Sci-Fi']],
       ['duration', 136],
       ['year', 1999],
@@ -45,8 +46,8 @@ describe('TapeService', () => {
       ['credits'],
       ['premieres'],
       ['titles']
-    ])('should have empty %s', async (prop) => {
-      expect(tape[prop]).toEqual([]);
+    ])('should have undefined %s', async (prop) => {
+      expect(tape[prop]).toBeUndefined();
     });
   });
 });

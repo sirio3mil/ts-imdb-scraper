@@ -6,24 +6,14 @@ import { Title } from "./title.model";
 
 @ObjectType({ description: "tape" })
 export class Tape {
-  constructor() {
-    this.countries = [];
-    this.languages = [];
-    this.genres = [];
-    this.credits = [];
-    this.premieres = [];
-    this.titles = [];
-    this.colors = [];
-  }
-
   @Field()
   originalTitle: string;
 
   @Field({ nullable: true })
   budget?: number;
 
-  @Field(() => [String])
-  colors: string[];
+  @Field(() => [String], { nullable: true })
+  colors?: string[];
 
   @Field(() => Int, { nullable: true })
   currency?: number;
@@ -40,14 +30,17 @@ export class Tape {
   @Field(() => Int)
   year: number;
 
-  @Field(() => [String])
-  countries: string[];
+  @Field(() => [String], { nullable: true })
+  countries?: string[];
 
-  @Field(() => [String])
-  languages: string[];
+  @Field(() => [String], { nullable: true })
+  languages?: string[];
 
-  @Field(() => [String])
-  genres: string[];
+  @Field(() => [String], { nullable: true })
+  genres?: string[];
+
+  @Field(() => [String], { nullable: true })
+  sounds?: string[];
 
   @Field(() => [Credit])
   credits: Credit[];

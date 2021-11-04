@@ -47,15 +47,16 @@ type Ranking {
 type Tape {
   originalTitle: String!
   budget: Float
-  colors: [String!]!
+  colors: [String!]
   currency: Int
   duration: Int!
   isTvShow: Boolean!
   isTvShowChapter: Boolean!
   year: Int!
-  countries: [String!]!
-  languages: [String!]!
-  genres: [String!]!
+  countries: [String!]
+  languages: [String!]
+  genres: [String!]
+  sounds: [String!]
   credits: [Credit!]!
   premieres: [Premiere!]!
   titles: [Title!]!
@@ -65,5 +66,5 @@ type Tape {
 }
 
 type Query {
-  getTape(imdbNumber: Float!): Tape!
+  getTape(imdbNumber: Int!): Tape!
 }
