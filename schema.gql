@@ -57,6 +57,7 @@ type Tape {
   languages: [String!]
   genres: [String!]
   sounds: [String!]
+  locations: [String!]
   credits: [Credit!]!
   premieres: [Premiere!]!
   titles: [Title!]!

@@ -2,6 +2,7 @@ import { NotFoundException } from "@nestjs/common";
 import { Args, Int, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { Tape } from "../models/tape.model";
 import { CreditService } from "../services/credit.service";
+import { LocationService } from "../services/location.service";
 import { ReleaseInfoService } from "../services/release-info.service";
 import { TapeService } from "../services/tape.service";
 
@@ -10,7 +11,8 @@ export class TapeResolver {
   constructor(
     private readonly tapeService: TapeService,
     private readonly creditService: CreditService,
-    private readonly premiereService: ReleaseInfoService
+    private readonly releaseInfoService: ReleaseInfoService,
+    private readonly locationService: LocationService
   ) {}
 
   @Query(() => Tape)
@@ -31,12 +33,18 @@ export class TapeResolver {
   @ResolveField()
   async premieres(@Parent() tape: Tape) {
     const { url } = tape;
-    return this.premiereService.getPremieres(url);
+    return this.releaseInfoService.getPremieres(url);
   }
 
   @ResolveField()
   async titles(@Parent() tape: Tape) {
     const { url } = tape;
-    return this.premiereService.getTitles(url);
+    return this.releaseInfoService.getTitles(url);
+  }
+
+  @ResolveField()
+  async locations(@Parent() tape: Tape) {
+    const { url } = tape;
+    return this.locationService.getLocations(url);
   }
 }

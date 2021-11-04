@@ -17,7 +17,8 @@ export class MemoryProvider extends AbstractProvider {
     }
     const hours = 24;
     const urlContent = await this.getContent(url);
-    put(url, this.cleanContent(urlContent), hours * 1000 * 60 * 60);
-    return urlContent;
+    const cleanContent = this.cleanContent(urlContent);
+    put(url, cleanContent, hours * 1000 * 60 * 60);
+    return cleanContent;
   }
 }

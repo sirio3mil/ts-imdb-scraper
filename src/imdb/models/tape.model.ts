@@ -42,6 +42,9 @@ export class Tape {
   @Field(() => [String], { nullable: true })
   sounds?: string[];
 
+  @Field(() => [String], { nullable: true })
+  locations?: string[];
+
   @Field(() => [Credit])
   credits: Credit[];
 

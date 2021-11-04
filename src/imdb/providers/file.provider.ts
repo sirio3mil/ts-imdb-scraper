@@ -19,9 +19,10 @@ export class FileProvider extends AbstractProvider {
       return readFileSync(localPath, "utf8");
     }
     const urlContent = await this.getContent(url);
-    writeFile(localPath, this.cleanContent(urlContent), () => {
+    const cleanContent = this.cleanContent(urlContent);
+    writeFile(localPath, cleanContent, () => {
       /* Silent error */
     });
-    return urlContent;
+    return cleanContent;
   }
 }
