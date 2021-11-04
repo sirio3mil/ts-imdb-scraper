@@ -48,6 +48,5 @@ describe('TapeService', () => {
     ])('should have empty %s', async (prop) => {
       expect(tape[prop]).toEqual([]);
     });
-
   });
 });
