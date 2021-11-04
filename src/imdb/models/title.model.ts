@@ -1,14 +1,12 @@
 import { Field, ObjectType } from "@nestjs/graphql";
-import { Country } from "./country.model";
-import { Language } from "./language.model";
 
 @ObjectType({ description: "tape title" })
 export class Title {
   @Field({ nullable: true })
-  country?: Country;
+  country?: string;
 
   @Field({ nullable: true })
-  language?: Language;
+  language?: string;
 
   @Field({ nullable: true })
   observations?: string;

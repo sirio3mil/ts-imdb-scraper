@@ -1,8 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import * as cheerio from "cheerio";
 import { URL } from "url";
 import { Ranking } from "../models/ranking.model";
-import { TapeDetail } from "../models/tape-detail.model";
 import { Tape } from "../models/tape.model";
 import { AbstractProvider } from "../providers/abstract.provider";
 import { HtmlService } from "./html.service";
@@ -16,11 +14,8 @@ export class TapeService extends HtmlService {
   async getTape(imdbNumber: number): Promise<Tape> {
     const url = this.createUrl(imdbNumber);
     const tape = new Tape();
-    tape.detail = new TapeDetail();
-    tape.imdb = {
-      ID: imdbNumber,
-      url: url.toString(),
-    };
+    tape.ID = imdbNumber;
+    tape.url = url.href;
     const $ = await this.load(url);
     const titleBlock = $('[class^="TitleBlock__Container"]');
     this.setOriginalTitle(titleBlock, tape);
@@ -66,17 +61,13 @@ export class TapeService extends HtmlService {
         $(elem)
           .find(".ipc-metadata-list-item__list-content-item")
           .each((i, elem) => {
-            tape.countries.push({
-              officialName: $(elem).text(),
-            });
+            tape.countries.push($(elem).text());
           });
       } else if (label === "Language") {
         $(elem)
           .find(".ipc-metadata-list-item__list-content-item")
           .each((i, elem) => {
-            tape.languages.push({
-              name: $(elem).text(),
-            });
+            tape.languages.push($(elem).text());
           });
       }
     });
@@ -92,9 +83,7 @@ export class TapeService extends HtmlService {
         $(elem)
           .find(".ipc-metadata-list-item__list-content-item")
           .each((i, elem) => {
-            tape.genres.push({
-              name: $(elem).text(),
-            });
+            tape.genres.push($(elem).text());
           });
       }
     });
@@ -114,7 +103,7 @@ export class TapeService extends HtmlService {
   }
 
   private setYear(titleBlock: cheerio.Cheerio, tape: Tape) {
-    tape.detail.year = parseInt(
+    tape.year = parseInt(
       titleBlock
         .find('[class^="TitleBlockMetaData__ListItemText"]')
         .first()
@@ -128,12 +117,12 @@ export class TapeService extends HtmlService {
       .last()
       ?.text();
     const durationParts = formatedDuration?.split(" ");
-    tape.detail.duration = 0;
+    tape.duration = 0;
     durationParts.forEach((elem) => {
       if (elem.endsWith("h")) {
-        tape.detail.duration += parseInt(elem.replace(/[^0-9]/g, "")) * 60;
+        tape.duration += parseInt(elem.replace(/[^0-9]/g, "")) * 60;
       } else if (elem.endsWith("min")) {
-        tape.detail.duration += parseInt(elem.replace(/[^0-9]/g, ""));
+        tape.duration += parseInt(elem.replace(/[^0-9]/g, ""));
       }
     });
   }
@@ -141,7 +130,7 @@ export class TapeService extends HtmlService {
   private setColors($: cheerio.Root, tape: Tape) {
     const colors = $('[href^="/search/title/?colors"]');
     colors.each((i, elem) => {
-      tape.detail.colors.push($(elem).text());
+      tape.colors.push($(elem).text());
     });
   }
 
@@ -150,7 +139,7 @@ export class TapeService extends HtmlService {
     boxOfficeItems.each((i, elem) => {
       const label = $(elem).find(".ipc-metadata-list-item__label").text();
       if (label === "Budget") {
-        tape.detail.budget = parseInt(
+        tape.budget = parseInt(
           $(elem)
             .find(".ipc-metadata-list-item__list-content-item")
             .text()

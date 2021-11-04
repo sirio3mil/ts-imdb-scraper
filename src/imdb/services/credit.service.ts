@@ -40,10 +40,8 @@ export class CreditService extends HtmlService {
             person: {
               fullName,
               alias,
-              imdb: {
-                ID: id,
-                url: url.toString().replace(url.search, ""),
-              },
+              ID: id,
+              url: url.toString().replace(url.search, ""),
             },
             role,
             character,

@@ -24,19 +24,19 @@ export class TapeResolver {
 
   @ResolveField()
   async credits(@Parent() tape: Tape) {
-    const { url } = tape.imdb;
+    const { url } = tape;
     return this.creditService.getCredits(url);
   }
 
   @ResolveField()
   async premieres(@Parent() tape: Tape) {
-    const { url } = tape.imdb;
+    const { url } = tape;
     return this.premiereService.getPremieres(url);
   }
 
   @ResolveField()
   async titles(@Parent() tape: Tape) {
-    const { url } = tape.imdb;
+    const { url } = tape;
     return this.premiereService.getTitles(url);
   }
 }

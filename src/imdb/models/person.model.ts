@@ -1,13 +1,15 @@
-import { Field, ObjectType } from "@nestjs/graphql";
-import { Imdb } from "./imdb.model";
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 
 @ObjectType({ description: "person" })
 export class Person {
   @Field()
   fullName: string;
 
-  @Field()
-  imdb: Imdb;
+  @Field(() => Int)
+  ID: number;
+
+  @Field({ nullable: true })
+  url?: string;
 
   @Field({ nullable: true })
   alias?: string;

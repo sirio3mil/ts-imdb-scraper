@@ -2,44 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-"""tape details"""
-type TapeDetail {
-  budget: Float
-  colors: [String!]!
-  currency: Int
-  duration: Int!
-  isTvShow: Boolean!
-  isTvShowChapter: Boolean!
-  year: Int!
-}
-
-"""language"""
-type Language {
-  name: String!
-}
-
-"""country"""
-type Country {
-  isoCode: String
-  language: Language
-  officialName: String!
-}
-
-"""genre"""
-type Genre {
-  name: String!
-}
-
-"""imdb number"""
-type Imdb {
-  ID: Int!
-  url: String
-}
-
 """person"""
 type Person {
   fullName: String!
-  imdb: Imdb!
+  ID: Int!
+  url: String
   alias: String
 }
 
@@ -52,7 +19,7 @@ type Credit {
 
 """premiere"""
 type Premiere {
-  country: Country!
+  country: String!
   date: Date!
   detail: String
   place: String
@@ -61,6 +28,14 @@ type Premiere {
 """Date custom scalar type"""
 scalar Date
 
+"""tape title"""
+type Title {
+  country: String
+  language: String
+  observations: String
+  title: String!
+}
+
 """ranking"""
 type Ranking {
   calculatedScore: Float!
@@ -68,25 +43,24 @@ type Ranking {
   votes: Int!
 }
 
-"""tape title"""
-type Title {
-  country: Country
-  language: Language
-  observations: String
-  title: String!
-}
-
 """tape"""
 type Tape {
   originalTitle: String!
-  detail: TapeDetail!
-  countries: [Country!]!
-  languages: [Language!]!
-  genres: [Genre!]!
+  budget: Float
+  colors: [String!]!
+  currency: Int
+  duration: Int!
+  isTvShow: Boolean!
+  isTvShowChapter: Boolean!
+  year: Int!
+  countries: [String!]!
+  languages: [String!]!
+  genres: [String!]!
   credits: [Credit!]!
   premieres: [Premiere!]!
   titles: [Title!]!
-  imdb: Imdb!
+  ID: Int!
+  url: String
   ranking: Ranking
 }
 

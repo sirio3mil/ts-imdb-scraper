@@ -1,7 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { URL } from "url";
-import { Country } from "../models/country.model";
-import { Language } from "../models/language.model";
 import { Premiere } from "../models/premiere.model";
 import { Title } from "../models/title.model";
 import { AbstractProvider } from "../providers/abstract.provider";
@@ -18,9 +16,7 @@ export class ReleaseInfoService extends HtmlService {
     const $ = await this.load(new URL("releaseinfo", url));
     $(".release-date-item").each((i, row) => {
       const row$ = $(row);
-      const country = new Country(
-        row$.find(".release-date-item__country-name").text()
-      );
+      const country = row$.find(".release-date-item__country-name").text();
       const date = row$.find(".release-date-item__date").text();
       const details = row$.find(".release-date-item__attributes").text();
       const regExp = /\(([^)]+)\)/g;
@@ -52,23 +48,23 @@ export class ReleaseInfoService extends HtmlService {
       const details = row$.find(".aka-item__name").text();
       const regExp = /\(([^)]+)\)/g;
       const matches = details.match(regExp);
-      let country: Country, language: Language, observations: string;
+      let country: string, language: string, observations: string;
       if (matches?.length === 1) {
         const content = matches[0]
           .substring(1, matches[0].length - 1)
           .replace("title", "")
           .trim();
         if (content.charAt(0) === content.charAt(0).toUpperCase()) {
-          language = new Language(content);
+          language = content;
         } else {
           observations = content;
         }
         const name = details.replace(matches[0], "").trim();
         if (!!name) {
-          country = new Country(name);
+          country = name;
         }
       } else {
-        country = new Country(details);
+        country = details;
       }
       titles.push({
         country,

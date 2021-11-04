@@ -1,12 +1,7 @@
-import { Field, ObjectType } from "@nestjs/graphql";
-import { Country } from "./country.model";
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { Credit } from "./credit.model";
-import { Genre } from "./genre.model";
-import { Imdb } from "./imdb.model";
-import { Language } from "./language.model";
 import { Premiere } from "./premiere.model";
 import { Ranking } from "./ranking.model";
-import { TapeDetail } from "./tape-detail.model";
 import { Title } from "./title.model";
 
 @ObjectType({ description: "tape" })
@@ -18,22 +13,41 @@ export class Tape {
     this.credits = [];
     this.premieres = [];
     this.titles = [];
+    this.colors = [];
   }
 
   @Field()
   originalTitle: string;
 
-  @Field()
-  detail: TapeDetail;
+  @Field({ nullable: true })
+  budget?: number;
 
-  @Field(() => [Country])
-  countries: Country[];
+  @Field(() => [String])
+  colors: string[];
 
-  @Field(() => [Language])
-  languages: Language[];
+  @Field(() => Int, { nullable: true })
+  currency?: number;
 
-  @Field(() => [Genre])
-  genres: Genre[];
+  @Field(() => Int)
+  duration: number;
+
+  @Field({ defaultValue: false })
+  isTvShow: boolean;
+
+  @Field({ defaultValue: false })
+  isTvShowChapter: boolean;
+
+  @Field(() => Int)
+  year: number;
+
+  @Field(() => [String])
+  countries: string[];
+
+  @Field(() => [String])
+  languages: string[];
+
+  @Field(() => [String])
+  genres: string[];
 
   @Field(() => [Credit])
   credits: Credit[];
@@ -44,8 +58,11 @@ export class Tape {
   @Field(() => [Title])
   titles: Title[];
 
-  @Field()
-  imdb: Imdb;
+  @Field(() => Int)
+  ID: number;
+
+  @Field({ nullable: true })
+  url?: string;
 
   @Field({ nullable: true })
   ranking?: Ranking;
