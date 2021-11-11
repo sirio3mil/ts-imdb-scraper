@@ -15,10 +15,10 @@ export class ParentalGuideService extends HtmlService {
     const $ = await this.load(new URL("parentalguide", url));
     const links = $('[href^="/search/title?certificates"]');
     links.each((i, link) => {
-      const [country, certification] = $(link).text().split(':');
+      const [country, certification] = $(link).text().split(":");
       certifications.push({
         country,
-        certification
+        certification,
       });
     });
 

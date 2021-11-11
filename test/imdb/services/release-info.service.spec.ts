@@ -4,7 +4,7 @@ import { Title } from "../../../src/imdb/models/title.model";
 import { FileProvider } from "../../../src/imdb/providers/file.provider";
 import { ReleaseInfoService } from "../../../src/imdb/services/release-info.service";
 
-describe('ReleaseInfoService', () => {
+describe("ReleaseInfoService", () => {
   const url = `https://www.imdb.com/title/tt0133093/`;
 
   let fileProvider: FileProvider;
@@ -17,64 +17,70 @@ describe('ReleaseInfoService', () => {
     releaseInfoService = new ReleaseInfoService(fileProvider);
   });
 
-  describe('getTitles', () => {
+  describe("getTitles", () => {
     let titles: Title[];
 
     beforeEach(async () => {
       titles = await releaseInfoService.getTitles(url);
     });
 
-    it('should match titles length', async () => {
-      expect(titles.length).toBeGreaterThanOrEqual(57);      
+    it("should match titles length", async () => {
+      expect(titles.length).toBeGreaterThanOrEqual(57);
     });
 
     it.each([
-      [{
-        title: "La matriz",
-        country: "Panama",
-        observations: "alternative"
-      }],
-      [{
-        title: "The Matrix",
-        country: "Norway"
-      }],
-      [{
-        title: "The Matrix",
-        observations: "original"
-      }],
-      [{
-        title: "マトリックス",
-        country: "Japan",
-        language: "Japanese"
-      }],
-    ])('should match titles content', async (expected) => {
+      [
+        {
+          title: "La matriz",
+          country: "Panama",
+          observations: "alternative",
+        },
+      ],
+      [
+        {
+          title: "The Matrix",
+          country: "Norway",
+        },
+      ],
+      [
+        {
+          title: "The Matrix",
+          observations: "original",
+        },
+      ],
+      [
+        {
+          title: "マトリックス",
+          country: "Japan",
+          language: "Japanese",
+        },
+      ],
+    ])("should match titles content", async (expected) => {
       expect(titles).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining(expected)
-        ])
+        expect.arrayContaining([expect.objectContaining(expected)])
       );
     });
   });
 
-  describe('getPremieres', () => {
+  describe("getPremieres", () => {
     let premieres: Premiere[];
     const premiereTestCases = [
       {
         country: "USA",
         place: "Westwood, California",
-        detail: "premiere"
+        detail: "premiere",
       },
       {
-        country: "USA"
+        country: "USA",
       },
       {
         country: "Finland",
-        detail: "Night Visions Film Festival"
+        detail: "Night Visions Film Festival",
       },
       {
         country: "Spain",
         place: "Barcelona",
-        detail: "re-release"
+        detail: "re-release",
       },
     ];
 
@@ -82,28 +88,31 @@ describe('ReleaseInfoService', () => {
       premieres = await releaseInfoService.getPremieres(url);
     });
 
-    it('should match premieres length', async () => {
-      expect(premieres.length).toBeGreaterThanOrEqual(63);      
+    it("should match premieres length", async () => {
+      expect(premieres.length).toBeGreaterThanOrEqual(63);
     });
 
     it.each(
-      premiereTestCases.map(premiere => [premiere.place || premiere.country, premiere])
+      premiereTestCases.map((premiere) => [
+        premiere.place || premiere.country,
+        premiere,
+      ])
     )("should match premieres content %s", async (label, expected) => {
       expect(premieres).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining(expected)
-        ])
+        expect.arrayContaining([expect.objectContaining(expected)])
       );
     });
 
-    it.each([
-      ["1999-06-22"],
-      ["2012-05-04"],
-    ])('should match premieres date %s', async (date) => {
-      const dates = premieres.filter(premiere => premiere.country === 'Spain').map(premiere => premiere.date.toISOString());
-      expect(dates).toEqual(expect.arrayContaining([
-        expect.stringContaining(date)
-      ]));
-    });
+    it.each([["1999-06-22"], ["2012-05-04"]])(
+      "should match premieres date %s",
+      async (date) => {
+        const dates = premieres
+          .filter((premiere) => premiere.country === "Spain")
+          .map((premiere) => premiere.date.toISOString());
+        expect(dates).toEqual(
+          expect.arrayContaining([expect.stringContaining(date)])
+        );
+      }
+    );
   });
 });
