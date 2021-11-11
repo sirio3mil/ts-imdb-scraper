@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { URL } from "url";
 import { AbstractProvider } from "../providers/abstract.provider";
 import { HtmlService } from "./html.service";
 
@@ -7,14 +6,14 @@ import { HtmlService } from "./html.service";
 export class LocationService extends HtmlService {
   constructor(protected provider: AbstractProvider) {
     super(provider);
+    this.page = "locations";
   }
 
-  async getLocations(url: string): Promise<string[]> {
+  getLocations(): string[] {
     const locations = [];
-    const $ = await this.load(new URL("locations", url));
-    const links = $('[href^="/search/title?locations"]');
+    const links = this.$('[href^="/search/title?locations"]');
     links.each((i, location) => {
-      locations.push($(location).text());
+      locations.push(this.$(location).text());
     });
 
     return locations;

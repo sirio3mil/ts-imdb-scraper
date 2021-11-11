@@ -1,20 +1,30 @@
 import { Injectable } from "@nestjs/common";
 import * as cheerio from "cheerio";
-import { URL } from "url";
 import { AbstractProvider } from "../providers/abstract.provider";
 
 @Injectable()
 export abstract class HtmlService {
+  protected $: cheerio.Root;
+  protected page: string;
+
   constructor(protected provider: AbstractProvider) {}
 
-  protected async load(url: URL): Promise<cheerio.Root> {
-    const html = await this.provider.get(url);
-    return cheerio.load(html);
+  async loadContent(url: URL) {
+    this.load(this.page ? new URL(this.page, url) : url);
   }
 
-  protected createUrl(imdbNumber: number): URL {
+  createUrl(imdbNumber: number): URL {
     const imdbID: string = `${imdbNumber}`.padStart(7, "0");
 
     return new URL(`title/tt${imdbID}/`, "https://www.imdb.com");
+  }
+
+  protected async load(url: URL) {
+    const html = await this.provider.get(url);
+    this.$ = cheerio.load(html);
+  }
+
+  protected getContent(): cheerio.Root {
+    return this.$;
   }
 }

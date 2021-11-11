@@ -6,9 +6,12 @@
 type Person {
   fullName: String!
   ID: Int!
-  url: String
+  url: URL!
   alias: String
 }
+
+"""URL custom scalar type"""
+scalar URL
 
 """credit, cast and crew member"""
 type Credit {
@@ -70,7 +73,7 @@ type Tape {
   certifications: [Certification!]
   keywords: [String!]
   ID: Int!
-  url: String
+  url: URL!
   ranking: Ranking
 }
 

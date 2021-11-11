@@ -1,7 +1,6 @@
 import { HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
 import { get, put } from "memory-cache";
-import { URL } from "url";
 import { AbstractProvider } from "./abstract.provider";
 
 @Injectable()

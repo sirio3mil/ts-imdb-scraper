@@ -8,8 +8,8 @@ export class Person {
   @Field(() => Int)
   ID: number;
 
-  @Field({ nullable: true })
-  url?: string;
+  @Field()
+  url: URL;
 
   @Field({ nullable: true })
   alias?: string;

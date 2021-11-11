@@ -4,6 +4,7 @@ import { AbstractProvider } from "./providers/abstract.provider";
 import { FileProvider } from "./providers/file.provider";
 import { TapeResolver } from "./resolvers/tape.resolver";
 import { DateScalar } from "./scalars/date.scalar";
+import { URLScalar } from "./scalars/url.scalar";
 import { CreditService } from "./services/credit.service";
 import { KeywordService } from "./services/keyword.service";
 import { LocationService } from "./services/location.service";
@@ -15,6 +16,7 @@ import { TapeService } from "./services/tape.service";
   imports: [HttpModule],
   providers: [
     DateScalar,
+    URLScalar,
     TapeResolver,
     TapeService,
     CreditService,

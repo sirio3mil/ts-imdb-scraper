@@ -3,7 +3,6 @@ import { Injectable } from "@nestjs/common";
 import { createHash } from "crypto";
 import { existsSync, readFileSync, writeFile } from "fs";
 import { join, resolve } from "path";
-import { URL } from "url";
 import { AbstractProvider } from "./abstract.provider";
 
 @Injectable()

@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { URL } from "url";
 import { Premiere } from "../models/premiere.model";
 import { Title } from "../models/title.model";
 import { AbstractProvider } from "../providers/abstract.provider";
@@ -9,16 +8,16 @@ import { HtmlService } from "./html.service";
 export class ReleaseInfoService extends HtmlService {
   constructor(protected provider: AbstractProvider) {
     super(provider);
+    this.page = "releaseinfo";
   }
 
-  async getPremieres(url: string): Promise<Premiere[]> {
+  getPremieres(): Premiere[] {
     const premieres = [];
-    const $ = await this.load(new URL("releaseinfo", url));
-    $(".release-date-item").each((i, row) => {
-      const row$ = $(row);
-      const country = row$.find(".release-date-item__country-name").text();
-      const date = row$.find(".release-date-item__date").text();
-      const details = row$.find(".release-date-item__attributes").text();
+    this.$(".release-date-item").each((i, row) => {
+      const item = this.$(row);
+      const country = item.find(".release-date-item__country-name").text();
+      const date = item.find(".release-date-item__date").text();
+      const details = item.find(".release-date-item__attributes").text();
       const regExp = /\(([^)]+)\)/g;
       const matches = details.match(regExp);
       let detail: string, place: string;
@@ -39,13 +38,12 @@ export class ReleaseInfoService extends HtmlService {
     return premieres;
   }
 
-  async getTitles(url: string): Promise<Title[]> {
+  getTitles(): Title[] {
     const titles = [];
-    const $ = await this.load(new URL("releaseinfo", url));
-    $(".aka-item").each((i, row) => {
-      const row$ = $(row);
-      const title = row$.find(".aka-item__title").text();
-      const details = row$.find(".aka-item__name").text();
+    this.$(".aka-item").each((i, row) => {
+      const item = this.$(row);
+      const title = item.find(".aka-item__title").text();
+      const details = item.find(".aka-item__name").text();
       const regExp = /\(([^)]+)\)/g;
       const matches = details.match(regExp);
       let country: string, language: string, observations: string;

@@ -64,8 +64,8 @@ export class Tape {
   @Field(() => Int)
   ID: number;
 
-  @Field({ nullable: true })
-  url?: string;
+  @Field()
+  url: URL;
 
   @Field({ nullable: true })
   ranking?: Ranking;

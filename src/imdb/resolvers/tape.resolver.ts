@@ -30,46 +30,69 @@ export class TapeResolver {
   async getTape(
     @Args("imdbNumber", { type: () => Int }) imdbNumber: number
   ): Promise<Tape> {
-    const tape = await this.tapeService.getTape(imdbNumber);
-    if (!tape) {
-      throw new NotFoundException(imdbNumber);
+    try{
+      const url = this.tapeService.createUrl(imdbNumber);
+      await this.tapeService.loadContent(url);
+      return {
+        ID: imdbNumber,
+        url,
+        originalTitle: this.tapeService.getOriginalTitle(),
+        duration: this.tapeService.getDuration(),
+        year: this.tapeService.getYear(),
+        budget: this.tapeService.getBudget(),
+        colors: this.tapeService.getColors(),
+        countries: this.tapeService.getCountries(),
+        languages: this.tapeService.getLanguages(),
+        genres: this.tapeService.getGenres(),
+        ranking: this.tapeService.getRanking(),
+        sounds: this.tapeService.getSounds(),
+        isTvShow: false,
+        isTvShowChapter: false
+      }
+    }catch(e){
+      throw new NotFoundException(`Tape with imdbNumber ${imdbNumber} not found`);
     }
-    return tape;
   }
 
   @ResolveField()
   async credits(@Parent() tape: Tape) {
     const { url } = tape;
-    return this.creditService.getCredits(url);
+    await this.creditService.loadContent(url);
+    return this.creditService.getCredits();
   }
 
   @ResolveField()
   async premieres(@Parent() tape: Tape) {
     const { url } = tape;
-    return this.releaseInfoService.getPremieres(url);
+    this.releaseInfoService.loadContent(url);
+    return this.releaseInfoService.getPremieres();
   }
 
   @ResolveField()
   async titles(@Parent() tape: Tape) {
     const { url } = tape;
-    return this.releaseInfoService.getTitles(url);
+    this.releaseInfoService.loadContent(url);
+    return this.releaseInfoService.getTitles();
   }
 
   @ResolveField()
   async locations(@Parent() tape: Tape) {
     const { url } = tape;
-    return this.locationService.getLocations(url);
+    this.locationService.loadContent(url);
+    return this.locationService.getLocations();
   }
 
   @ResolveField()
   async certifications(@Parent() tape: Tape) {
     const { url } = tape;
-    return this.parentalGuideService.getCertifications(url);
+    this.parentalGuideService.loadContent(url);
+    return this.parentalGuideService.getCertifications();
   }
 
   @ResolveField()
   async keywords(@Parent() tape: Tape) {
     const { url } = tape;
-    return this.keywordService.getKeywords(url);
+    this.keywordService.loadContent(url);
+    return this.keywordService.getKeywords();
   }
 }

@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { URL } from "url";
 import { AbstractProvider } from "../providers/abstract.provider";
 import { HtmlService } from "./html.service";
 
@@ -7,14 +6,14 @@ import { HtmlService } from "./html.service";
 export class KeywordService extends HtmlService {
   constructor(protected provider: AbstractProvider) {
     super(provider);
+    this.page = "keywords";
   }
 
-  async getKeywords(url: string): Promise<string[]> {
+  getKeywords(): string[] {
     const keywords = [];
-    const $ = await this.load(new URL("keywords", url));
-    const links = $('[href^="/search/keyword?keywords"]');
+    const links = this.$('[href^="/search/keyword?keywords"]');
     links.each((i, link) => {
-      keywords.push($(link).text());
+      keywords.push(this.$(link).text());
     });
 
     return keywords;

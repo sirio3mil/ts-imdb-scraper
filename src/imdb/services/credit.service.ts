@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { URL } from "url";
 import { Credit } from "../models/credit.model";
 import { AbstractProvider } from "../providers/abstract.provider";
 import { HtmlService } from "./html.service";
@@ -8,19 +7,19 @@ import { HtmlService } from "./html.service";
 export class CreditService extends HtmlService {
   constructor(protected provider: AbstractProvider) {
     super(provider);
+    this.page = "fullcredits";
   }
 
-  async getCredits(url: string): Promise<Credit[]> {
+  getCredits(): Credit[] {
     const credits = [];
-    const $ = await this.load(new URL("fullcredits", url));
-    const titles = $("#fullcredits_content").find("h4");
+    const titles = this.$("#fullcredits_content").find("h4");
     titles.each((i, title) => {
-      const table = $(title).next("table");
+      const table = this.$(title).next("table");
       const simpleCreditsTable = table.hasClass("simpleCreditsTable");
       const rows = table.find("tr");
-      const role = $(title).attr("id");
+      const role = this.$(title).attr("id");
       rows.each((i, row) => {
-        const cells = $(row).find("td");
+        const cells = this.$(row).find("td");
         const nameCellPosition = simpleCreditsTable ? 0 : 1;
         const nameCell = cells.eq(nameCellPosition);
         const href = nameCell.find("a").attr("href");
@@ -41,7 +40,7 @@ export class CreditService extends HtmlService {
               fullName,
               alias,
               ID: id,
-              url: url.toString().replace(url.search, ""),
+              url
             },
             role,
             character,
