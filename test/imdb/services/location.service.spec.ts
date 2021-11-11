@@ -14,7 +14,8 @@ describe("LocationService", () => {
     httpService = new HttpService();
     fileProvider = new FileProvider(httpService);
     locationService = new LocationService(fileProvider);
-    locations = await locationService.getLocations(url);
+    await locationService.loadContent(new URL(url));
+    locations = await locationService.getLocations();
   });
 
   describe("getLocations", () => {

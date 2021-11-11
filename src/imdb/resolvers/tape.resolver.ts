@@ -64,35 +64,35 @@ export class TapeResolver {
   @ResolveField()
   async premieres(@Parent() tape: Tape) {
     const { url } = tape;
-    this.releaseInfoService.loadContent(url);
+    await this.releaseInfoService.loadContent(url);
     return this.releaseInfoService.getPremieres();
   }
 
   @ResolveField()
   async titles(@Parent() tape: Tape) {
     const { url } = tape;
-    this.releaseInfoService.loadContent(url);
+    await this.releaseInfoService.loadContent(url);
     return this.releaseInfoService.getTitles();
   }
 
   @ResolveField()
   async locations(@Parent() tape: Tape) {
     const { url } = tape;
-    this.locationService.loadContent(url);
+    await this.locationService.loadContent(url);
     return this.locationService.getLocations();
   }
 
   @ResolveField()
   async certifications(@Parent() tape: Tape) {
     const { url } = tape;
-    this.parentalGuideService.loadContent(url);
+    await this.parentalGuideService.loadContent(url);
     return this.parentalGuideService.getCertifications();
   }
 
   @ResolveField()
   async keywords(@Parent() tape: Tape) {
     const { url } = tape;
-    this.keywordService.loadContent(url);
+    await this.keywordService.loadContent(url);
     return this.keywordService.getKeywords();
   }
 }

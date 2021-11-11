@@ -114,7 +114,7 @@ export class TapeService extends HtmlService {
     durationParts.forEach((elem) => {
       if (elem.endsWith("h")) {
         duration += parseInt(elem.replace(/[^0-9]/g, "")) * 60;
-      } else if (elem.endsWith("min")) {
+      } else if (elem.endsWith("m")) {
         duration += parseInt(elem.replace(/[^0-9]/g, ""));
       }
     });
@@ -147,11 +147,12 @@ export class TapeService extends HtmlService {
   }
 
   getBudget(): number | null {
+    let budget: number | null = null;
     const boxOfficeItems = this.$('[class*="BoxOffice__MetaDataListItemBoxOffice"]');
     boxOfficeItems.each((i, elem) => {
       const label = this.$(elem).find(".ipc-metadata-list-item__label").text();
       if (label === "Budget") {
-        return parseInt(
+        budget = parseInt(
           this.$(elem)
             .find(".ipc-metadata-list-item__list-content-item")
             .text()
@@ -160,6 +161,6 @@ export class TapeService extends HtmlService {
       }
     });
 
-    return null;
+    return budget;
   }
 }

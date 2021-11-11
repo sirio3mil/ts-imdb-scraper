@@ -15,13 +15,14 @@ describe("ReleaseInfoService", () => {
     httpService = new HttpService();
     fileProvider = new FileProvider(httpService);
     releaseInfoService = new ReleaseInfoService(fileProvider);
+    await releaseInfoService.loadContent(new URL(url));
   });
 
   describe("getTitles", () => {
     let titles: Title[];
 
     beforeEach(async () => {
-      titles = await releaseInfoService.getTitles(url);
+      titles = await releaseInfoService.getTitles();
     });
 
     it("should match titles length", async () => {
@@ -85,7 +86,7 @@ describe("ReleaseInfoService", () => {
     ];
 
     beforeEach(async () => {
-      premieres = await releaseInfoService.getPremieres(url);
+      premieres = await releaseInfoService.getPremieres();
     });
 
     it("should match premieres length", async () => {

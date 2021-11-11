@@ -15,7 +15,8 @@ describe("CreditService", () => {
     httpService = new HttpService();
     fileProvider = new FileProvider(httpService);
     creditService = new CreditService(fileProvider);
-    credits = await creditService.getCredits(url);
+    await creditService.loadContent(new URL(url));
+    credits = creditService.getCredits();
   });
 
   describe("getCredits", () => {
