@@ -21,9 +21,7 @@ describe("TapeService", () => {
       const ranking = tapeService.getRanking();
       expect(ranking.calculatedScore).toBeCloseTo(8.7, 1);
       expect(ranking.votes).toBeGreaterThanOrEqual(1800000);
-      expect(ranking.score).toBe(
-        ranking.calculatedScore * ranking.votes
-      );
+      expect(ranking.score).toBe(ranking.calculatedScore * ranking.votes);
     });
 
     it("should match budget", () => {

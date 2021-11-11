@@ -40,7 +40,7 @@ export class CreditService extends HtmlService {
               fullName,
               alias,
               ID: id,
-              url
+              url,
             },
             role,
             character,

@@ -30,7 +30,7 @@ export class TapeResolver {
   async getTape(
     @Args("imdbNumber", { type: () => Int }) imdbNumber: number
   ): Promise<Tape> {
-    try{
+    try {
       const url = this.tapeService.createUrl(imdbNumber);
       await this.tapeService.loadContent(url);
       return {
@@ -47,10 +47,12 @@ export class TapeResolver {
         ranking: this.tapeService.getRanking(),
         sounds: this.tapeService.getSounds(),
         isTvShow: false,
-        isTvShowChapter: false
-      }
-    }catch(e){
-      throw new NotFoundException(`Tape with imdbNumber ${imdbNumber} not found`);
+        isTvShowChapter: false,
+      };
+    } catch (e) {
+      throw new NotFoundException(
+        `Tape with imdbNumber ${imdbNumber} not found`
+      );
     }
   }
 

@@ -148,7 +148,9 @@ export class TapeService extends HtmlService {
 
   getBudget(): number | null {
     let budget: number | null = null;
-    const boxOfficeItems = this.$('[class*="BoxOffice__MetaDataListItemBoxOffice"]');
+    const boxOfficeItems = this.$(
+      '[class*="BoxOffice__MetaDataListItemBoxOffice"]'
+    );
     boxOfficeItems.each((i, elem) => {
       const label = this.$(elem).find(".ipc-metadata-list-item__label").text();
       if (label === "Budget") {
