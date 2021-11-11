@@ -58,6 +58,9 @@ export class Tape {
   @Field(() => [Certification], { nullable: true })
   certifications?: Certification[];
 
+  @Field(() => [String], { nullable: true })
+  keywords?: string[];
+
   @Field(() => Int)
   ID: number;
 

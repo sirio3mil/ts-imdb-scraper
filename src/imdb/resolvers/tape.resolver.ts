@@ -2,6 +2,7 @@ import { NotFoundException } from "@nestjs/common";
 import { Args, Int, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { Tape } from "../models/tape.model";
 import { CreditService } from "../services/credit.service";
+import { KeywordService } from "../services/keyword.service";
 import { LocationService } from "../services/location.service";
 import { ParentalGuideService } from "../services/parental-guide.service";
 import { ReleaseInfoService } from "../services/release-info.service";
@@ -14,7 +15,8 @@ export class TapeResolver {
     private readonly creditService: CreditService,
     private readonly releaseInfoService: ReleaseInfoService,
     private readonly locationService: LocationService,
-    private readonly parentalGuideService: ParentalGuideService
+    private readonly parentalGuideService: ParentalGuideService,
+    private readonly keywordService: KeywordService
   ) {}
 
   @Query(() => Tape)
@@ -54,5 +56,11 @@ export class TapeResolver {
   async certifications(@Parent() tape: Tape) {
     const { url } = tape;
     return this.parentalGuideService.getCertifications(url);
+  }
+
+  @ResolveField()
+  async keywords(@Parent() tape: Tape) {
+    const { url } = tape;
+    return this.keywordService.getKeywords(url);
   }
 }

@@ -36,17 +36,17 @@ type Title {
   title: String!
 }
 
+"""parental guide tape certifications"""
+type Certification {
+  certification: String!
+  country: String!
+}
+
 """ranking"""
 type Ranking {
   calculatedScore: Float!
   score: Float!
   votes: Int!
-}
-
-"""parental guide tape certifications"""
-type Certification {
-  certification: String!
-  country: String!
 }
 
 """tape"""
@@ -68,6 +68,7 @@ type Tape {
   premieres: [Premiere!]
   titles: [Title!]
   certifications: [Certification!]
+  keywords: [String!]
   ID: Int!
   url: String
   ranking: Ranking
