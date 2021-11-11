@@ -23,8 +23,4 @@ export abstract class HtmlService {
     const html = await this.provider.get(url);
     this.$ = cheerio.load(html);
   }
-
-  protected getContent(): cheerio.Root {
-    return this.$;
-  }
 }
