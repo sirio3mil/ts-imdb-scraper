@@ -9,8 +9,8 @@ export abstract class HtmlService {
 
   constructor(protected provider: AbstractProvider) {}
 
-  async loadContent(url: URL) {
-    this.load(this.page ? new URL(this.page, url) : url);
+  async getContent(url: URL): Promise<string> {
+    return this.provider.get(this.page ? new URL(this.page, url) : url);
   }
 
   createUrl(imdbNumber: number): URL {
@@ -19,8 +19,8 @@ export abstract class HtmlService {
     return new URL(`title/tt${imdbID}/`, "https://www.imdb.com");
   }
 
-  protected async load(url: URL) {
-    const html = await this.provider.get(url);
-    this.$ = cheerio.load(html);
+  set$(content: string): this {
+    this.$ = cheerio.load(content);
+    return this;
   }
 }

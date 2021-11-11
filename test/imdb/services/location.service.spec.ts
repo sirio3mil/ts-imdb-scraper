@@ -14,8 +14,8 @@ describe("LocationService", () => {
     httpService = new HttpService();
     fileProvider = new FileProvider(httpService);
     locationService = new LocationService(fileProvider);
-    await locationService.loadContent(new URL(url));
-    locations = await locationService.getLocations();
+    const content = await locationService.getContent(new URL(url));
+    locations = locationService.set$(content).getLocations();
   });
 
   describe("getLocations", () => {

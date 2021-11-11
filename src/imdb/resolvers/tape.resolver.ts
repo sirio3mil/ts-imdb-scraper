@@ -32,7 +32,8 @@ export class TapeResolver {
   ): Promise<Tape> {
     try {
       const url = this.tapeService.createUrl(imdbNumber);
-      await this.tapeService.loadContent(url);
+      const content = await this.tapeService.getContent(url);
+      this.tapeService.set$(content);
       return {
         ID: imdbNumber,
         url,
@@ -59,42 +60,42 @@ export class TapeResolver {
   @ResolveField()
   async credits(@Parent() tape: Tape) {
     const { url } = tape;
-    await this.creditService.loadContent(url);
-    return this.creditService.getCredits();
+    const content = await this.creditService.getContent(url);
+    return this.creditService.set$(content).getCredits();
   }
 
   @ResolveField()
   async premieres(@Parent() tape: Tape) {
     const { url } = tape;
-    await this.releaseInfoService.loadContent(url);
-    return this.releaseInfoService.getPremieres();
+    const content = await this.releaseInfoService.getContent(url);
+    return this.releaseInfoService.set$(content).getPremieres();
   }
 
   @ResolveField()
   async titles(@Parent() tape: Tape) {
     const { url } = tape;
-    await this.releaseInfoService.loadContent(url);
-    return this.releaseInfoService.getTitles();
+    const content = await this.releaseInfoService.getContent(url);
+    return this.releaseInfoService.set$(content).getTitles();
   }
 
   @ResolveField()
   async locations(@Parent() tape: Tape) {
     const { url } = tape;
-    await this.locationService.loadContent(url);
-    return this.locationService.getLocations();
+    const content = await this.locationService.getContent(url);
+    return this.locationService.set$(content).getLocations();
   }
 
   @ResolveField()
   async certifications(@Parent() tape: Tape) {
     const { url } = tape;
-    await this.parentalGuideService.loadContent(url);
-    return this.parentalGuideService.getCertifications();
+    const content = await this.parentalGuideService.getContent(url);
+    return this.parentalGuideService.set$(content).getCertifications();
   }
 
   @ResolveField()
   async keywords(@Parent() tape: Tape) {
     const { url } = tape;
-    await this.keywordService.loadContent(url);
-    return this.keywordService.getKeywords();
+    const content = await this.keywordService.getContent(url);
+    return this.keywordService.set$(content).getKeywords();
   }
 }

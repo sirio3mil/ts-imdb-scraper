@@ -15,7 +15,8 @@ describe("ReleaseInfoService", () => {
     httpService = new HttpService();
     fileProvider = new FileProvider(httpService);
     releaseInfoService = new ReleaseInfoService(fileProvider);
-    await releaseInfoService.loadContent(new URL(url));
+    const content = await releaseInfoService.getContent(new URL(url));
+    releaseInfoService.set$(content);
   });
 
   describe("getTitles", () => {

@@ -14,8 +14,8 @@ describe("KeywordService", () => {
     httpService = new HttpService();
     fileProvider = new FileProvider(httpService);
     keywordService = new KeywordService(fileProvider);
-    await keywordService.loadContent(new URL(url));
-    keywords = keywordService.getKeywords();
+    const content = await keywordService.getContent(new URL(url));
+    keywords = keywordService.set$(content).getKeywords();
   });
 
   describe("getKeywords", () => {

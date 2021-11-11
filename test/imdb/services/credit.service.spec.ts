@@ -15,8 +15,8 @@ describe("CreditService", () => {
     httpService = new HttpService();
     fileProvider = new FileProvider(httpService);
     creditService = new CreditService(fileProvider);
-    await creditService.loadContent(new URL(url));
-    credits = creditService.getCredits();
+    const content = await creditService.getContent(new URL(url));
+    credits = creditService.set$(content).getCredits();
   });
 
   describe("getCredits", () => {

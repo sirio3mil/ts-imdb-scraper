@@ -13,7 +13,8 @@ describe("TapeService", () => {
     httpService = new HttpService();
     fileProvider = new FileProvider(httpService);
     tapeService = new TapeService(fileProvider);
-    await tapeService.loadContent(tapeService.createUrl(tapeID));
+    const content = await tapeService.getContent(tapeService.createUrl(tapeID));
+    tapeService.set$(content);
   });
 
   describe("getTape", () => {

@@ -15,8 +15,8 @@ describe("ParentalGuideService", () => {
     httpService = new HttpService();
     fileProvider = new FileProvider(httpService);
     parentalGuideService = new ParentalGuideService(fileProvider);
-    await parentalGuideService.loadContent(new URL(url));
-    certifications = await parentalGuideService.getCertifications();
+    const content = await parentalGuideService.getContent(new URL(url));
+    certifications = parentalGuideService.set$(content).getCertifications();
   });
 
   describe("getCertifications", () => {
