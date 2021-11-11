@@ -58,6 +58,25 @@ describe('ReleaseInfoService', () => {
 
   describe('getPremieres', () => {
     let premieres: Premiere[];
+    const premiereTestCases = [
+      {
+        country: "USA",
+        place: "Westwood, California",
+        detail: "premiere"
+      },
+      {
+        country: "USA"
+      },
+      {
+        country: "Finland",
+        detail: "Night Visions Film Festival"
+      },
+      {
+        country: "Spain",
+        place: "Barcelona",
+        detail: "re-release"
+      },
+    ];
 
     beforeEach(async () => {
       premieres = await releaseInfoService.getPremieres(url);
@@ -67,25 +86,9 @@ describe('ReleaseInfoService', () => {
       expect(premieres.length).toBeGreaterThanOrEqual(63);      
     });
 
-    it.each([
-      [{
-        country: "USA",
-        place: "Westwood, California",
-        detail: "premiere"
-      }],
-      [{
-        country: "USA"
-      }],
-      [{
-        country: "Finland",
-        detail: "Night Visions Film Festival"
-      }],
-      [{
-        country: "Spain",
-        place: "Barcelona",
-        detail: "re-release"
-      }],
-    ])('should match premieres content', async (expected) => {
+    it.each(
+      premiereTestCases.map(premiere => [premiere.place || premiere.country, premiere])
+    )("should match premieres content %s", async (label, expected) => {
       expect(premieres).toEqual(
         expect.arrayContaining([
           expect.objectContaining(expected)
