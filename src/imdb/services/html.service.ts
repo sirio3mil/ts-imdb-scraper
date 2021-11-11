@@ -11,4 +11,10 @@ export abstract class HtmlService {
     const html = await this.provider.get(url);
     return cheerio.load(html);
   }
+
+  protected createUrl(imdbNumber: number): URL {
+    const imdbID: string = `${imdbNumber}`.padStart(7, "0");
+
+    return new URL(`title/tt${imdbID}/`, "https://www.imdb.com");
+  }
 }

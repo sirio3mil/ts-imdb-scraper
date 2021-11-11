@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { URL } from "url";
 import { Ranking } from "../models/ranking.model";
 import { Tape } from "../models/tape.model";
 import { AbstractProvider } from "../providers/abstract.provider";
@@ -91,12 +90,6 @@ export class TapeService extends HtmlService {
           });
       }
     });
-  }
-
-  private createUrl(imdbNumber: number): URL {
-    const imdbID: string = `${imdbNumber}`.padStart(7, "0");
-
-    return new URL(`title/tt${imdbID}/`, "https://www.imdb.com");
   }
 
   private setOriginalTitle(titleBlock: cheerio.Cheerio, tape: Tape) {
