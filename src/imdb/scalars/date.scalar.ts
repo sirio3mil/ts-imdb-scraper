@@ -10,7 +10,7 @@ export class DateScalar implements CustomScalar<string, Date> {
   }
 
   serialize(value: Date): string {
-    return value.toString();
+    return value.toISOString();
   }
 
   parseLiteral(ast: ValueNode): Date {
