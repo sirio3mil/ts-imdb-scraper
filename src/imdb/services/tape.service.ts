@@ -16,7 +16,9 @@ export class TapeService extends HtmlService {
       return null;
     }
     const ranking = new Ranking();
-    const ratingAmount = this.$('[class^="AggregateRatingButton__TotalRatingAmount"]');
+    const ratingAmount = this.$(
+      '[class^="AggregateRatingButton__TotalRatingAmount"]'
+    );
     ranking.calculatedScore = parseFloat(ratingScore.first().text());
     const formattedVotes = ratingAmount.first().text();
     if (formattedVotes.endsWith("M")) {
@@ -151,14 +153,16 @@ export class TapeService extends HtmlService {
   }
 
   getEpisode(): Episode | null {
-    const items = this.$('[class^="EpisodeNavigationForEpisode__SeasonEpisodeNumbersItem"]');
+    const items = this.$(
+      '[class^="EpisodeNavigationForEpisode__SeasonEpisodeNumbersItem"]'
+    );
     if (!items.length) {
       return null;
     }
     const episode = new Episode();
     items.each((i, item) => {
       const text = this.$(item).text();
-      if (text.startsWith("S")){
+      if (text.startsWith("S")) {
         const seasonNumber = text.match(/\d{1,3}/g);
         episode.season = parseInt(seasonNumber[0]);
       } else if (text.startsWith("E")) {

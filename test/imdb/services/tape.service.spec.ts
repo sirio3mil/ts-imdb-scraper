@@ -17,7 +17,9 @@ describe("TapeService", () => {
     const tapeID = 133093;
 
     beforeAll(async () => {
-      const content = await tapeService.getContent(tapeService.createUrl(tapeID));
+      const content = await tapeService.getContent(
+        tapeService.createUrl(tapeID)
+      );
       tapeService.set$(content);
     });
 
@@ -94,7 +96,9 @@ describe("TapeService", () => {
     const tapeID = 773262;
 
     beforeAll(async () => {
-      const content = await tapeService.getContent(tapeService.createUrl(tapeID));
+      const content = await tapeService.getContent(
+        tapeService.createUrl(tapeID)
+      );
       tapeService.set$(content);
     });
 
@@ -166,7 +170,9 @@ describe("TapeService", () => {
     const tapeID = 1013982;
 
     beforeAll(async () => {
-      const content = await tapeService.getContent(tapeService.createUrl(tapeID));
+      const content = await tapeService.getContent(
+        tapeService.createUrl(tapeID)
+      );
       tapeService.set$(content);
     });
 
