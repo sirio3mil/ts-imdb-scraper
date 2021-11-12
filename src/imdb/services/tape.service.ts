@@ -9,16 +9,15 @@ export class TapeService extends HtmlService {
     super(provider);
   }
 
-  getRanking(): Ranking {
+  getRanking(): Ranking | null {
+    const ratingScore = this.$('[class^="AggregateRatingButton__RatingScore"]');
+    if (!ratingScore.length) {
+      return null;
+    }
     const ranking = new Ranking();
-    ranking.calculatedScore = parseFloat(
-      this.$('[class^="AggregateRatingButton__RatingScore"]').first().text()
-    );
-    const formattedVotes = this.$(
-      '[class^="AggregateRatingButton__TotalRatingAmount"]'
-    )
-      .first()
-      .text();
+    const ratingAmount = this.$('[class^="AggregateRatingButton__TotalRatingAmount"]');
+    ranking.calculatedScore = parseFloat(ratingScore.first().text());
+    const formattedVotes = ratingAmount.first().text();
     if (formattedVotes.endsWith("M")) {
       ranking.votes =
         parseFloat(formattedVotes.replace(/[^0-9.]/g, "")) * 1000000;
@@ -97,17 +96,41 @@ export class TapeService extends HtmlService {
     return title?.text();
   }
 
-  protected getYears(): string[] {
+  protected getYears(): number[] {
+    const items = [];
     const text = this.$('[class^="TitleBlock__Container"]')
       .find('[class^="TitleBlockMetaData__ListItemText"]')
       .first()
-      .text();
+      ?.text();
+    if (!!text) {
+      const year = text.match(/\d{4}/g);
+      if (!!year) {
+        year.forEach((elem) => {
+          items.push(parseInt(elem));
+        });
+      }
+    }
 
-    return text.split("–");
+    return items;
   }
 
   getYear(): number {
-    return parseInt(this.getYears()[0]);
+    const years = this.getYears();
+    if (!years.length) {
+      const item = this.$('[class^="TitleBlock__Container"]')
+        .find(".ipc-inline-list__item")
+        .first()
+        ?.text();
+      if (!!item && item.startsWith("Episode air")) {
+        const year = item.match(/\d{4}/g);
+        if (!!year) {
+          return parseInt(year[0]);
+        }
+      }
+      return 0;
+    }
+
+    return years[0];
   }
 
   isFinished(): boolean {
