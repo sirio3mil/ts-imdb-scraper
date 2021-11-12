@@ -47,7 +47,7 @@ export class TapeResolver {
         genres: this.tapeService.getGenres(),
         ranking: this.tapeService.getRanking(),
         sounds: this.tapeService.getSounds(),
-        isTvShow: false,
+        isTvShow: this.tapeService.isTvShow(),
         isTvShowChapter: false,
       };
     } catch (e) {

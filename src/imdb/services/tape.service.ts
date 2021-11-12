@@ -97,13 +97,29 @@ export class TapeService extends HtmlService {
     return title?.text();
   }
 
+  protected getYears(): string[] {
+    const text = this.$('[class^="TitleBlock__Container"]')
+      .find('[class^="TitleBlockMetaData__ListItemText"]')
+      .first()
+      .text();
+
+    return text.split("–");
+  }
+
   getYear(): number {
-    return parseInt(
-      this.$('[class^="TitleBlock__Container"]')
-        .find('[class^="TitleBlockMetaData__ListItemText"]')
-        .first()
-        .text()
-    );
+    return parseInt(this.getYears()[0]);
+  }
+
+  isFinished(): boolean {
+    return this.getYears().length === 2;
+  }
+
+  isTvShow(): boolean {
+    const item = this.$('[class^="TitleBlock__Container"]')
+      .find(".ipc-inline-list__item")
+      .first()
+      ?.text();
+    return !!item?.includes("TV Series") || !!item?.includes("TV Mini Series");
   }
 
   getDuration(): number {

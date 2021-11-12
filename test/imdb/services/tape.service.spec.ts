@@ -28,6 +28,14 @@ describe("TapeService", () => {
       expect(ranking.score).toBe(ranking.calculatedScore * ranking.votes);
     });
 
+    it("should not be finished", () => {
+      expect(tapeService.isFinished()).toBeFalsy();
+    });
+
+    it("should not be TV Show", () => {
+      expect(tapeService.isTvShow()).toBeFalsy();
+    });
+
     it("should match budget", () => {
       const budget = tapeService.getBudget();
       expect(budget).toEqual(63000000);
@@ -87,6 +95,14 @@ describe("TapeService", () => {
       expect(ranking.calculatedScore).toBeCloseTo(8.6, 1);
       expect(ranking.votes).toBeGreaterThanOrEqual(684000);
       expect(ranking.score).toBe(ranking.calculatedScore * ranking.votes);
+    });
+
+    it("should be finished", () => {
+      expect(tapeService.isFinished()).toBeTruthy();
+    });
+
+    it("should be TV Show", () => {
+      expect(tapeService.isTvShow()).toBeTruthy();
     });
 
     it("should match single color", () => {
