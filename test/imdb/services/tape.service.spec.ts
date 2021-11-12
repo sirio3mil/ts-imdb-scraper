@@ -3,8 +3,6 @@ import { FileProvider } from "../../../src/imdb/providers/file.provider";
 import { TapeService } from "../../../src/imdb/services/tape.service";
 
 describe("TapeService", () => {
-  const tapeID = 133093;
-
   let fileProvider: FileProvider;
   let httpService: HttpService;
   let tapeService: TapeService;
@@ -13,11 +11,16 @@ describe("TapeService", () => {
     httpService = new HttpService();
     fileProvider = new FileProvider(httpService);
     tapeService = new TapeService(fileProvider);
-    const content = await tapeService.getContent(tapeService.createUrl(tapeID));
-    tapeService.set$(content);
   });
 
   describe("getTape", () => {
+    const tapeID = 133093;
+
+    beforeAll(async () => {
+      const content = await tapeService.getContent(tapeService.createUrl(tapeID));
+      tapeService.set$(content);
+    });
+
     it("should match ranking", () => {
       const ranking = tapeService.getRanking();
       expect(ranking.calculatedScore).toBeCloseTo(8.7, 1);
@@ -30,12 +33,12 @@ describe("TapeService", () => {
       expect(budget).toEqual(63000000);
     });
 
-    it("should match colors", () => {
+    it("should match single color", () => {
       const colors = tapeService.getColors();
       expect(colors).toEqual(["Color"]);
     });
 
-    it("should match languages", () => {
+    it("should match single language", () => {
       const languages = tapeService.getLanguages();
       expect(languages).toEqual(["English"]);
     });
@@ -68,6 +71,62 @@ describe("TapeService", () => {
     it("should match originalTitle", () => {
       const originalTitle = tapeService.getOriginalTitle();
       expect(originalTitle).toEqual("The Matrix");
+    });
+  });
+
+  describe("getTvShow", () => {
+    const tapeID = 773262;
+
+    beforeAll(async () => {
+      const content = await tapeService.getContent(tapeService.createUrl(tapeID));
+      tapeService.set$(content);
+    });
+
+    it("should match ranking", () => {
+      const ranking = tapeService.getRanking();
+      expect(ranking.calculatedScore).toBeCloseTo(8.6, 1);
+      expect(ranking.votes).toBeGreaterThanOrEqual(684000);
+      expect(ranking.score).toBe(ranking.calculatedScore * ranking.votes);
+    });
+
+    it("should match single color", () => {
+      const colors = tapeService.getColors();
+      expect(colors).toEqual(["Color"]);
+    });
+
+    it("should match languages", () => {
+      const languages = tapeService.getLanguages();
+      expect(languages).toEqual(["English", "Spanish"]);
+    });
+
+    it("should match single country", () => {
+      const countries = tapeService.getCountries();
+      expect(countries).toEqual(["United States"]);
+    });
+
+    it("should match single sound", () => {
+      const sounds = tapeService.getSounds();
+      expect(sounds).toEqual(["Dolby Digital"]);
+    });
+
+    it("should match genres", () => {
+      const genres = tapeService.getGenres();
+      expect(genres).toEqual(["Crime", "Drama", "Mystery", "Thriller"]);
+    });
+
+    it("should match year", () => {
+      const year = tapeService.getYear();
+      expect(year).toEqual(2006);
+    });
+
+    it("should match duration", () => {
+      const duration = tapeService.getDuration();
+      expect(duration).toEqual(53);
+    });
+
+    it("should match title", () => {
+      const title = tapeService.getOriginalTitle();
+      expect(title).toEqual("Dexter");
     });
   });
 });
