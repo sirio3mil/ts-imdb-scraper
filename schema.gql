@@ -52,6 +52,13 @@ type Ranking {
   votes: Int!
 }
 
+"""episode data"""
+type Episode {
+  chapter: Int!
+  season: Int!
+  tvShowID: Int!
+}
+
 """tape"""
 type Tape {
   originalTitle: String!
@@ -75,6 +82,7 @@ type Tape {
   ID: Int!
   url: URL!
   ranking: Ranking
+  episode: Episode
 }
 
 type Query {

@@ -48,7 +48,8 @@ export class TapeResolver {
         ranking: this.tapeService.getRanking(),
         sounds: this.tapeService.getSounds(),
         isTvShow: this.tapeService.isTvShow(),
-        isTvShowChapter: false,
+        isTvShowChapter: this.tapeService.isTvShowChapter(),
+        episode: this.tapeService.getEpisode(),
       };
     } catch (e) {
       throw new NotFoundException(

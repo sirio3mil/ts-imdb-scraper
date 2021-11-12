@@ -1,6 +1,7 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { Certification } from "./certification.model";
 import { Credit } from "./credit.model";
+import { Episode } from "./episode.model";
 import { Premiere } from "./premiere.model";
 import { Ranking } from "./ranking.model";
 import { Title } from "./title.model";
@@ -69,4 +70,7 @@ export class Tape {
 
   @Field({ nullable: true })
   ranking?: Ranking;
+
+  @Field({ nullable: true })
+  episode?: Episode;
 }

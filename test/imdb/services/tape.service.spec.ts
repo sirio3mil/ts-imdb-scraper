@@ -40,6 +40,10 @@ describe("TapeService", () => {
       expect(tapeService.isTvShowChapter()).toBeFalsy();
     });
 
+    it("should not have episode data", () => {
+      expect(tapeService.getEpisode()).toBeNull();
+    });
+
     it("should match budget", () => {
       const budget = tapeService.getBudget();
       expect(budget).toEqual(63000000);
@@ -109,6 +113,10 @@ describe("TapeService", () => {
       expect(tapeService.isTvShowChapter()).toBeFalsy();
     });
 
+    it("should not have episode data", () => {
+      expect(tapeService.getEpisode()).toBeNull();
+    });
+
     it("should be TV Show", () => {
       expect(tapeService.isTvShow()).toBeTruthy();
     });
@@ -160,6 +168,13 @@ describe("TapeService", () => {
     beforeAll(async () => {
       const content = await tapeService.getContent(tapeService.createUrl(tapeID));
       tapeService.set$(content);
+    });
+
+    it("should match episode", () => {
+      const episode = tapeService.getEpisode();
+      expect(episode.tvShowID).toEqual(773262);
+      expect(episode.season).toEqual(2);
+      expect(episode.chapter).toEqual(3);
     });
 
     it("should not be finished", () => {

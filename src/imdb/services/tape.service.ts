@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { Episode } from "../models/episode.model";
 import { Ranking } from "../models/ranking.model";
 import { AbstractProvider } from "../providers/abstract.provider";
 import { HtmlService } from "./html.service";
@@ -147,6 +148,29 @@ export class TapeService extends HtmlService {
 
   isTvShowChapter(): boolean {
     return this.$('[class^="EpisodeNavigationForEpisode"]').length > 0;
+  }
+
+  getEpisode(): Episode | null {
+    const items = this.$('[class^="EpisodeNavigationForEpisode__SeasonEpisodeNumbersItem"]');
+    if (!items.length) {
+      return null;
+    }
+    const episode = new Episode();
+    items.each((i, item) => {
+      const text = this.$(item).text();
+      if (text.startsWith("S")){
+        const seasonNumber = text.match(/\d{1,3}/g);
+        episode.season = parseInt(seasonNumber[0]);
+      } else if (text.startsWith("E")) {
+        const episodeNumber = text.match(/\d{1,3}/g);
+        episode.chapter = parseInt(episodeNumber[0]);
+      }
+    });
+    const parentLink = this.$('[class*="SeriesParentLink__ParentTextLink"]');
+    if (!!parentLink.length) {
+      episode.tvShowID = parseInt(parentLink.attr("href").match(/\d+/g)[0]);
+    }
+    return episode;
   }
 
   getDuration(): number {
