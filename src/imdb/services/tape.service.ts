@@ -145,6 +145,10 @@ export class TapeService extends HtmlService {
     return !!item?.includes("TV Series") || !!item?.includes("TV Mini Series");
   }
 
+  isTvShowChapter(): boolean {
+    return this.$('[class^="EpisodeNavigationForEpisode"]').length > 0;
+  }
+
   getDuration(): number {
     const formatedDuration = this.$('[class^="TitleBlock__Container"]')
       .find(".ipc-inline-list__item")

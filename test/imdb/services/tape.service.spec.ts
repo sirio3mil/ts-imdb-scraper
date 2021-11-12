@@ -13,7 +13,7 @@ describe("TapeService", () => {
     tapeService = new TapeService(fileProvider);
   });
 
-  describe("getTape", () => {
+  describe("Tape", () => {
     const tapeID = 133093;
 
     beforeAll(async () => {
@@ -34,6 +34,10 @@ describe("TapeService", () => {
 
     it("should not be TV Show", () => {
       expect(tapeService.isTvShow()).toBeFalsy();
+    });
+
+    it("should not be an episode", () => {
+      expect(tapeService.isTvShowChapter()).toBeFalsy();
     });
 
     it("should match budget", () => {
@@ -82,7 +86,7 @@ describe("TapeService", () => {
     });
   });
 
-  describe("getTvShow", () => {
+  describe("TV Show", () => {
     const tapeID = 773262;
 
     beforeAll(async () => {
@@ -99,6 +103,10 @@ describe("TapeService", () => {
 
     it("should be finished", () => {
       expect(tapeService.isFinished()).toBeTruthy();
+    });
+
+    it("should not be an episode", () => {
+      expect(tapeService.isTvShowChapter()).toBeFalsy();
     });
 
     it("should be TV Show", () => {
@@ -143,6 +151,42 @@ describe("TapeService", () => {
     it("should match title", () => {
       const title = tapeService.getOriginalTitle();
       expect(title).toEqual("Dexter");
+    });
+  });
+
+  describe("Tv Show Chapter", () => {
+    const tapeID = 1013982;
+
+    beforeAll(async () => {
+      const content = await tapeService.getContent(tapeService.createUrl(tapeID));
+      tapeService.set$(content);
+    });
+
+    it("should not be finished", () => {
+      expect(tapeService.isFinished()).toBeFalsy();
+    });
+
+    it("should be an episode", () => {
+      expect(tapeService.isTvShowChapter()).toBeTruthy();
+    });
+
+    it("should not be TV Show", () => {
+      expect(tapeService.isTvShow()).toBeFalsy();
+    });
+
+    it("should match year", () => {
+      const year = tapeService.getYear();
+      expect(year).toEqual(2007);
+    });
+
+    it("should match duration", () => {
+      const duration = tapeService.getDuration();
+      expect(duration).toEqual(52);
+    });
+
+    it("should match title", () => {
+      const title = tapeService.getOriginalTitle();
+      expect(title).toEqual("An Inconvenient Lie");
     });
   });
 });
