@@ -38,7 +38,7 @@ export class TapeService extends HtmlService {
       .find(".ipc-metadata-list__item");
     detailsBlock.each((i, elem) => {
       const label = this.$(elem).find(".ipc-metadata-list-item__label").text();
-      if (label === "Countries of origin") {
+      if (label.endsWith("of origin")) {
         this.$(elem)
           .find(".ipc-metadata-list-item__list-content-item")
           .each((i, elem) => {
@@ -57,7 +57,7 @@ export class TapeService extends HtmlService {
       .find(".ipc-metadata-list__item");
     detailsBlock.each((i, elem) => {
       const label = this.$(elem).find(".ipc-metadata-list-item__label").text();
-      if (label === "Language") {
+      if (label.startsWith("Language")) {
         this.$(elem)
           .find(".ipc-metadata-list-item__list-content-item")
           .each((i, elem) => {
@@ -89,10 +89,12 @@ export class TapeService extends HtmlService {
   }
 
   getOriginalTitle(): string {
-    const originalTitle = this.$('[class^="TitleBlock__Container"]').find(
-      '[class^="OriginalTitle__OriginalTitleText"]'
-    );
-    return originalTitle?.text()?.replace("Original title: ", "");
+    let title = this.$('[class^="OriginalTitle__OriginalTitleText"]');
+    if (title.length) {
+      return title.text()?.replace("Original title: ", "");
+    }
+    title = this.$('[class^="TitleHeader__TitleText"]');
+    return title?.text();
   }
 
   getYear(): number {
