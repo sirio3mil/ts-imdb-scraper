@@ -1,5 +1,6 @@
 import { HttpModule } from "@nestjs/axios";
 import { Module } from "@nestjs/common";
+import { TapeRepository } from "src/dbal/tape.repository";
 import { AbstractProvider } from "./providers/abstract.provider";
 import { FileProvider } from "./providers/file.provider";
 import { TapeResolver } from "./resolvers/tape.resolver";
@@ -11,6 +12,17 @@ import { LocationService } from "./services/location.service";
 import { ParentalGuideService } from "./services/parental-guide.service";
 import { ReleaseInfoService } from "./services/release-info.service";
 import { TapeService } from "./services/tape.service";
+import * as sql from "mssql";
+import { ConfigService } from "@nestjs/config";
+
+const connectionFactory = {
+  provide: 'CONNECTION',
+  useFactory: async (configService: ConfigService) => {
+    const sqlConfig = configService.get<sql.config>('mssql');
+    return sql.connect(sqlConfig);
+  },
+  inject: [ConfigService],
+};
 
 @Module({
   imports: [HttpModule],
@@ -24,10 +36,13 @@ import { TapeService } from "./services/tape.service";
     ReleaseInfoService,
     ParentalGuideService,
     KeywordService,
+    TapeRepository,
     {
       provide: AbstractProvider,
       useClass: FileProvider,
     },
+    connectionFactory,
   ],
+  exports: ['CONNECTION'],
 })
 export class ImdbModule {}

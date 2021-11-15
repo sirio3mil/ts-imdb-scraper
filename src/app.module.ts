@@ -17,6 +17,6 @@ import configuration from './config/configuration';
       isGlobal: true,
       load: [configuration],
     }),
-  ],
+  ]
 })
 export class AppModule {}

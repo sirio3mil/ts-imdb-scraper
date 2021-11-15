@@ -17,6 +17,7 @@ import { ReleaseInfoService } from "../services/release-info.service";
 import { TapeService } from "../services/tape.service";
 import * as sql from "mssql";
 import { ConfigService } from "@nestjs/config";
+import { TapeRepository } from "src/dbal/tape.repository";
 
 @Resolver(() => Tape)
 export class TapeResolver {
@@ -27,7 +28,8 @@ export class TapeResolver {
     private readonly releaseInfoService: ReleaseInfoService,
     private readonly locationService: LocationService,
     private readonly parentalGuideService: ParentalGuideService,
-    private readonly keywordService: KeywordService
+    private readonly keywordService: KeywordService,
+    private readonly tapeRepository: TapeRepository,
   ) {}
 
   @Query(() => Tape)
@@ -78,13 +80,7 @@ export class TapeResolver {
         this.tapeService.getContent(url),
       ]);
       this.tapeService.set$(tapeContent);
-      const result = await pool.request()
-        .input('imdbNumber', sql.Int, imdbNumber)
-        .query`select t.objectId
-                ,t.tapeId 
-              from ImdbNumber i 
-              INNER JOIN [Tape] t ON t.objectId = i.objectId 
-              where i.imdbNumber = @imdbNumber`;
+      const result = await this.tapeRepository.getTape(imdbNumber);
       if (!result.recordset.length) {
         const objectResultset = await sql.query`insert into [Object] (rowTypeId) OUTPUT inserted.objectId values (${ROW_TYPE_TAPE})`;
         objectId = objectResultset.recordset[0].objectId;
