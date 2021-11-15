@@ -8,6 +8,8 @@ import {
   ResolveField,
   Resolver,
 } from "@nestjs/graphql";
+import { Constants } from "src/config/constants";
+import { TapeRepository } from "src/dbal/repositories/tape.repository";
 import { Tape } from "../models/tape.model";
 import { CreditService } from "../services/credit.service";
 import { KeywordService } from "../services/keyword.service";
@@ -15,21 +17,17 @@ import { LocationService } from "../services/location.service";
 import { ParentalGuideService } from "../services/parental-guide.service";
 import { ReleaseInfoService } from "../services/release-info.service";
 import { TapeService } from "../services/tape.service";
-import * as sql from "mssql";
-import { ConfigService } from "@nestjs/config";
-import { TapeRepository } from "src/dbal/tape.repository";
 
 @Resolver(() => Tape)
 export class TapeResolver {
   constructor(
-    private configService: ConfigService,
     private readonly tapeService: TapeService,
     private readonly creditService: CreditService,
     private readonly releaseInfoService: ReleaseInfoService,
     private readonly locationService: LocationService,
     private readonly parentalGuideService: ParentalGuideService,
     private readonly keywordService: KeywordService,
-    private readonly tapeRepository: TapeRepository,
+    private readonly tapeRepository: TapeRepository
   ) {}
 
   @Query(() => Tape)
@@ -71,36 +69,29 @@ export class TapeResolver {
     try {
       let objectId: string;
       let tapeId: number;
-      const ROW_TYPE_TAPE = 4;
-      //const ROW_TAPE_PERSON = 3;
-      const sqlConfig = this.configService.get<sql.config>('mssql');
       const url = this.tapeService.createUrl(imdbNumber);
-      const [pool, tapeContent] = await Promise.all([
-        sql.connect(sqlConfig),
+      const [tapeContent] = await Promise.all([
         this.tapeService.getContent(url),
       ]);
       this.tapeService.set$(tapeContent);
-      const result = await this.tapeRepository.getTapeByImdbNumber(imdbNumber);
-      if (!result.recordset.length) {
-        const objectResultset = await sql.query`insert into [Object] (rowTypeId) OUTPUT inserted.objectId values (${ROW_TYPE_TAPE})`;
-        objectId = objectResultset.recordset[0].objectId;
-        await pool.request()
-          .input('imdbNumber', sql.Int, imdbNumber)
-          .input('objectId', sql.VarChar, objectId)
-          .query`insert into ImdbNumber (objectId, imdbNumber) values (@objectId, @imdbNumber)`;
-        const tapeResultset = await pool.request()
-          .input('originalTitle', sql.VarChar, this.tapeService.getOriginalTitle())
-          .input('objectId', sql.VarChar, objectId)
-          .query`insert into Tape (originalTitle, objectId) OUTPUT inserted.tapeId values (@originalTitle, @objectId)`;
-        tapeId = parseInt(tapeResultset.recordset[0].tapeId);
+      const storedTape = await this.tapeRepository.getTapeByImdbNumber(
+        imdbNumber
+      );
+      if (!storedTape) {
+        objectId = await this.tapeRepository.insertObject(Constants.rowTypes.tape);
+        await this.tapeRepository.insertImdbNumber(objectId, imdbNumber);
+        tapeId = await this.tapeRepository.insertTape(
+          objectId,
+          this.tapeService.getOriginalTitle()
+        );
       } else {
-        objectId = result.recordset[0].objectId;
-        tapeId = parseInt(result.recordset[0].tapeId);
+        objectId = storedTape.objectId;
+        tapeId = storedTape.tapeId;
       }
-      console.dir({objectId, tapeId, imdbNumber});
-     } catch (err) {
+      console.dir({ objectId, tapeId, imdbNumber });
+    } catch (err) {
       console.log(err);
-     }
+    }
     return new Tape();
   }
 

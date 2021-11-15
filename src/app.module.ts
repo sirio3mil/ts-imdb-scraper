@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
+import { ConfigModule } from "@nestjs/config";
 import { GraphQLModule } from "@nestjs/graphql";
+import configuration from "./config/configuration";
 import { ImdbModule } from "./imdb/imdb.module";
-import { ConfigModule } from '@nestjs/config';
-import configuration from './config/configuration';
 
 @Module({
   imports: [
@@ -17,6 +17,6 @@ import configuration from './config/configuration';
       isGlobal: true,
       load: [configuration],
     }),
-  ]
+  ],
 })
 export class AppModule {}
