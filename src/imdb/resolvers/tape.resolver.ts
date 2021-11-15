@@ -2,6 +2,7 @@ import { NotFoundException } from "@nestjs/common";
 import {
   Args,
   Int,
+  Mutation,
   Parent,
   Query,
   ResolveField,
@@ -14,10 +15,13 @@ import { LocationService } from "../services/location.service";
 import { ParentalGuideService } from "../services/parental-guide.service";
 import { ReleaseInfoService } from "../services/release-info.service";
 import { TapeService } from "../services/tape.service";
+import * as sql from "mssql";
+import { ConfigService } from "@nestjs/config";
 
 @Resolver(() => Tape)
 export class TapeResolver {
   constructor(
+    private configService: ConfigService,
     private readonly tapeService: TapeService,
     private readonly creditService: CreditService,
     private readonly releaseInfoService: ReleaseInfoService,
@@ -56,6 +60,22 @@ export class TapeResolver {
         `Tape with imdbNumber ${imdbNumber} not found`
       );
     }
+  }
+
+  @Mutation(() => Tape)
+  async importTape(
+    @Args("imdbNumber", { type: () => Int }) imdbNumber: number
+  ) {
+    try {
+      const sqlConfig = this.configService.get<sql.config>('mssql');
+      await sql.connect(sqlConfig)
+      const result = await sql.query`select * from ImdbNumber where imdbNumber = ${imdbNumber}`
+      const objectId = result.recordset[0].objectId;
+      console.log(objectId);
+     } catch (err) {
+      console.log(err);
+     }
+    return new Tape();
   }
 
   @ResolveField()

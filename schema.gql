@@ -88,3 +88,7 @@ type Tape {
 type Query {
   getTape(imdbNumber: Int!): Tape!
 }
+
+type Mutation {
+  importTape(imdbNumber: Int!): Tape!
+}

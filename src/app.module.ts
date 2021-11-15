@@ -1,6 +1,8 @@
 import { Module } from "@nestjs/common";
 import { GraphQLModule } from "@nestjs/graphql";
 import { ImdbModule } from "./imdb/imdb.module";
+import { ConfigModule } from '@nestjs/config';
+import configuration from './config/configuration';
 
 @Module({
   imports: [
@@ -10,6 +12,10 @@ import { ImdbModule } from "./imdb/imdb.module";
       subscriptions: {
         "graphql-ws": true,
       },
+    }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [configuration],
     }),
   ],
 })
