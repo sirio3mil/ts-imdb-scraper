@@ -9,7 +9,7 @@ export class TapeRepository {
     this.connection = connection;
   }
 
-  async getTape(imdbNumber: number): Promise<sql.IResult<any>> {
+  async getTapeByImdbNumber(imdbNumber: number): Promise<sql.IResult<any>> {
     return this.connection.request()
         .input('imdbNumber', sql.Int, imdbNumber)
         .query`select t.objectId

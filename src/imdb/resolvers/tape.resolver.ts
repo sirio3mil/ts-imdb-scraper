@@ -80,7 +80,7 @@ export class TapeResolver {
         this.tapeService.getContent(url),
       ]);
       this.tapeService.set$(tapeContent);
-      const result = await this.tapeRepository.getTape(imdbNumber);
+      const result = await this.tapeRepository.getTapeByImdbNumber(imdbNumber);
       if (!result.recordset.length) {
         const objectResultset = await sql.query`insert into [Object] (rowTypeId) OUTPUT inserted.objectId values (${ROW_TYPE_TAPE})`;
         objectId = objectResultset.recordset[0].objectId;
