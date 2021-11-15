@@ -67,11 +67,41 @@ export class TapeResolver {
     @Args("imdbNumber", { type: () => Int }) imdbNumber: number
   ) {
     try {
+      let objectId: string;
+      let tapeId: number;
+      const ROW_TYPE_TAPE = 4;
+      //const ROW_TAPE_PERSON = 3;
       const sqlConfig = this.configService.get<sql.config>('mssql');
-      await sql.connect(sqlConfig)
-      const result = await sql.query`select * from ImdbNumber where imdbNumber = ${imdbNumber}`
-      const objectId = result.recordset[0].objectId;
-      console.log(objectId);
+      const url = this.tapeService.createUrl(imdbNumber);
+      const [pool, tapeContent] = await Promise.all([
+        sql.connect(sqlConfig),
+        this.tapeService.getContent(url),
+      ]);
+      this.tapeService.set$(tapeContent);
+      const result = await pool.request()
+        .input('imdbNumber', sql.Int, imdbNumber)
+        .query`select t.objectId
+                ,t.tapeId 
+              from ImdbNumber i 
+              INNER JOIN [Tape] t ON t.objectId = i.objectId 
+              where i.imdbNumber = @imdbNumber`;
+      if (!result.recordset.length) {
+        const objectResultset = await sql.query`insert into [Object] (rowTypeId) OUTPUT inserted.objectId values (${ROW_TYPE_TAPE})`;
+        objectId = objectResultset.recordset[0].objectId;
+        await pool.request()
+          .input('imdbNumber', sql.Int, imdbNumber)
+          .input('objectId', sql.VarChar, objectId)
+          .query`insert into ImdbNumber (objectId, imdbNumber) values (@objectId, @imdbNumber)`;
+        const tapeResultset = await pool.request()
+          .input('originalTitle', sql.VarChar, this.tapeService.getOriginalTitle())
+          .input('objectId', sql.VarChar, objectId)
+          .query`insert into Tape (originalTitle, objectId) OUTPUT inserted.tapeId values (@originalTitle, @objectId)`;
+        tapeId = parseInt(tapeResultset.recordset[0].tapeId);
+      } else {
+        objectId = result.recordset[0].objectId;
+        tapeId = parseInt(result.recordset[0].tapeId);
+      }
+      console.dir({objectId, tapeId, imdbNumber});
      } catch (err) {
       console.log(err);
      }
