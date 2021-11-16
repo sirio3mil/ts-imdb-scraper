@@ -67,28 +67,25 @@ export class TapeResolver {
     @Args("imdbNumber", { type: () => Int }) imdbNumber: number
   ) {
     try {
-      let objectId: string;
-      let tapeId: number;
       const url = this.tapeService.createUrl(imdbNumber);
       const [tapeContent] = await Promise.all([
         this.tapeService.getContent(url),
       ]);
       this.tapeService.set$(tapeContent);
-      const storedTape = await this.tapeRepository.getTapeByImdbNumber(
+      let storedTape = await this.tapeRepository.getTapeByImdbNumber(
         imdbNumber
       );
       if (!storedTape) {
-        objectId = await this.tapeRepository.insertObject(Constants.rowTypes.tape);
-        await this.tapeRepository.insertImdbNumber(objectId, imdbNumber);
-        tapeId = await this.tapeRepository.insertTape(
-          objectId,
-          this.tapeService.getOriginalTitle()
-        );
-      } else {
-        objectId = storedTape.objectId;
-        tapeId = storedTape.tapeId;
+        const objectId = await this.tapeRepository.insertObject(Constants.rowTypes.tape);
+        [, storedTape] = await Promise.all([
+          this.tapeRepository.insertImdbNumber(objectId, imdbNumber),
+          this.tapeRepository.insertTape({
+            objectId,
+            originalTitle: this.tapeService.getOriginalTitle()
+          })
+        ]);
       }
-      console.dir({ objectId, tapeId, imdbNumber });
+      console.dir(storedTape);
     } catch (err) {
       console.log(err);
     }

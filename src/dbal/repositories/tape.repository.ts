@@ -14,7 +14,7 @@ export class TapeRepository {
     const result = await this.connection
       .request()
       .input("imdbNumber", sql.Int, imdbNumber)
-      .query`select t.objectId, t.tapeId from ImdbNumber i INNER JOIN [Tape] t ON t.objectId = i.objectId where i.imdbNumber = @imdbNumber`;
+      .query`select t.objectId, t.tapeId, t.originalTitle from ImdbNumber i INNER JOIN [Tape] t ON t.objectId = i.objectId where i.imdbNumber = @imdbNumber`;
     if (result.recordset.length === 0) {
       return null;
     }
@@ -43,13 +43,15 @@ export class TapeRepository {
       .query`insert into ImdbNumber (objectId, imdbNumber) values (@objectId, @imdbNumber)`;
   }
 
-  async insertTape(objectId: string, originalTitle: string): Promise<number> {
+  async insertTape(tape: TapeInterface): Promise<TapeInterface> {
     const result = await this.connection
       .request()
-      .input("objectId", sql.VarChar, objectId)
-      .input("originalTitle", sql.VarChar, originalTitle)
+      .input("objectId", sql.VarChar, tape.objectId)
+      .input("originalTitle", sql.VarChar, tape.originalTitle)
       .query`insert into [Tape] (objectId, originalTitle) OUTPUT inserted.tapeId values (@objectId, @originalTitle)`;
 
-    return parseInt(result.recordset[0]?.tapeId);
+    tape.tapeId = parseInt(result.recordset[0].tapeId);
+
+    return tape;
   }
 }
