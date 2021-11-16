@@ -76,13 +76,41 @@ export class TapeResolver {
         imdbNumber
       );
       if (!storedTape) {
-        const objectId = await this.tapeRepository.insertObject(Constants.rowTypes.tape);
+        const objectId = await this.tapeRepository.insertObject(
+          Constants.rowTypes.tape
+        );
         [, storedTape] = await Promise.all([
           this.tapeRepository.insertImdbNumber(objectId, imdbNumber),
           this.tapeRepository.insertTape({
             objectId,
-            originalTitle: this.tapeService.getOriginalTitle()
-          })
+            originalTitle: this.tapeService.getOriginalTitle(),
+          }),
+          this.tapeRepository.insertTapeDetail({
+            duration: this.tapeService.getDuration(),
+            year: this.tapeService.getYear(),
+            budget: this.tapeService.getBudget(),
+            color: this.tapeService.getColors().join(", "),
+            isTvShow: this.tapeService.isTvShow(),
+            isTvShowChapter: this.tapeService.isTvShowChapter(),
+            tapeId: storedTape.tapeId,
+          }),
+        ]);
+      } else {
+        [storedTape] = await Promise.all([
+          this.tapeRepository.updateTape({
+            objectId: storedTape.objectId,
+            originalTitle: this.tapeService.getOriginalTitle(),
+            tapeId: storedTape.tapeId,
+          }),
+          this.tapeRepository.updateTapeDetail({
+            duration: this.tapeService.getDuration(),
+            year: this.tapeService.getYear(),
+            budget: this.tapeService.getBudget(),
+            color: this.tapeService.getColors().join(", "),
+            isTvShow: this.tapeService.isTvShow(),
+            isTvShowChapter: this.tapeService.isTvShowChapter(),
+            tapeId: storedTape.tapeId,
+          }),
         ]);
       }
       console.dir(storedTape);
