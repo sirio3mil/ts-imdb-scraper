@@ -2,9 +2,11 @@ import { HttpModule } from "@nestjs/axios";
 import { Module } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import * as sql from "mssql";
+import { CountryRepository } from "src/dbal/repositories/country.repository";
 import { TapeRepository } from "src/dbal/repositories/tape.repository";
 import { AbstractProvider } from "./providers/abstract.provider";
 import { FileProvider } from "./providers/file.provider";
+import { ImdbResolver } from "./resolvers/imdb.resolver";
 import { TapeResolver } from "./resolvers/tape.resolver";
 import { DateScalar } from "./scalars/date.scalar";
 import { URLScalar } from "./scalars/url.scalar";
@@ -29,6 +31,7 @@ const connectionFactory = {
   providers: [
     DateScalar,
     URLScalar,
+    ImdbResolver,
     TapeResolver,
     TapeService,
     CreditService,
@@ -37,6 +40,7 @@ const connectionFactory = {
     ParentalGuideService,
     KeywordService,
     TapeRepository,
+    CountryRepository,
     {
       provide: AbstractProvider,
       useClass: FileProvider,

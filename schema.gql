@@ -2,6 +2,62 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""stored tape detail"""
+type DbalTapeDetail {
+  budget: Float
+  color: String
+  duration: Int
+  cover: Boolean
+  adult: Boolean
+  tvShow: Boolean
+  tvShowChapter: Boolean
+  year: Int
+  tapeId: ID!
+}
+
+"""stored country"""
+type DbalCountry {
+  countryId: ID
+  isoCode: String
+  officialName: String!
+}
+
+"""stored tape"""
+type DbalTape {
+  originalTitle: String!
+  objectId: String!
+  tapeId: ID
+  detail: DbalTapeDetail
+  countries: [DbalCountry!]
+}
+
+"""count inserted rows"""
+type Counter {
+  total: Int!
+  added: Int!
+}
+
+"""tape import result"""
+type TapeResult {
+  tapeId: Int!
+  objectId: String!
+  countries: Counter!
+}
+
+"""episode data"""
+type Episode {
+  chapter: Int!
+  season: Int!
+  tvShowID: Int!
+}
+
+"""ranking"""
+type Ranking {
+  calculatedScore: Float!
+  score: Float!
+  votes: Int!
+}
+
 """person"""
 type Person {
   fullName: String!
@@ -45,20 +101,6 @@ type Certification {
   country: String!
 }
 
-"""ranking"""
-type Ranking {
-  calculatedScore: Float!
-  score: Float!
-  votes: Int!
-}
-
-"""episode data"""
-type Episode {
-  chapter: Int!
-  season: Int!
-  tvShowID: Int!
-}
-
 """tape"""
 type Tape {
   originalTitle: String!
@@ -87,8 +129,9 @@ type Tape {
 
 type Query {
   getTape(imdbNumber: Int!): Tape!
+  getStoredTape(tapeId: ID!): DbalTape!
 }
 
 type Mutation {
-  importTape(imdbNumber: Int!): Tape!
+  importTape(imdbNumber: Int!): TapeResult!
 }

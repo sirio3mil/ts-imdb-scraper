@@ -1,7 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
 import * as sql from "mssql";
-import { ITapeDetail } from "../models/tape-detail.interface";
-import { ITape } from "../models/tape.interface";
+import { DbalCountry } from "../models/country.model";
+import { DbalTapeDetail } from "../models/tape-detail.model";
+import { DbalTape } from "../models/tape.model";
+import { NotFoundException } from "@nestjs/common";
 
 @Injectable()
 export class TapeRepository {
@@ -11,7 +13,33 @@ export class TapeRepository {
     this.connection = connection;
   }
 
-  async getTapeByImdbNumber(imdbNumber: number): Promise<ITape | null> {
+  async getTape(tapeId: number): Promise<DbalTape> {
+    const result = await this.connection
+      .request()
+      .input("tapeId", sql.BigInt, tapeId)
+      .query`select t.objectId, t.tapeId, t.originalTitle from Tape t where t.tapeId = @tapeId`;
+
+    if (result.rowsAffected[0] === 0) {
+      throw new NotFoundException("Tape not found");
+    }
+
+    return result.recordset[0];
+  }
+
+  async getTapeDetail(tapeId: number): Promise<DbalTapeDetail> {
+    const result = await this.connection
+      .request()
+      .input("tapeId", sql.BigInt, tapeId)
+      .query`select td.budget, td.color, td.duration, td.adult, td.cover, td.tvShow, td.tvShowChapter, td.year, td.tapeId from TapeDetail td where td.tapeId = @tapeId`;
+
+    if (result.rowsAffected[0] === 0) {
+      throw new NotFoundException("Tape detail not found");
+    }
+
+    return result.recordset[0];
+  }
+
+  async getTapeByImdbNumber(imdbNumber: number): Promise<DbalTape | null> {
     const result = await this.connection
       .request()
       .input("imdbNumber", sql.BigInt, imdbNumber)
@@ -36,80 +64,128 @@ export class TapeRepository {
   async insertImdbNumber(
     objectId: string,
     imdbNumber: number
-  ): Promise<sql.IResult<any>> {
-    return this.connection
+  ): Promise<boolean> {
+    const result = await this.connection
       .request()
       .input("objectId", sql.UniqueIdentifier, objectId)
       .input("imdbNumber", sql.BigInt, imdbNumber)
       .query`insert into ImdbNumber (objectId, imdbNumber) values (@objectId, @imdbNumber)`;
+
+    return result.rowsAffected[0] > 0;
   }
 
-  async insertTape(tape: ITape): Promise<ITape> {
+  async insertTape(tape: DbalTape): Promise<DbalTape> {
     const result = await this.connection
       .request()
       .input("objectId", sql.UniqueIdentifier, tape.objectId)
       .input("originalTitle", sql.NVarChar(150), tape.originalTitle)
       .query`insert into [Tape] (objectId, originalTitle) OUTPUT inserted.tapeId values (@objectId, @originalTitle)`;
-
+    if (result.rowsAffected[0] === 0) {
+      throw new NotFoundException("Tape not found");
+    }
     tape.tapeId = parseInt(result.recordset[0].tapeId);
 
     return tape;
   }
 
-  async updateTape(tape: ITape): Promise<ITape> {
-    await this.connection
+  async upsertTape(tape: DbalTape): Promise<DbalTape> {
+    const result = await this.connection
       .request()
       .input("tapeId", sql.BigInt, tape.tapeId)
       .input("originalTitle", sql.NVarChar(150), tape.originalTitle)
       .query`update Tape set 
         originalTitle = @originalTitle
         where tapeId = @tapeId`;
+    
+    if (result.rowsAffected[0] === 0) {
+      return this.insertTape(tape);
+    }
 
     return tape;
   }
 
-  async insertTapeDetail(tapeDetail: ITapeDetail): Promise<ITapeDetail> {
-    await this.connection
+  async insertTapeDetail(tapeDetail: DbalTapeDetail): Promise<DbalTapeDetail> {
+    const result = await this.connection
       .request()
       .input("budget", sql.Float, tapeDetail.budget || 0)
       .input("color", sql.NVarChar(20), tapeDetail.color)
       .input("duration", sql.SmallInt, tapeDetail.duration)
-      .input("isAdult", sql.Bit, tapeDetail.isAdult || false)
-      .input("hasCover", sql.Bit, tapeDetail.hasCover || false)
-      .input("isTvShow", sql.Bit, tapeDetail.isTvShow || false)
-      .input("isTvShowChapter", sql.Bit, tapeDetail.isTvShowChapter || false)
+      .input("adult", sql.Bit, tapeDetail.adult || false)
+      .input("cover", sql.Bit, tapeDetail.cover || false)
+      .input("tvShow", sql.Bit, tapeDetail.tvShow || false)
+      .input("tvShowChapter", sql.Bit, tapeDetail.tvShowChapter || false)
       .input("year", sql.SmallInt, tapeDetail.year)
       .input("tapeId", sql.BigInt, tapeDetail.tapeId)
       .query`insert into TapeDetail 
         (budget, color, duration, adult, cover, tvShow, tvShowChapter, year, tapeId) values 
-        (@budget, @color, @duration, @isAdult, @hasCover, @isTvShow, @isTvShowChapter, @year, @tapeId)`;
+        (@budget, @color, @duration, @adult, @cover, @tvShow, @tvShowChapter, @year, @tapeId)`;
+
+    if (result.rowsAffected[0] === 0) {
+      throw new NotFoundException("Tape detail not found");
+    }
 
     return tapeDetail;
   }
 
-  async updateTapeDetail(tapeDetail: ITapeDetail): Promise<ITapeDetail> {
-    await this.connection
+  async upsertTapeDetail(tapeDetail: DbalTapeDetail): Promise<DbalTapeDetail> {
+    const result = await this.connection
       .request()
       .input("budget", sql.Float, tapeDetail.budget || 0)
       .input("color", sql.NVarChar(20), tapeDetail.color)
       .input("duration", sql.SmallInt, tapeDetail.duration)
-      .input("isAdult", sql.Bit, tapeDetail.isAdult || false)
-      .input("hasCover", sql.Bit, tapeDetail.hasCover || false)
-      .input("isTvShow", sql.Bit, tapeDetail.isTvShow || false)
-      .input("isTvShowChapter", sql.Bit, tapeDetail.isTvShowChapter || false)
+      .input("adult", sql.Bit, tapeDetail.adult || false)
+      .input("cover", sql.Bit, tapeDetail.cover || false)
+      .input("tvShow", sql.Bit, tapeDetail.tvShow || false)
+      .input("tvShowChapter", sql.Bit, tapeDetail.tvShowChapter || false)
       .input("year", sql.SmallInt, tapeDetail.year)
       .input("tapeId", sql.BigInt, tapeDetail.tapeId)
       .query`update TapeDetail set 
         budget = @budget,
         color = @color,
         duration = @duration,
-        adult = @isAdult,
-        cover = @hasCover,
-        tvShow = @isTvShow,
-        tvShowChapter = @isTvShowChapter,
+        adult = @adult,
+        cover = @cover,
+        tvShow = @tvShow,
+        tvShowChapter = @tvShowChapter,
         year = @year
         where tapeId = @tapeId`;
 
+    if (result.rowsAffected[0] === 0) {
+      return this.insertTapeDetail(tapeDetail);
+    }
+
     return tapeDetail;
+  }
+
+  async getTapeCountries(tapeId: number): Promise<DbalCountry[]> {
+    const result = await this.connection
+      .request()
+      .input("tapeId", sql.BigInt, tapeId)
+      .query`select c.countryId, c.officialName, c.isoCode from Country c INNER JOIN TapeCountry tc ON tc.countryId = c.countryId where tc.tapeId = @tapeId`;
+
+    return result.recordset;
+  }
+
+  async addCountries(tapeId: number, countries: DbalCountry[]): Promise<number> {
+    const countryIds = countries.map(c => c.countryId);
+    const tapeCountries = await this.getTapeCountries(tapeId);
+    tapeCountries.forEach(country => {
+      const index = countryIds.indexOf(country.countryId);
+      if (index >= 0) {
+        countryIds.splice(index, 1);
+      }
+    });
+    if (countryIds.length === 0) {
+      return 0;
+    }
+    const stmt = new sql.PreparedStatement(this.connection);
+    stmt.input("tapeId", sql.BigInt);
+    stmt.input("countryId", sql.Int);
+    await stmt.prepare(`insert into TapeCountry (tapeId, countryId) values (@tapeId, @countryId)`);
+    for (const countryId of countryIds) {
+      await stmt.execute({ tapeId, countryId });
+    }
+    await stmt.unprepare();
+    return countryIds.length;
   }
 }

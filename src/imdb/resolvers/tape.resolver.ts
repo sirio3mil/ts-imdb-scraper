@@ -2,14 +2,11 @@ import { NotFoundException } from "@nestjs/common";
 import {
   Args,
   Int,
-  Mutation,
   Parent,
   Query,
   ResolveField,
   Resolver,
 } from "@nestjs/graphql";
-import { Constants } from "src/config/constants";
-import { TapeRepository } from "src/dbal/repositories/tape.repository";
 import { Tape } from "../models/tape.model";
 import { CreditService } from "../services/credit.service";
 import { KeywordService } from "../services/keyword.service";
@@ -27,7 +24,6 @@ export class TapeResolver {
     private readonly locationService: LocationService,
     private readonly parentalGuideService: ParentalGuideService,
     private readonly keywordService: KeywordService,
-    private readonly tapeRepository: TapeRepository
   ) {}
 
   @Query(() => Tape)
@@ -60,64 +56,6 @@ export class TapeResolver {
         `Tape with imdbNumber ${imdbNumber} not found`
       );
     }
-  }
-
-  @Mutation(() => Tape)
-  async importTape(
-    @Args("imdbNumber", { type: () => Int }) imdbNumber: number
-  ) {
-    try {
-      const url = this.tapeService.createUrl(imdbNumber);
-      const [tapeContent] = await Promise.all([
-        this.tapeService.getContent(url),
-      ]);
-      this.tapeService.set$(tapeContent);
-      let storedTape = await this.tapeRepository.getTapeByImdbNumber(
-        imdbNumber
-      );
-      if (!storedTape) {
-        const objectId = await this.tapeRepository.insertObject(
-          Constants.rowTypes.tape
-        );
-        [, storedTape] = await Promise.all([
-          this.tapeRepository.insertImdbNumber(objectId, imdbNumber),
-          this.tapeRepository.insertTape({
-            objectId,
-            originalTitle: this.tapeService.getOriginalTitle(),
-          }),
-          this.tapeRepository.insertTapeDetail({
-            duration: this.tapeService.getDuration(),
-            year: this.tapeService.getYear(),
-            budget: this.tapeService.getBudget(),
-            color: this.tapeService.getColors().join(", "),
-            isTvShow: this.tapeService.isTvShow(),
-            isTvShowChapter: this.tapeService.isTvShowChapter(),
-            tapeId: storedTape.tapeId,
-          }),
-        ]);
-      } else {
-        [storedTape] = await Promise.all([
-          this.tapeRepository.updateTape({
-            objectId: storedTape.objectId,
-            originalTitle: this.tapeService.getOriginalTitle(),
-            tapeId: storedTape.tapeId,
-          }),
-          this.tapeRepository.updateTapeDetail({
-            duration: this.tapeService.getDuration(),
-            year: this.tapeService.getYear(),
-            budget: this.tapeService.getBudget(),
-            color: this.tapeService.getColors().join(", "),
-            isTvShow: this.tapeService.isTvShow(),
-            isTvShowChapter: this.tapeService.isTvShowChapter(),
-            tapeId: storedTape.tapeId,
-          }),
-        ]);
-      }
-      console.dir(storedTape);
-    } catch (err) {
-      console.log(err);
-    }
-    return new Tape();
   }
 
   @ResolveField()
