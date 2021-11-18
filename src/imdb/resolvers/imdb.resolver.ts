@@ -1,14 +1,8 @@
-import {
-  Args,
-  Int,
-  Mutation,
-  Resolver,
-} from "@nestjs/graphql";
+import { Args, Int, Mutation, Resolver } from "@nestjs/graphql";
 import { Constants } from "src/config/constants";
 import { CountryRepository } from "src/dbal/repositories/country.repository";
 import { TapeRepository } from "src/dbal/repositories/tape.repository";
 import { TapeResult } from "../models/tape-result.model";
-import { Tape } from "../models/tape.model";
 import { TapeService } from "../services/tape.service";
 
 @Resolver(() => TapeResult)
@@ -16,7 +10,7 @@ export class ImdbResolver {
   constructor(
     private readonly tapeService: TapeService,
     private readonly tapeRepository: TapeRepository,
-    private readonly countryRepository: CountryRepository,
+    private readonly countryRepository: CountryRepository
   ) {}
 
   @Mutation(() => TapeResult)
@@ -25,7 +19,7 @@ export class ImdbResolver {
   ) {
     try {
       const url = this.tapeService.createUrl(imdbNumber);
-      const [tapeContent, ] = await Promise.all([
+      const [tapeContent] = await Promise.all([
         this.tapeService.getContent(url),
       ]);
       this.tapeService.set$(tapeContent);
@@ -70,16 +64,22 @@ export class ImdbResolver {
           }),
         ]);
       }
-      const countries = await this.countryRepository.processCountriesOfficialNames(this.tapeService.getCountries());
-      const countriesAdded = await this.tapeRepository.addCountries(storedTape.tapeId, countries);
+      const countries =
+        await this.countryRepository.processCountriesOfficialNames(
+          this.tapeService.getCountries()
+        );
+      const countriesAdded = await this.tapeRepository.addCountries(
+        storedTape.tapeId,
+        countries
+      );
       return {
         objectId: storedTape.objectId,
         tapeId: storedTape.tapeId,
-        countries:  {
+        countries: {
           total: countries.length,
-          added: countriesAdded
-        }
-      }
+          added: countriesAdded,
+        },
+      };
     } catch (err) {
       throw err;
     }

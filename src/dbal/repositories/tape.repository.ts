@@ -1,9 +1,8 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import * as sql from "mssql";
 import { DbalCountry } from "../models/country.model";
 import { DbalTapeDetail } from "../models/tape-detail.model";
 import { DbalTape } from "../models/tape.model";
-import { NotFoundException } from "@nestjs/common";
 
 @Injectable()
 export class TapeRepository {
@@ -96,7 +95,7 @@ export class TapeRepository {
       .query`update Tape set 
         originalTitle = @originalTitle
         where tapeId = @tapeId`;
-    
+
     if (result.rowsAffected[0] === 0) {
       return this.insertTape(tape);
     }
@@ -166,10 +165,13 @@ export class TapeRepository {
     return result.recordset;
   }
 
-  async addCountries(tapeId: number, countries: DbalCountry[]): Promise<number> {
-    const countryIds = countries.map(c => c.countryId);
+  async addCountries(
+    tapeId: number,
+    countries: DbalCountry[]
+  ): Promise<number> {
+    const countryIds = countries.map((c) => c.countryId);
     const tapeCountries = await this.getTapeCountries(tapeId);
-    tapeCountries.forEach(country => {
+    tapeCountries.forEach((country) => {
       const index = countryIds.indexOf(country.countryId);
       if (index >= 0) {
         countryIds.splice(index, 1);
@@ -181,7 +183,9 @@ export class TapeRepository {
     const stmt = new sql.PreparedStatement(this.connection);
     stmt.input("tapeId", sql.BigInt);
     stmt.input("countryId", sql.Int);
-    await stmt.prepare(`insert into TapeCountry (tapeId, countryId) values (@tapeId, @countryId)`);
+    await stmt.prepare(
+      `insert into TapeCountry (tapeId, countryId) values (@tapeId, @countryId)`
+    );
     for (const countryId of countryIds) {
       await stmt.execute({ tapeId, countryId });
     }

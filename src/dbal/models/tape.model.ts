@@ -1,6 +1,6 @@
+import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { DbalCountry } from "./country.model";
 import { DbalTapeDetail } from "./tape-detail.model";
-import { Field, ID, ObjectType } from "@nestjs/graphql";
 
 @ObjectType({ description: "stored tape" })
 export class DbalTape {

@@ -12,9 +12,7 @@ import { TapeRepository } from "../repositories/tape.repository";
 
 @Resolver(() => DbalTape)
 export class DbalTapeResolver {
-  constructor(
-    private readonly tapeRepository: TapeRepository,
-  ) {}
+  constructor(private readonly tapeRepository: TapeRepository) {}
 
   @Query(() => DbalTape)
   async getStoredTape(
@@ -23,9 +21,7 @@ export class DbalTapeResolver {
     try {
       return this.tapeRepository.getTape(tapeId);
     } catch (e) {
-      throw new NotFoundException(
-        `Tape with tapeId ${tapeId} not found`
-      );
+      throw new NotFoundException(`Tape with tapeId ${tapeId} not found`);
     }
   }
 

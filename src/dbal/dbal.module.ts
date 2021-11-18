@@ -16,11 +16,7 @@ const connectionFactory = {
 
 @Module({
   imports: [HttpModule],
-  providers: [
-    DbalTapeResolver,
-    TapeRepository,
-    connectionFactory,
-  ],
+  providers: [DbalTapeResolver, TapeRepository, connectionFactory],
   exports: ["CONNECTION"],
 })
 export class DbalModule {}

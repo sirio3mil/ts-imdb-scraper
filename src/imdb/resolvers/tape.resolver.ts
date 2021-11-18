@@ -23,7 +23,7 @@ export class TapeResolver {
     private readonly releaseInfoService: ReleaseInfoService,
     private readonly locationService: LocationService,
     private readonly parentalGuideService: ParentalGuideService,
-    private readonly keywordService: KeywordService,
+    private readonly keywordService: KeywordService
   ) {}
 
   @Query(() => Tape)
