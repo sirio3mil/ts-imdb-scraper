@@ -5,6 +5,7 @@ import { DbalLanguage } from "./language.model";
 import { DbalRanking } from "./ranking.model";
 import { DbalSound } from "./sound.model";
 import { DbalTapeDetail } from "./tape-detail.model";
+import { DbalTvShowChapter } from "./tv-show-chapter.model";
 import { DbalTvShow } from "./tv-show.model";
 
 @ObjectType({ description: "stored tape" })
@@ -38,4 +39,7 @@ export class DbalTape {
 
   @Field({ nullable: true })
   tvShow?: DbalTvShow;
+
+  @Field({ nullable: true })
+  tvShowChapter?: DbalTvShowChapter;
 }

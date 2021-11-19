@@ -1,11 +1,13 @@
 import { Args, Int, Mutation, Resolver } from "@nestjs/graphql";
 import { Constants } from "src/config/constants";
+import { DbalTvShowChapter } from "src/dbal/models/tv-show-chapter.model";
 import { CountryRepository } from "src/dbal/repositories/country.repository";
 import { GenreRepository } from "src/dbal/repositories/genre.repository";
 import { LanguageRepository } from "src/dbal/repositories/language.repository";
 import { RankingRepository } from "src/dbal/repositories/ranking.repository";
 import { SoundRepository } from "src/dbal/repositories/sound.repository";
 import { TapeRepository } from "src/dbal/repositories/tape.repository";
+import { Episode } from "../models/episode.model";
 import { TapeResult } from "../models/tape-result.model";
 import { TapeService } from "../services/tape.service";
 
@@ -36,6 +38,7 @@ export class ImdbResolver {
       );
       const ranking = this.tapeService.getRanking();
       const isTvShow = this.tapeService.isTvShow();
+      const isTvShowChapter = this.tapeService.isTvShowChapter();
       if (!storedTape) {
         const objectId = await this.tapeRepository.insertObject(
           Constants.rowTypes.tape
@@ -52,7 +55,7 @@ export class ImdbResolver {
             budget: this.tapeService.getBudget(),
             color: this.tapeService.getColors().join(", "),
             tvShow: isTvShow,
-            tvShowChapter: this.tapeService.isTvShowChapter(),
+            tvShowChapter: isTvShowChapter,
             tapeId: storedTape.tapeId,
           }),
           this.rankingRepository.insertRanking({
@@ -75,7 +78,7 @@ export class ImdbResolver {
             budget: this.tapeService.getBudget(),
             color: this.tapeService.getColors().join(", "),
             tvShow: isTvShow,
-            tvShowChapter: this.tapeService.isTvShowChapter(),
+            tvShowChapter: isTvShowChapter,
             tapeId: storedTape.tapeId,
           }),
           this.rankingRepository.upsertRanking({
@@ -87,9 +90,20 @@ export class ImdbResolver {
         ]);
       }
       let finished: boolean;
+      let tvShowChapter: DbalTvShowChapter;
       if (isTvShow) {
         finished = this.tapeService.isFinished();
         this.tapeRepository.upsertTvShow(storedTape, finished);
+      } else if (isTvShowChapter) {
+        const episode = this.tapeService.getEpisode();
+        const tvShow = await this.tapeRepository.getTapeByImdbNumber(episode.tvShowID);
+        tvShowChapter = {
+          tapeId: storedTape.tapeId,
+          tvShowTapeId: tvShow.tapeId,
+          season: episode.season,
+          chapter: episode.chapter,
+        }
+        this.tapeRepository.upsertTvShowChapter(tvShowChapter);
       }
       const [countries, sounds, languages, genres] = await Promise.all([
         this.countryRepository.processCountriesOfficialNames(
@@ -131,6 +145,7 @@ export class ImdbResolver {
         },
         ranking,
         finished,
+        ...tvShowChapter,
       };
     } catch (err) {
       throw err;

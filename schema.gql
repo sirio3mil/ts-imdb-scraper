@@ -54,6 +54,14 @@ type DbalTvShow {
   tapeId: ID!
 }
 
+"""stored tv show chapter"""
+type DbalTvShowChapter {
+  chapter: Int!
+  season: Int!
+  tapeId: ID!
+  tvShowTapeId: Int!
+}
+
 """stored tape"""
 type DbalTape {
   originalTitle: String!
@@ -66,6 +74,7 @@ type DbalTape {
   genres: [DbalGenre!]
   ranking: DbalRanking
   tvShow: DbalTvShow
+  tvShowChapter: DbalTvShowChapter
 }
 
 """count inserted rows"""
@@ -91,6 +100,9 @@ type TapeResult {
   genres: Counter!
   ranking: Ranking!
   finished: Boolean
+  tvShowTapeId: Int
+  chapter: Int
+  season: Int
 }
 
 """episode data"""

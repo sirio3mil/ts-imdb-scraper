@@ -6,6 +6,7 @@ import { DbalLanguage } from "../models/language.model";
 import { DbalSound } from "../models/sound.model";
 import { DbalTapeDetail } from "../models/tape-detail.model";
 import { DbalTape } from "../models/tape.model";
+import { DbalTvShowChapter } from "../models/tv-show-chapter.model";
 import { DbalTvShow } from "../models/tv-show.model";
 
 @Injectable()
@@ -335,5 +336,44 @@ export class TapeRepository {
     }
 
     return tape;
+  }
+
+  async getTvShowChapter(tapeId: number): Promise<DbalTvShowChapter> {
+    const result = await this.connection
+      .request()
+      .input("tapeId", sql.BigInt, tapeId)
+      .query`select tv.tapeId, tv.chapter, tv.season, tv.tvShowTapeId from TvShowChapter tv where tv.tapeId = @tapeId`;
+
+    return result.recordset[0];
+  }
+
+  async insertTvShowChapter(tvShowChapter: DbalTvShowChapter): Promise<DbalTvShowChapter> {
+    const result = await this.connection
+      .request()
+      .input("tapeId", sql.BigInt, tvShowChapter.tapeId)
+      .input("chapter", sql.Int, tvShowChapter.chapter)
+      .input("season", sql.Int, tvShowChapter.season)
+      .input("tvShowTapeId", sql.BigInt, tvShowChapter.tvShowTapeId)
+      .query`insert into TvShowChapter (tapeId, chapter, season, tvShowTapeId) values (@tapeId, @chapter, @season, @tvShowTapeId)`;
+    if (result.rowsAffected[0] === 0) {
+      throw new NotFoundException(`TvShowChapter with id ${tvShowChapter.tapeId} not found`);
+    }
+
+    return tvShowChapter;
+  }
+
+  async upsertTvShowChapter(tvShowChapter: DbalTvShowChapter): Promise<DbalTvShowChapter> {
+    const result = await this.connection
+      .request()
+      .input("tapeId", sql.BigInt, tvShowChapter.tapeId)
+      .input("chapter", sql.Int, tvShowChapter.chapter)
+      .input("season", sql.Int, tvShowChapter.season)
+      .input("tvShowTapeId", sql.BigInt, tvShowChapter.tvShowTapeId)
+      .query`update TvShowChapter set chapter = @chapter, season = @season, tvShowTapeId = @tvShowTapeId where tapeId = @tapeId`;
+    if (result.rowsAffected[0] === 0) {
+      return this.insertTvShowChapter(tvShowChapter);
+    }
+
+    return tvShowChapter;
   }
 }

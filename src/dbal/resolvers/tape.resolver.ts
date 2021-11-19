@@ -70,4 +70,10 @@ export class DbalTapeResolver {
     const { tapeId } = tape;
     return this.tapeRepository.getTvShow(tapeId);
   }
+
+  @ResolveField()
+  async tvShowChapter(@Parent() tape: DbalTape) {
+    const { tapeId } = tape;
+    return this.tapeRepository.getTvShowChapter(tapeId);
+  }
 }

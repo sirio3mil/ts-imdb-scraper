@@ -27,4 +27,13 @@ export class TapeResult {
 
   @Field({ nullable: true })
   finished?: boolean;
+
+  @Field(() => Int, { nullable: true })
+  tvShowTapeId?: number;
+
+  @Field(() => Int, { nullable: true })
+  chapter?: number;
+
+  @Field(() => Int, { nullable: true })
+  season?: number;
 }
