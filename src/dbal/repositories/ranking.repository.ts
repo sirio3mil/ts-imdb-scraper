@@ -1,7 +1,6 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import * as sql from "mssql";
 import { DbalRanking } from "../models/ranking.model";
-import { NotFoundException } from "@nestjs/common";
 
 @Injectable()
 export class RankingRepository {

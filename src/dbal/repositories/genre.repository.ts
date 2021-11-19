@@ -15,9 +15,7 @@ export class GenreRepository {
     const notFoundGenres: string[] = [];
     let stmt = new sql.PreparedStatement(this.connection);
     stmt.input("name", sql.NVarChar(100));
-    await stmt.prepare(
-      `SELECT genreId, name FROM genre WHERE name = @name`
-    );
+    await stmt.prepare(`SELECT genreId, name FROM genre WHERE name = @name`);
     for (const name of names) {
       const result = await stmt.execute({ name });
       if (result.recordset.length > 0) {

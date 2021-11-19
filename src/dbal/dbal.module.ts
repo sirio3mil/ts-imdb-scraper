@@ -18,10 +18,10 @@ const connectionFactory = {
 @Module({
   imports: [HttpModule],
   providers: [
-    DbalTapeResolver, 
-    TapeRepository, 
+    DbalTapeResolver,
+    TapeRepository,
     RankingRepository,
-    connectionFactory
+    connectionFactory,
   ],
   exports: ["CONNECTION"],
 })

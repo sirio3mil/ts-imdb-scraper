@@ -18,7 +18,7 @@ export class ImdbResolver {
     private readonly soundRepository: SoundRepository,
     private readonly languageRepository: LanguageRepository,
     private readonly genreRepository: GenreRepository,
-    private readonly rankingRepository: RankingRepository,
+    private readonly rankingRepository: RankingRepository
   ) {}
 
   @Mutation(() => TapeResult)
@@ -101,16 +101,15 @@ export class ImdbResolver {
         this.languageRepository.processLanguageNames(
           this.tapeService.getLanguages()
         ),
-        this.genreRepository.processGenreNames(
-          this.tapeService.getGenres()
-        ),
+        this.genreRepository.processGenreNames(this.tapeService.getGenres()),
       ]);
-      const [countriesAdded, soundsAdded, languagesAdded, genresAdded] = await Promise.all([
-        this.tapeRepository.addCountries(storedTape.tapeId, countries),
-        this.tapeRepository.addSounds(storedTape.tapeId, sounds),
-        this.tapeRepository.addLanguages(storedTape.tapeId, languages),
-        this.tapeRepository.addGenres(storedTape.tapeId, genres),
-      ]);
+      const [countriesAdded, soundsAdded, languagesAdded, genresAdded] =
+        await Promise.all([
+          this.tapeRepository.addCountries(storedTape.tapeId, countries),
+          this.tapeRepository.addSounds(storedTape.tapeId, sounds),
+          this.tapeRepository.addLanguages(storedTape.tapeId, languages),
+          this.tapeRepository.addGenres(storedTape.tapeId, genres),
+        ]);
       return {
         objectId: storedTape.objectId,
         tapeId: storedTape.tapeId,

@@ -4,7 +4,7 @@ import { Field, ID, ObjectType } from "@nestjs/graphql";
 export class DbalTvShow {
   @Field()
   finished: boolean;
-  
+
   @Field(() => ID)
   tapeId: number;
 }

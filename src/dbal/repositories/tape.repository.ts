@@ -206,10 +206,7 @@ export class TapeRepository {
     return result.recordset;
   }
 
-  async addSounds(
-    tapeId: number,
-    sounds: DbalSound[]
-  ): Promise<number> {
+  async addSounds(tapeId: number, sounds: DbalSound[]): Promise<number> {
     const soundIds = sounds.map((c) => c.soundId);
     const tapeSounds = await this.getTapeSounds(tapeId);
     tapeSounds.forEach((sound) => {
@@ -280,10 +277,7 @@ export class TapeRepository {
     return result.recordset;
   }
 
-  async addGenres(
-    tapeId: number,
-    genres: DbalGenre[]
-  ): Promise<number> {
+  async addGenres(tapeId: number, genres: DbalGenre[]): Promise<number> {
     const genreIds = genres.map((c) => c.genreId);
     const tapeGenres = await this.getTapeGenres(tapeId);
     tapeGenres.forEach((genre) => {
@@ -313,7 +307,7 @@ export class TapeRepository {
       .request()
       .input("tapeId", sql.BigInt, tapeId)
       .query`select tv.tapeId, tv.finished from TvShow tv where tv.tapeId = @tapeId`;
-    
+
     return result.recordset[0];
   }
 

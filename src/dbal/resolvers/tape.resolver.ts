@@ -15,7 +15,7 @@ import { TapeRepository } from "../repositories/tape.repository";
 export class DbalTapeResolver {
   constructor(
     private readonly tapeRepository: TapeRepository,
-    private readonly rankingRepository: RankingRepository,
+    private readonly rankingRepository: RankingRepository
   ) {}
 
   @Query(() => DbalTape)
