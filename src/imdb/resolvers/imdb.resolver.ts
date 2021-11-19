@@ -1,6 +1,7 @@
 import { Args, Int, Mutation, Resolver } from "@nestjs/graphql";
 import { Constants } from "src/config/constants";
 import { CountryRepository } from "src/dbal/repositories/country.repository";
+import { SoundRepository } from "src/dbal/repositories/sound.repository";
 import { TapeRepository } from "src/dbal/repositories/tape.repository";
 import { TapeResult } from "../models/tape-result.model";
 import { TapeService } from "../services/tape.service";
@@ -10,7 +11,8 @@ export class ImdbResolver {
   constructor(
     private readonly tapeService: TapeService,
     private readonly tapeRepository: TapeRepository,
-    private readonly countryRepository: CountryRepository
+    private readonly countryRepository: CountryRepository,
+    private readonly soundRepository: SoundRepository,
   ) {}
 
   @Mutation(() => TapeResult)
@@ -72,12 +74,24 @@ export class ImdbResolver {
         storedTape.tapeId,
         countries
       );
+      const sounds =
+        await this.soundRepository.processSoundDescriptions(
+          this.tapeService.getSounds()
+        );
+      const soundsAdded = await this.tapeRepository.addSounds(
+        storedTape.tapeId,
+        sounds
+      );
       return {
         objectId: storedTape.objectId,
         tapeId: storedTape.tapeId,
         countries: {
           total: countries.length,
           added: countriesAdded,
+        },
+        sounds: {
+          total: sounds.length,
+          added: soundsAdded,
         },
       };
     } catch (err) {

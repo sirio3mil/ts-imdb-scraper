@@ -1,6 +1,7 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import * as sql from "mssql";
 import { DbalCountry } from "../models/country.model";
+import { DbalSound } from "../models/sound.model";
 import { DbalTapeDetail } from "../models/tape-detail.model";
 import { DbalTape } from "../models/tape.model";
 
@@ -191,5 +192,42 @@ export class TapeRepository {
     }
     await stmt.unprepare();
     return countryIds.length;
+  }
+
+  async getTapeSounds(tapeId: number): Promise<DbalSound[]> {
+    const result = await this.connection
+      .request()
+      .input("tapeId", sql.BigInt, tapeId)
+      .query`select s.soundId, s.description from Sound s INNER JOIN TapeSound ts ON ts.soundId = s.soundId where ts.tapeId = @tapeId`;
+
+    return result.recordset;
+  }
+
+  async addSounds(
+    tapeId: number,
+    sounds: DbalSound[]
+  ): Promise<number> {
+    const soundIds = sounds.map((c) => c.soundId);
+    const tapeSounds = await this.getTapeSounds(tapeId);
+    tapeSounds.forEach((sound) => {
+      const index = soundIds.indexOf(sound.soundId);
+      if (index >= 0) {
+        soundIds.splice(index, 1);
+      }
+    });
+    if (soundIds.length === 0) {
+      return 0;
+    }
+    const stmt = new sql.PreparedStatement(this.connection);
+    stmt.input("tapeId", sql.BigInt);
+    stmt.input("soundId", sql.Int);
+    await stmt.prepare(
+      `insert into TapeSound (tapeId, soundId) values (@tapeId, @soundId)`
+    );
+    for (const soundId of soundIds) {
+      await stmt.execute({ tapeId, soundId });
+    }
+    await stmt.unprepare();
+    return soundIds.length;
   }
 }

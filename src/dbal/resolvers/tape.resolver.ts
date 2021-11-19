@@ -36,4 +36,10 @@ export class DbalTapeResolver {
     const { tapeId } = tape;
     return this.tapeRepository.getTapeCountries(tapeId);
   }
+
+  @ResolveField()
+  async sounds(@Parent() tape: DbalTape) {
+    const { tapeId } = tape;
+    return this.tapeRepository.getTapeSounds(tapeId);
+  }
 }

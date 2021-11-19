@@ -11,4 +11,7 @@ export class TapeResult {
 
   @Field()
   countries: Counter;
+
+  @Field()
+  sounds: Counter;
 }
