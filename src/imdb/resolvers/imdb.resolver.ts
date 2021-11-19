@@ -7,7 +7,6 @@ import { LanguageRepository } from "src/dbal/repositories/language.repository";
 import { RankingRepository } from "src/dbal/repositories/ranking.repository";
 import { SoundRepository } from "src/dbal/repositories/sound.repository";
 import { TapeRepository } from "src/dbal/repositories/tape.repository";
-import { Episode } from "../models/episode.model";
 import { TapeResult } from "../models/tape-result.model";
 import { TapeService } from "../services/tape.service";
 
