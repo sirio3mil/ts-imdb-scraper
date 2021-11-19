@@ -1,5 +1,6 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { DbalCountry } from "./country.model";
+import { DbalLanguage } from "./language.model";
 import { DbalSound } from "./sound.model";
 import { DbalTapeDetail } from "./tape-detail.model";
 
@@ -22,4 +23,7 @@ export class DbalTape {
 
   @Field(() => [DbalSound], { nullable: true })
   sounds?: DbalSound[];
+
+  @Field(() => [DbalLanguage], { nullable: true })
+  languages?: DbalLanguage[];
 }

@@ -47,6 +47,4 @@ export class SoundRepository {
 
     return sounds;
   }
-
 }
-

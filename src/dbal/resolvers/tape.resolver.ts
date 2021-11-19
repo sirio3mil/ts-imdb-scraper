@@ -42,4 +42,10 @@ export class DbalTapeResolver {
     const { tapeId } = tape;
     return this.tapeRepository.getTapeSounds(tapeId);
   }
+
+  @ResolveField()
+  async languages(@Parent() tape: DbalTape) {
+    const { tapeId } = tape;
+    return this.tapeRepository.getTapeLanguages(tapeId);
+  }
 }

@@ -3,6 +3,7 @@ import { Module } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import * as sql from "mssql";
 import { CountryRepository } from "src/dbal/repositories/country.repository";
+import { LanguageRepository } from "src/dbal/repositories/language.repository";
 import { SoundRepository } from "src/dbal/repositories/sound.repository";
 import { TapeRepository } from "src/dbal/repositories/tape.repository";
 import { AbstractProvider } from "./providers/abstract.provider";
@@ -43,6 +44,7 @@ const connectionFactory = {
     TapeRepository,
     CountryRepository,
     SoundRepository,
+    LanguageRepository,
     {
       provide: AbstractProvider,
       useClass: FileProvider,

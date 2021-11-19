@@ -1,6 +1,7 @@
 import { Args, Int, Mutation, Resolver } from "@nestjs/graphql";
 import { Constants } from "src/config/constants";
 import { CountryRepository } from "src/dbal/repositories/country.repository";
+import { LanguageRepository } from "src/dbal/repositories/language.repository";
 import { SoundRepository } from "src/dbal/repositories/sound.repository";
 import { TapeRepository } from "src/dbal/repositories/tape.repository";
 import { TapeResult } from "../models/tape-result.model";
@@ -13,6 +14,7 @@ export class ImdbResolver {
     private readonly tapeRepository: TapeRepository,
     private readonly countryRepository: CountryRepository,
     private readonly soundRepository: SoundRepository,
+    private readonly languageRepository: LanguageRepository,
   ) {}
 
   @Mutation(() => TapeResult)
@@ -66,22 +68,22 @@ export class ImdbResolver {
           }),
         ]);
       }
-      const countries =
-        await this.countryRepository.processCountriesOfficialNames(
+      const [countries, sounds, languages] = await Promise.all([
+        this.countryRepository.processCountriesOfficialNames(
           this.tapeService.getCountries()
-        );
-      const countriesAdded = await this.tapeRepository.addCountries(
-        storedTape.tapeId,
-        countries
-      );
-      const sounds =
-        await this.soundRepository.processSoundDescriptions(
+        ),
+        this.soundRepository.processSoundDescriptions(
           this.tapeService.getSounds()
-        );
-      const soundsAdded = await this.tapeRepository.addSounds(
-        storedTape.tapeId,
-        sounds
-      );
+        ),
+        this.languageRepository.processLanguageNames(
+          this.tapeService.getLanguages()
+        )
+      ]);
+      const [countriesAdded, soundsAdded, languagesAdded] = await Promise.all([
+        this.tapeRepository.addCountries(storedTape.tapeId, countries),
+        this.tapeRepository.addSounds(storedTape.tapeId, sounds),
+        this.tapeRepository.addLanguages(storedTape.tapeId, languages),
+      ]);
       return {
         objectId: storedTape.objectId,
         tapeId: storedTape.tapeId,
@@ -92,6 +94,10 @@ export class ImdbResolver {
         sounds: {
           total: sounds.length,
           added: soundsAdded,
+        },
+        languages: {
+          total: languages.length,
+          added: languagesAdded,
         },
       };
     } catch (err) {

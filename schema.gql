@@ -28,6 +28,12 @@ type DbalSound {
   soundId: ID
 }
 
+"""stored language"""
+type DbalLanguage {
+  languageId: ID
+  name: String!
+}
+
 """stored tape"""
 type DbalTape {
   originalTitle: String!
@@ -36,6 +42,7 @@ type DbalTape {
   detail: DbalTapeDetail
   countries: [DbalCountry!]
   sounds: [DbalSound!]
+  languages: [DbalLanguage!]
 }
 
 """count inserted rows"""
@@ -50,6 +57,7 @@ type TapeResult {
   objectId: String!
   countries: Counter!
   sounds: Counter!
+  languages: Counter!
 }
 
 """episode data"""
