@@ -24,4 +24,7 @@ export class TapeResult {
 
   @Field()
   ranking: Ranking;
+
+  @Field({ nullable: true })
+  finished?: boolean;
 }

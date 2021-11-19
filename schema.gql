@@ -48,6 +48,12 @@ type DbalRanking {
   votes: Int!
 }
 
+"""stored tv show"""
+type DbalTvShow {
+  finished: Boolean!
+  tapeId: ID!
+}
+
 """stored tape"""
 type DbalTape {
   originalTitle: String!
@@ -59,6 +65,7 @@ type DbalTape {
   languages: [DbalLanguage!]
   genres: [DbalGenre!]
   ranking: DbalRanking
+  tvShow: DbalTvShow
 }
 
 """count inserted rows"""
@@ -83,6 +90,7 @@ type TapeResult {
   languages: Counter!
   genres: Counter!
   ranking: Ranking!
+  finished: Boolean
 }
 
 """episode data"""

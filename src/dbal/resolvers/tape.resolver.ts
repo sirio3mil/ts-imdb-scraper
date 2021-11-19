@@ -64,4 +64,10 @@ export class DbalTapeResolver {
     const { objectId } = tape;
     return this.rankingRepository.getRanking(objectId);
   }
+
+  @ResolveField()
+  async tvShow(@Parent() tape: DbalTape) {
+    const { tapeId } = tape;
+    return this.tapeRepository.getTvShow(tapeId);
+  }
 }

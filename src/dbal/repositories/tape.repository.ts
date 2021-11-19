@@ -6,6 +6,7 @@ import { DbalLanguage } from "../models/language.model";
 import { DbalSound } from "../models/sound.model";
 import { DbalTapeDetail } from "../models/tape-detail.model";
 import { DbalTape } from "../models/tape.model";
+import { DbalTvShow } from "../models/tv-show.model";
 
 @Injectable()
 export class TapeRepository {
@@ -305,5 +306,40 @@ export class TapeRepository {
     }
     await stmt.unprepare();
     return genreIds.length;
+  }
+
+  async getTvShow(tapeId: number): Promise<DbalTvShow> {
+    const result = await this.connection
+      .request()
+      .input("tapeId", sql.BigInt, tapeId)
+      .query`select tv.tapeId, tv.finished from TvShow tv where tv.tapeId = @tapeId`;
+    
+    return result.recordset[0];
+  }
+
+  async insertTvShow(tape: DbalTape, finished: boolean): Promise<DbalTape> {
+    const result = await this.connection
+      .request()
+      .input("tapeId", sql.BigInt, tape.tapeId)
+      .input("finished", sql.Bit, finished)
+      .query`insert into TvShow (tapeId, finished) values (@tapeId, @finished)`;
+    if (result.rowsAffected[0] === 0) {
+      throw new NotFoundException(`TvShow with id ${tape.tapeId} not found`);
+    }
+
+    return tape;
+  }
+
+  async upsertTvShow(tape: DbalTape, finished: boolean): Promise<DbalTape> {
+    const result = await this.connection
+      .request()
+      .input("tapeId", sql.BigInt, tape.tapeId)
+      .input("finished", sql.Bit, finished)
+      .query`update TvShow set finished = @finished where tapeId = @tapeId`;
+    if (result.rowsAffected[0] === 0) {
+      return this.insertTvShow(tape, finished);
+    }
+
+    return tape;
   }
 }
