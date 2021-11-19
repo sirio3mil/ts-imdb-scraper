@@ -25,9 +25,9 @@ describe("TapeService", () => {
 
     it("should match ranking", () => {
       const ranking = tapeService.getRanking();
-      expect(ranking.calculatedScore).toBeCloseTo(8.7, 1);
+      expect(ranking.realScore).toBeCloseTo(8.7, 1);
       expect(ranking.votes).toBeGreaterThanOrEqual(1800000);
-      expect(ranking.score).toBe(ranking.calculatedScore * ranking.votes);
+      expect(ranking.score).toBe(ranking.realScore * ranking.votes);
     });
 
     it("should not be finished", () => {
@@ -104,9 +104,9 @@ describe("TapeService", () => {
 
     it("should match ranking", () => {
       const ranking = tapeService.getRanking();
-      expect(ranking.calculatedScore).toBeCloseTo(8.6, 1);
+      expect(ranking.realScore).toBeCloseTo(8.6, 1);
       expect(ranking.votes).toBeGreaterThanOrEqual(684000);
-      expect(ranking.score).toBe(ranking.calculatedScore * ranking.votes);
+      expect(ranking.score).toBe(ranking.realScore * ranking.votes);
     });
 
     it("should be finished", () => {

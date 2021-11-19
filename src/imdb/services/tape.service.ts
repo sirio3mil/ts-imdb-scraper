@@ -19,7 +19,7 @@ export class TapeService extends HtmlService {
     const ratingAmount = this.$(
       '[class^="AggregateRatingButton__TotalRatingAmount"]'
     );
-    ranking.calculatedScore = parseFloat(ratingScore.first().text());
+    ranking.realScore = parseFloat(ratingScore.first().text());
     const formattedVotes = ratingAmount.first().text();
     if (formattedVotes.endsWith("M")) {
       ranking.votes =
@@ -28,7 +28,7 @@ export class TapeService extends HtmlService {
       ranking.votes = parseFloat(formattedVotes.replace(/[^0-9.]/g, "")) * 1000;
     }
     if (!!ranking.votes) {
-      ranking.score = ranking.votes * ranking.calculatedScore;
+      ranking.score = ranking.votes * ranking.realScore;
     }
     return ranking;
   }

@@ -3,6 +3,7 @@ import { Module } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import * as sql from "mssql";
 import { TapeRepository } from "src/dbal/repositories/tape.repository";
+import { RankingRepository } from "./repositories/ranking.repository";
 import { DbalTapeResolver } from "./resolvers/tape.resolver";
 
 const connectionFactory = {
@@ -16,7 +17,12 @@ const connectionFactory = {
 
 @Module({
   imports: [HttpModule],
-  providers: [DbalTapeResolver, TapeRepository, connectionFactory],
+  providers: [
+    DbalTapeResolver, 
+    TapeRepository, 
+    RankingRepository,
+    connectionFactory
+  ],
   exports: ["CONNECTION"],
 })
 export class DbalModule {}

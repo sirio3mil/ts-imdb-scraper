@@ -3,6 +3,7 @@ import { Constants } from "src/config/constants";
 import { CountryRepository } from "src/dbal/repositories/country.repository";
 import { GenreRepository } from "src/dbal/repositories/genre.repository";
 import { LanguageRepository } from "src/dbal/repositories/language.repository";
+import { RankingRepository } from "src/dbal/repositories/ranking.repository";
 import { SoundRepository } from "src/dbal/repositories/sound.repository";
 import { TapeRepository } from "src/dbal/repositories/tape.repository";
 import { TapeResult } from "../models/tape-result.model";
@@ -17,6 +18,7 @@ export class ImdbResolver {
     private readonly soundRepository: SoundRepository,
     private readonly languageRepository: LanguageRepository,
     private readonly genreRepository: GenreRepository,
+    private readonly rankingRepository: RankingRepository,
   ) {}
 
   @Mutation(() => TapeResult)
@@ -70,7 +72,14 @@ export class ImdbResolver {
           }),
         ]);
       }
-      const [countries, sounds, languages, genres] = await Promise.all([
+      const ranking = this.tapeService.getRanking();
+      const [, countries, sounds, languages, genres] = await Promise.all([
+        this.rankingRepository.upsertRanking({
+          score: ranking.score,
+          votes: ranking.votes,
+          realScore: ranking.realScore,
+          objectId: storedTape.objectId,
+        }),
         this.countryRepository.processCountriesOfficialNames(
           this.tapeService.getCountries()
         ),
@@ -109,6 +118,7 @@ export class ImdbResolver {
           total: genres.length,
           added: genresAdded,
         },
+        ranking
       };
     } catch (err) {
       throw err;

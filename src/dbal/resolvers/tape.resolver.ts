@@ -8,11 +8,15 @@ import {
   Resolver,
 } from "@nestjs/graphql";
 import { DbalTape } from "../models/tape.model";
+import { RankingRepository } from "../repositories/ranking.repository";
 import { TapeRepository } from "../repositories/tape.repository";
 
 @Resolver(() => DbalTape)
 export class DbalTapeResolver {
-  constructor(private readonly tapeRepository: TapeRepository) {}
+  constructor(
+    private readonly tapeRepository: TapeRepository,
+    private readonly rankingRepository: RankingRepository,
+  ) {}
 
   @Query(() => DbalTape)
   async getStoredTape(
@@ -53,5 +57,11 @@ export class DbalTapeResolver {
   async genres(@Parent() tape: DbalTape) {
     const { tapeId } = tape;
     return this.tapeRepository.getTapeGenres(tapeId);
+  }
+
+  @ResolveField()
+  async ranking(@Parent() tape: DbalTape) {
+    const { objectId } = tape;
+    return this.rankingRepository.getRanking(objectId);
   }
 }

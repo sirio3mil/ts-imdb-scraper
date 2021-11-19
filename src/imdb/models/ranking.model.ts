@@ -1,9 +1,10 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
+import { IRanking } from "src/domain/models/ranking.interface";
 
 @ObjectType({ description: "ranking" })
-export class Ranking {
+export class Ranking implements IRanking {
   @Field()
-  calculatedScore: number;
+  realScore: number;
 
   @Field()
   score: number;

@@ -1,5 +1,6 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { Counter } from "./counter.model";
+import { Ranking } from "./ranking.model";
 
 @ObjectType({ description: "tape import result" })
 export class TapeResult {
@@ -20,4 +21,7 @@ export class TapeResult {
 
   @Field()
   genres: Counter;
+
+  @Field()
+  ranking: Ranking;
 }

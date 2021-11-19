@@ -40,6 +40,14 @@ type DbalGenre {
   name: String!
 }
 
+"""stored ranking"""
+type DbalRanking {
+  realScore: Float!
+  objectId: ID!
+  score: Float!
+  votes: Int!
+}
+
 """stored tape"""
 type DbalTape {
   originalTitle: String!
@@ -50,12 +58,20 @@ type DbalTape {
   sounds: [DbalSound!]
   languages: [DbalLanguage!]
   genres: [DbalGenre!]
+  ranking: DbalRanking
 }
 
 """count inserted rows"""
 type Counter {
   total: Int!
   added: Int!
+}
+
+"""ranking"""
+type Ranking {
+  realScore: Float!
+  score: Float!
+  votes: Int!
 }
 
 """tape import result"""
@@ -66,6 +82,7 @@ type TapeResult {
   sounds: Counter!
   languages: Counter!
   genres: Counter!
+  ranking: Ranking!
 }
 
 """episode data"""
@@ -73,13 +90,6 @@ type Episode {
   chapter: Int!
   season: Int!
   tvShowID: Int!
-}
-
-"""ranking"""
-type Ranking {
-  calculatedScore: Float!
-  score: Float!
-  votes: Int!
 }
 
 """person"""
