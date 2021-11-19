@@ -34,6 +34,7 @@ export class ImdbResolver {
       let storedTape = await this.tapeRepository.getTapeByImdbNumber(
         imdbNumber
       );
+      const ranking = this.tapeService.getRanking();
       if (!storedTape) {
         const objectId = await this.tapeRepository.insertObject(
           Constants.rowTypes.tape
@@ -53,6 +54,12 @@ export class ImdbResolver {
             tvShowChapter: this.tapeService.isTvShowChapter(),
             tapeId: storedTape.tapeId,
           }),
+          this.rankingRepository.insertRanking({
+            score: ranking.score,
+            votes: ranking.votes,
+            realScore: ranking.realScore,
+            objectId: storedTape.objectId,
+          }),
         ]);
       } else {
         [storedTape] = await Promise.all([
@@ -70,16 +77,16 @@ export class ImdbResolver {
             tvShowChapter: this.tapeService.isTvShowChapter(),
             tapeId: storedTape.tapeId,
           }),
+          this.rankingRepository.upsertRanking({
+            score: ranking.score,
+            votes: ranking.votes,
+            realScore: ranking.realScore,
+            objectId: storedTape.objectId,
+          }),
         ]);
       }
-      const ranking = this.tapeService.getRanking();
-      const [, countries, sounds, languages, genres] = await Promise.all([
-        this.rankingRepository.upsertRanking({
-          score: ranking.score,
-          votes: ranking.votes,
-          realScore: ranking.realScore,
-          objectId: storedTape.objectId,
-        }),
+      
+      const [countries, sounds, languages, genres] = await Promise.all([
         this.countryRepository.processCountriesOfficialNames(
           this.tapeService.getCountries()
         ),
