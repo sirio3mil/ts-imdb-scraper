@@ -78,7 +78,7 @@ export class TapeService extends HtmlService {
       .find(".ipc-metadata-list__item");
     detailsBlock.each((i, elem) => {
       const label = this.$(elem).find(".ipc-metadata-list-item__label").text();
-      if (label === "Genres") {
+      if (label.startsWith("Genre")) {
         this.$(elem)
           .find(".ipc-metadata-list-item__list-content-item")
           .each((i, elem) => {

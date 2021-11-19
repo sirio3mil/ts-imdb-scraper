@@ -34,6 +34,12 @@ type DbalLanguage {
   name: String!
 }
 
+"""stored genre"""
+type DbalGenre {
+  genreId: ID
+  name: String!
+}
+
 """stored tape"""
 type DbalTape {
   originalTitle: String!
@@ -43,6 +49,7 @@ type DbalTape {
   countries: [DbalCountry!]
   sounds: [DbalSound!]
   languages: [DbalLanguage!]
+  genres: [DbalGenre!]
 }
 
 """count inserted rows"""
@@ -58,6 +65,7 @@ type TapeResult {
   countries: Counter!
   sounds: Counter!
   languages: Counter!
+  genres: Counter!
 }
 
 """episode data"""

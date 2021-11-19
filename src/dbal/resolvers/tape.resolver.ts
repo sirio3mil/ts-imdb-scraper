@@ -48,4 +48,10 @@ export class DbalTapeResolver {
     const { tapeId } = tape;
     return this.tapeRepository.getTapeLanguages(tapeId);
   }
+
+  @ResolveField()
+  async genres(@Parent() tape: DbalTape) {
+    const { tapeId } = tape;
+    return this.tapeRepository.getTapeGenres(tapeId);
+  }
 }

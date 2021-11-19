@@ -1,6 +1,7 @@
 import { Args, Int, Mutation, Resolver } from "@nestjs/graphql";
 import { Constants } from "src/config/constants";
 import { CountryRepository } from "src/dbal/repositories/country.repository";
+import { GenreRepository } from "src/dbal/repositories/genre.repository";
 import { LanguageRepository } from "src/dbal/repositories/language.repository";
 import { SoundRepository } from "src/dbal/repositories/sound.repository";
 import { TapeRepository } from "src/dbal/repositories/tape.repository";
@@ -15,6 +16,7 @@ export class ImdbResolver {
     private readonly countryRepository: CountryRepository,
     private readonly soundRepository: SoundRepository,
     private readonly languageRepository: LanguageRepository,
+    private readonly genreRepository: GenreRepository,
   ) {}
 
   @Mutation(() => TapeResult)
@@ -68,7 +70,7 @@ export class ImdbResolver {
           }),
         ]);
       }
-      const [countries, sounds, languages] = await Promise.all([
+      const [countries, sounds, languages, genres] = await Promise.all([
         this.countryRepository.processCountriesOfficialNames(
           this.tapeService.getCountries()
         ),
@@ -77,12 +79,16 @@ export class ImdbResolver {
         ),
         this.languageRepository.processLanguageNames(
           this.tapeService.getLanguages()
-        )
+        ),
+        this.genreRepository.processGenreNames(
+          this.tapeService.getGenres()
+        ),
       ]);
-      const [countriesAdded, soundsAdded, languagesAdded] = await Promise.all([
+      const [countriesAdded, soundsAdded, languagesAdded, genresAdded] = await Promise.all([
         this.tapeRepository.addCountries(storedTape.tapeId, countries),
         this.tapeRepository.addSounds(storedTape.tapeId, sounds),
         this.tapeRepository.addLanguages(storedTape.tapeId, languages),
+        this.tapeRepository.addGenres(storedTape.tapeId, genres),
       ]);
       return {
         objectId: storedTape.objectId,
@@ -98,6 +104,10 @@ export class ImdbResolver {
         languages: {
           total: languages.length,
           added: languagesAdded,
+        },
+        genres: {
+          total: genres.length,
+          added: genresAdded,
         },
       };
     } catch (err) {
