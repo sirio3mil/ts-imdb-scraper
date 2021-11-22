@@ -59,6 +59,6 @@
     "graphql-subscriptions": "^2.0.0",
     "memory-cache": "^0.2.0",
     "mssql": "^7.3.0",
-    "ts-morph": "^12.2.0"
+    "ts-morph": "^13.0.0"
   }
 }
