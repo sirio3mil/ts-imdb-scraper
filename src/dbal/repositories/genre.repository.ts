@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import * as sql from "mssql";
-import { DbalGenre } from "../models/genre.model";
+import { Genre } from "../models/genre.model";
 
 @Injectable()
 export class GenreRepository {
@@ -10,8 +10,8 @@ export class GenreRepository {
     this.connection = connection;
   }
 
-  async processGenreNames(names: string[]): Promise<DbalGenre[]> {
-    const genres: DbalGenre[] = [];
+  async processGenreNames(names: string[]): Promise<Genre[]> {
+    const genres: Genre[] = [];
     const notFoundGenres: string[] = [];
     let stmt = new sql.PreparedStatement(this.connection);
     stmt.input("name", sql.NVarChar(100));
@@ -19,7 +19,7 @@ export class GenreRepository {
     for (const name of names) {
       const result = await stmt.execute({ name });
       if (result.recordset.length > 0) {
-        genres.push(<DbalGenre>result.recordset[0]);
+        genres.push(<Genre>result.recordset[0]);
       } else {
         notFoundGenres.push(name);
       }

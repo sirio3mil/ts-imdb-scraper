@@ -1,7 +1,7 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 
 @ObjectType({ description: "stored country" })
-export class DbalCountry {
+export class Country {
   @Field(() => ID)
   countryId?: number;
 

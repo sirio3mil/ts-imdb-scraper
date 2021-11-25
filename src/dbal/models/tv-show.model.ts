@@ -1,7 +1,7 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 
 @ObjectType({ description: "stored tv show" })
-export class DbalTvShow {
+export class TvShow {
   @Field()
   finished: boolean;
 

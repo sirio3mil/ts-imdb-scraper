@@ -3,7 +3,7 @@
 # ------------------------------------------------------
 
 """stored tape detail"""
-type DbalTapeDetail {
+type TapeDetail {
   budget: Float
   color: String
   duration: Int
@@ -16,26 +16,26 @@ type DbalTapeDetail {
 }
 
 """stored country"""
-type DbalCountry {
+type Country {
   countryId: ID
   isoCode: String
   officialName: String!
 }
 
 """stored sound"""
-type DbalSound {
+type Sound {
   description: String!
   soundId: ID
 }
 
 """stored language"""
-type DbalLanguage {
+type Language {
   languageId: ID
   name: String!
 }
 
 """stored genre"""
-type DbalGenre {
+type Genre {
   genreId: ID
   name: String!
 }
@@ -49,13 +49,13 @@ type DbalRanking {
 }
 
 """stored tv show"""
-type DbalTvShow {
+type TvShow {
   finished: Boolean!
   tapeId: ID!
 }
 
 """stored tv show chapter"""
-type DbalTvShowChapter {
+type TvShowChapter {
   chapter: Int!
   season: Int!
   tapeId: ID!
@@ -67,14 +67,14 @@ type DbalTape {
   originalTitle: String!
   objectId: String!
   tapeId: ID
-  detail: DbalTapeDetail
-  countries: [DbalCountry!]
-  sounds: [DbalSound!]
-  languages: [DbalLanguage!]
-  genres: [DbalGenre!]
+  detail: TapeDetail
+  countries: [Country!]
+  sounds: [Sound!]
+  languages: [Language!]
+  genres: [Genre!]
   ranking: DbalRanking
-  tvShow: DbalTvShow
-  tvShowChapter: DbalTvShowChapter
+  tvShow: TvShow
+  tvShowChapter: TvShowChapter
 }
 
 """count inserted rows"""

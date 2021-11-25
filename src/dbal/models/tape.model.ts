@@ -1,12 +1,12 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { DbalCountry } from "./country.model";
-import { DbalGenre } from "./genre.model";
-import { DbalLanguage } from "./language.model";
+import { Country } from "./country.model";
+import { Genre } from "./genre.model";
+import { Language } from "./language.model";
 import { DbalRanking } from "./ranking.model";
-import { DbalSound } from "./sound.model";
-import { DbalTapeDetail } from "./tape-detail.model";
-import { DbalTvShowChapter } from "./tv-show-chapter.model";
-import { DbalTvShow } from "./tv-show.model";
+import { Sound } from "./sound.model";
+import { TapeDetail } from "./tape-detail.model";
+import { TvShowChapter } from "./tv-show-chapter.model";
+import { TvShow } from "./tv-show.model";
 
 @ObjectType({ description: "stored tape" })
 export class DbalTape {
@@ -20,26 +20,26 @@ export class DbalTape {
   tapeId?: number;
 
   @Field({ nullable: true })
-  detail?: DbalTapeDetail;
+  detail?: TapeDetail;
 
-  @Field(() => [DbalCountry], { nullable: true })
-  countries?: DbalCountry[];
+  @Field(() => [Country], { nullable: true })
+  countries?: Country[];
 
-  @Field(() => [DbalSound], { nullable: true })
-  sounds?: DbalSound[];
+  @Field(() => [Sound], { nullable: true })
+  sounds?: Sound[];
 
-  @Field(() => [DbalLanguage], { nullable: true })
-  languages?: DbalLanguage[];
+  @Field(() => [Language], { nullable: true })
+  languages?: Language[];
 
-  @Field(() => [DbalGenre], { nullable: true })
-  genres?: DbalGenre[];
+  @Field(() => [Genre], { nullable: true })
+  genres?: Genre[];
 
   @Field({ nullable: true })
   ranking?: DbalRanking;
 
   @Field({ nullable: true })
-  tvShow?: DbalTvShow;
+  tvShow?: TvShow;
 
   @Field({ nullable: true })
-  tvShowChapter?: DbalTvShowChapter;
+  tvShowChapter?: TvShowChapter;
 }

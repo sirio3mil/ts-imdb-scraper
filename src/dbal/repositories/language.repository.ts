@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import * as sql from "mssql";
-import { DbalLanguage } from "../models/language.model";
+import { Language } from "../models/language.model";
 
 @Injectable()
 export class LanguageRepository {
@@ -10,8 +10,8 @@ export class LanguageRepository {
     this.connection = connection;
   }
 
-  async processLanguageNames(names: string[]): Promise<DbalLanguage[]> {
-    const languages: DbalLanguage[] = [];
+  async processLanguageNames(names: string[]): Promise<Language[]> {
+    const languages: Language[] = [];
     const notFoundLanguages: string[] = [];
     let stmt = new sql.PreparedStatement(this.connection);
     stmt.input("name", sql.NVarChar(100));
@@ -21,7 +21,7 @@ export class LanguageRepository {
     for (const name of names) {
       const result = await stmt.execute({ name });
       if (result.recordset.length > 0) {
-        languages.push(<DbalLanguage>result.recordset[0]);
+        languages.push(<Language>result.recordset[0]);
       } else {
         notFoundLanguages.push(name);
       }

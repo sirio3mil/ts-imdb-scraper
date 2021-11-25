@@ -1,7 +1,7 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 
 @ObjectType({ description: "stored sound" })
-export class DbalSound {
+export class Sound {
   @Field()
   description: string;
 

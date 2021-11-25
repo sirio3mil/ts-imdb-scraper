@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import * as sql from "mssql";
-import { DbalSound } from "../models/sound.model";
+import { Sound } from "../models/sound.model";
 
 @Injectable()
 export class SoundRepository {
@@ -10,8 +10,8 @@ export class SoundRepository {
     this.connection = connection;
   }
 
-  async processSoundDescriptions(descriptions: string[]): Promise<DbalSound[]> {
-    const sounds: DbalSound[] = [];
+  async processSoundDescriptions(descriptions: string[]): Promise<Sound[]> {
+    const sounds: Sound[] = [];
     const notFoundSounds: string[] = [];
     let stmt = new sql.PreparedStatement(this.connection);
     stmt.input("description", sql.NVarChar(50));
@@ -21,7 +21,7 @@ export class SoundRepository {
     for (const description of descriptions) {
       const result = await stmt.execute({ description });
       if (result.recordset.length > 0) {
-        sounds.push(<DbalSound>result.recordset[0]);
+        sounds.push(<Sound>result.recordset[0]);
       } else {
         notFoundSounds.push(description);
       }

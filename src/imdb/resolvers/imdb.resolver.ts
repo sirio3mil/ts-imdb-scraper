@@ -1,6 +1,6 @@
 import { Args, Int, Mutation, Resolver } from "@nestjs/graphql";
 import { Constants } from "src/config/constants";
-import { DbalTvShowChapter } from "src/dbal/models/tv-show-chapter.model";
+import { TvShowChapter } from "src/dbal/models/tv-show-chapter.model";
 import { CountryRepository } from "src/dbal/repositories/country.repository";
 import { GenreRepository } from "src/dbal/repositories/genre.repository";
 import { LanguageRepository } from "src/dbal/repositories/language.repository";
@@ -89,7 +89,7 @@ export class ImdbResolver {
         ]);
       }
       let finished: boolean;
-      let tvShowChapter: DbalTvShowChapter;
+      let tvShowChapter: TvShowChapter;
       if (isTvShow) {
         finished = this.tapeService.isFinished();
         this.tapeRepository.upsertTvShow(storedTape, finished);

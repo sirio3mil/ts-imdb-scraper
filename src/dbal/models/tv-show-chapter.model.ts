@@ -1,7 +1,7 @@
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 
 @ObjectType({ description: "stored tv show chapter" })
-export class DbalTvShowChapter {
+export class TvShowChapter {
   @Field(() => Int)
   chapter: number;
 

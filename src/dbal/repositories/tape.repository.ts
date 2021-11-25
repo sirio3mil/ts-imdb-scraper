@@ -1,13 +1,13 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import * as sql from "mssql";
-import { DbalCountry } from "../models/country.model";
-import { DbalGenre } from "../models/genre.model";
-import { DbalLanguage } from "../models/language.model";
-import { DbalSound } from "../models/sound.model";
-import { DbalTapeDetail } from "../models/tape-detail.model";
+import { Country } from "../models/country.model";
+import { Genre } from "../models/genre.model";
+import { Language } from "../models/language.model";
+import { Sound } from "../models/sound.model";
+import { TapeDetail } from "../models/tape-detail.model";
 import { DbalTape } from "../models/tape.model";
-import { DbalTvShowChapter } from "../models/tv-show-chapter.model";
-import { DbalTvShow } from "../models/tv-show.model";
+import { TvShowChapter } from "../models/tv-show-chapter.model";
+import { TvShow } from "../models/tv-show.model";
 
 @Injectable()
 export class TapeRepository {
@@ -30,7 +30,7 @@ export class TapeRepository {
     return result.recordset[0];
   }
 
-  async getTapeDetail(tapeId: number): Promise<DbalTapeDetail> {
+  async getTapeDetail(tapeId: number): Promise<TapeDetail> {
     const result = await this.connection
       .request()
       .input("tapeId", sql.BigInt, tapeId)
@@ -108,7 +108,7 @@ export class TapeRepository {
     return tape;
   }
 
-  async insertTapeDetail(tapeDetail: DbalTapeDetail): Promise<DbalTapeDetail> {
+  async insertTapeDetail(tapeDetail: TapeDetail): Promise<TapeDetail> {
     const result = await this.connection
       .request()
       .input("budget", sql.Float, tapeDetail.budget || 0)
@@ -131,7 +131,7 @@ export class TapeRepository {
     return tapeDetail;
   }
 
-  async upsertTapeDetail(tapeDetail: DbalTapeDetail): Promise<DbalTapeDetail> {
+  async upsertTapeDetail(tapeDetail: TapeDetail): Promise<TapeDetail> {
     const result = await this.connection
       .request()
       .input("budget", sql.Float, tapeDetail.budget || 0)
@@ -161,7 +161,7 @@ export class TapeRepository {
     return tapeDetail;
   }
 
-  async getTapeCountries(tapeId: number): Promise<DbalCountry[]> {
+  async getTapeCountries(tapeId: number): Promise<Country[]> {
     const result = await this.connection
       .request()
       .input("tapeId", sql.BigInt, tapeId)
@@ -172,7 +172,7 @@ export class TapeRepository {
 
   async addCountries(
     tapeId: number,
-    countries: DbalCountry[]
+    countries: Country[]
   ): Promise<number> {
     const countryIds = countries.map((c) => c.countryId);
     const tapeCountries = await this.getTapeCountries(tapeId);
@@ -198,7 +198,7 @@ export class TapeRepository {
     return countryIds.length;
   }
 
-  async getTapeSounds(tapeId: number): Promise<DbalSound[]> {
+  async getTapeSounds(tapeId: number): Promise<Sound[]> {
     const result = await this.connection
       .request()
       .input("tapeId", sql.BigInt, tapeId)
@@ -207,7 +207,7 @@ export class TapeRepository {
     return result.recordset;
   }
 
-  async addSounds(tapeId: number, sounds: DbalSound[]): Promise<number> {
+  async addSounds(tapeId: number, sounds: Sound[]): Promise<number> {
     const soundIds = sounds.map((c) => c.soundId);
     const tapeSounds = await this.getTapeSounds(tapeId);
     tapeSounds.forEach((sound) => {
@@ -232,7 +232,7 @@ export class TapeRepository {
     return soundIds.length;
   }
 
-  async getTapeLanguages(tapeId: number): Promise<DbalLanguage[]> {
+  async getTapeLanguages(tapeId: number): Promise<Language[]> {
     const result = await this.connection
       .request()
       .input("tapeId", sql.BigInt, tapeId)
@@ -243,7 +243,7 @@ export class TapeRepository {
 
   async addLanguages(
     tapeId: number,
-    languages: DbalLanguage[]
+    languages: Language[]
   ): Promise<number> {
     const languageIds = languages.map((c) => c.languageId);
     const tapeLanguages = await this.getTapeLanguages(tapeId);
@@ -269,7 +269,7 @@ export class TapeRepository {
     return languageIds.length;
   }
 
-  async getTapeGenres(tapeId: number): Promise<DbalGenre[]> {
+  async getTapeGenres(tapeId: number): Promise<Genre[]> {
     const result = await this.connection
       .request()
       .input("tapeId", sql.BigInt, tapeId)
@@ -278,7 +278,7 @@ export class TapeRepository {
     return result.recordset;
   }
 
-  async addGenres(tapeId: number, genres: DbalGenre[]): Promise<number> {
+  async addGenres(tapeId: number, genres: Genre[]): Promise<number> {
     const genreIds = genres.map((c) => c.genreId);
     const tapeGenres = await this.getTapeGenres(tapeId);
     tapeGenres.forEach((genre) => {
@@ -303,7 +303,7 @@ export class TapeRepository {
     return genreIds.length;
   }
 
-  async getTvShow(tapeId: number): Promise<DbalTvShow> {
+  async getTvShow(tapeId: number): Promise<TvShow> {
     const result = await this.connection
       .request()
       .input("tapeId", sql.BigInt, tapeId)
@@ -338,7 +338,7 @@ export class TapeRepository {
     return tape;
   }
 
-  async getTvShowChapter(tapeId: number): Promise<DbalTvShowChapter> {
+  async getTvShowChapter(tapeId: number): Promise<TvShowChapter> {
     const result = await this.connection
       .request()
       .input("tapeId", sql.BigInt, tapeId)
@@ -347,7 +347,7 @@ export class TapeRepository {
     return result.recordset[0];
   }
 
-  async insertTvShowChapter(tvShowChapter: DbalTvShowChapter): Promise<DbalTvShowChapter> {
+  async insertTvShowChapter(tvShowChapter: TvShowChapter): Promise<TvShowChapter> {
     const result = await this.connection
       .request()
       .input("tapeId", sql.BigInt, tvShowChapter.tapeId)
@@ -362,7 +362,7 @@ export class TapeRepository {
     return tvShowChapter;
   }
 
-  async upsertTvShowChapter(tvShowChapter: DbalTvShowChapter): Promise<DbalTvShowChapter> {
+  async upsertTvShowChapter(tvShowChapter: TvShowChapter): Promise<TvShowChapter> {
     const result = await this.connection
       .request()
       .input("tapeId", sql.BigInt, tvShowChapter.tapeId)

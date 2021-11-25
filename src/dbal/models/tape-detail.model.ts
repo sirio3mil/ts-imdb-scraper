@@ -1,7 +1,7 @@
 import { Field, Float, ID, Int, ObjectType } from "@nestjs/graphql";
 
 @ObjectType({ description: "stored tape detail" })
-export class DbalTapeDetail {
+export class TapeDetail {
   @Field(() => Float, { nullable: true })
   budget?: number;
 

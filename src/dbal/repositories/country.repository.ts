@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import * as sql from "mssql";
-import { DbalCountry } from "../models/country.model";
+import { Country } from "../models/country.model";
 
 @Injectable()
 export class CountryRepository {
@@ -10,7 +10,7 @@ export class CountryRepository {
     this.connection = connection;
   }
 
-  async getCountryByOfficialName(officialName: string): Promise<DbalCountry> {
+  async getCountryByOfficialName(officialName: string): Promise<Country> {
     const result = await this.connection
       .request()
       .input("officialName", sql.NVarChar(50), officialName)
@@ -20,7 +20,7 @@ export class CountryRepository {
     return result.recordset[0];
   }
 
-  async getCountry(countryId: number): Promise<DbalCountry> {
+  async getCountry(countryId: number): Promise<Country> {
     const result = await this.connection
       .request()
       .input("countryId", sql.Int, countryId)
@@ -30,7 +30,7 @@ export class CountryRepository {
     return result.recordset[0];
   }
 
-  async insertCountry(country: DbalCountry): Promise<DbalCountry> {
+  async insertCountry(country: Country): Promise<Country> {
     const result = await this.connection
       .request()
       .input("officialName", sql.NVarChar(50), country.officialName)
@@ -43,7 +43,7 @@ export class CountryRepository {
     return country;
   }
 
-  async updateCountry(country: DbalCountry): Promise<DbalCountry> {
+  async updateCountry(country: Country): Promise<Country> {
     const result = await this.connection
       .request()
       .input("countryId", sql.Int, country.countryId)
@@ -61,8 +61,8 @@ export class CountryRepository {
 
   async processCountriesOfficialNames(
     officialNames: string[]
-  ): Promise<DbalCountry[]> {
-    const countries: DbalCountry[] = [];
+  ): Promise<Country[]> {
+    const countries: Country[] = [];
     const notFoundCountries: string[] = [];
     let stmt = new sql.PreparedStatement(this.connection);
     stmt.input("officialName", sql.NVarChar(50));
@@ -72,7 +72,7 @@ export class CountryRepository {
     for (const officialName of officialNames) {
       const result = await stmt.execute({ officialName });
       if (result.recordset.length > 0) {
-        countries.push(<DbalCountry>result.recordset[0]);
+        countries.push(<Country>result.recordset[0]);
       } else {
         notFoundCountries.push(officialName);
       }
