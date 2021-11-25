@@ -9,5 +9,5 @@ export class PeopleAlias {
   peopleId: number;
 
   @Field(() => ID)
-  peopleAliasId: number;
+  peopleAliasId?: number;
 }

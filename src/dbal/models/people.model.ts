@@ -4,8 +4,8 @@ import { PeopleDetail } from "./people-detail.model";
 
 @ObjectType({ description: "people main model" })
 export class People {
-  @Field(() => [PeopleAlias])
-  aliases: PeopleAlias[];
+  @Field(() => [PeopleAlias], { nullable: true })
+  aliases?: PeopleAlias[];
 
   @Field({ nullable: true })
   detail?: PeopleDetail;
@@ -17,5 +17,5 @@ export class People {
   objectId: string;
 
   @Field(() => ID)
-  peopleId: number;
+  peopleId?: number;
 }

@@ -8,13 +8,12 @@ import { TapeDetail } from "../models/tape-detail.model";
 import { DbalTape } from "../models/tape.model";
 import { TvShowChapter } from "../models/tv-show-chapter.model";
 import { TvShow } from "../models/tv-show.model";
+import { ObjectRepository } from "./object.repository";
 
 @Injectable()
-export class TapeRepository {
-  private connection: sql.ConnectionPool;
-
+export class TapeRepository extends ObjectRepository {
   constructor(@Inject("CONNECTION") connection: sql.ConnectionPool) {
-    this.connection = connection;
+    super(connection);
   }
 
   async getTape(tapeId: number): Promise<DbalTape> {
@@ -51,31 +50,8 @@ export class TapeRepository {
     if (result.recordset.length === 0) {
       return null;
     }
-    const { tapeId, ...storedTape } = result.recordset[0];
-    storedTape.tapeId = parseInt(tapeId);
 
-    return storedTape;
-  }
-
-  async insertObject(rowTypeId: number): Promise<string> {
-    const result = await this.connection
-      .request()
-      .input("rowTypeId", sql.Int, rowTypeId)
-      .query`insert into [Object] (rowTypeId) OUTPUT inserted.objectId values (@rowTypeId)`;
-    return result.recordset[0].objectId;
-  }
-
-  async insertImdbNumber(
-    objectId: string,
-    imdbNumber: number
-  ): Promise<boolean> {
-    const result = await this.connection
-      .request()
-      .input("objectId", sql.UniqueIdentifier, objectId)
-      .input("imdbNumber", sql.BigInt, imdbNumber)
-      .query`insert into ImdbNumber (objectId, imdbNumber) values (@objectId, @imdbNumber)`;
-
-    return result.rowsAffected[0] > 0;
+    return result.recordset[0];
   }
 
   async insertTape(tape: DbalTape): Promise<DbalTape> {

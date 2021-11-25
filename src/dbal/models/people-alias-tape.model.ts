@@ -1,13 +1,12 @@
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
-import { PeopleAlias } from "./people-alias.model";
 
 @ObjectType({ description: "relation between people alias and tape" })
 export class PeopleAliasTape {
-  @Field()
-  peopleAlias: PeopleAlias;
+  @Field(() => Int)
+  peopleAliasId: number;
 
   @Field(() => ID)
-  peopleAliasTapeId: number;
+  peopleAliasTapeId?: number;
 
   @Field(() => Int)
   tapeId: number;

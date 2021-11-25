@@ -5,6 +5,7 @@ import * as sql from "mssql";
 import { CountryRepository } from "src/dbal/repositories/country.repository";
 import { GenreRepository } from "src/dbal/repositories/genre.repository";
 import { LanguageRepository } from "src/dbal/repositories/language.repository";
+import { PeopleRepository } from "src/dbal/repositories/people.repository";
 import { RankingRepository } from "src/dbal/repositories/ranking.repository";
 import { SoundRepository } from "src/dbal/repositories/sound.repository";
 import { TapeRepository } from "src/dbal/repositories/tape.repository";
@@ -49,6 +50,7 @@ const connectionFactory = {
     LanguageRepository,
     GenreRepository,
     RankingRepository,
+    PeopleRepository,
     {
       provide: AbstractProvider,
       useClass: FileProvider,

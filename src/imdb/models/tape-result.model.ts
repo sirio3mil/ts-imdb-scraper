@@ -36,4 +36,13 @@ export class TapeResult {
 
   @Field(() => Int, { nullable: true })
   season?: number;
+
+  @Field(() => Int, { nullable: true })
+  directors?: number;
+
+  @Field(() => Int, { nullable: true })
+  writers?: number;
+
+  @Field(() => Int, { nullable: true })
+  cast?: number;
 }

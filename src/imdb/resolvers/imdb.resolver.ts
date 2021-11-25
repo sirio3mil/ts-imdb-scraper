@@ -4,22 +4,26 @@ import { TvShowChapter } from "src/dbal/models/tv-show-chapter.model";
 import { CountryRepository } from "src/dbal/repositories/country.repository";
 import { GenreRepository } from "src/dbal/repositories/genre.repository";
 import { LanguageRepository } from "src/dbal/repositories/language.repository";
+import { PeopleRepository } from "src/dbal/repositories/people.repository";
 import { RankingRepository } from "src/dbal/repositories/ranking.repository";
 import { SoundRepository } from "src/dbal/repositories/sound.repository";
 import { TapeRepository } from "src/dbal/repositories/tape.repository";
 import { TapeResult } from "../models/tape-result.model";
+import { CreditService } from "../services/credit.service";
 import { TapeService } from "../services/tape.service";
 
 @Resolver(() => TapeResult)
 export class ImdbResolver {
   constructor(
     private readonly tapeService: TapeService,
+    private readonly creditService: CreditService,
     private readonly tapeRepository: TapeRepository,
     private readonly countryRepository: CountryRepository,
     private readonly soundRepository: SoundRepository,
     private readonly languageRepository: LanguageRepository,
     private readonly genreRepository: GenreRepository,
-    private readonly rankingRepository: RankingRepository
+    private readonly rankingRepository: RankingRepository,
+    private readonly peopleRepository: PeopleRepository,
   ) {}
 
   @Mutation(() => TapeResult)
@@ -28,10 +32,12 @@ export class ImdbResolver {
   ) {
     try {
       const url = this.tapeService.createUrl(imdbNumber);
-      const [tapeContent] = await Promise.all([
+      const [tapeContent, creditsContent] = await Promise.all([
         this.tapeService.getContent(url),
+        this.creditService.getContent(url),
       ]);
       this.tapeService.set$(tapeContent);
+      this.creditService.set$(creditsContent);
       let storedTape = await this.tapeRepository.getTapeByImdbNumber(
         imdbNumber
       );
@@ -104,7 +110,7 @@ export class ImdbResolver {
         }
         this.tapeRepository.upsertTvShowChapter(tvShowChapter);
       }
-      const [countries, sounds, languages, genres] = await Promise.all([
+      const [countries, sounds, languages, genres, credits] = await Promise.all([
         this.countryRepository.processCountriesOfficialNames(
           this.tapeService.getCountries()
         ),
@@ -115,14 +121,19 @@ export class ImdbResolver {
           this.tapeService.getLanguages()
         ),
         this.genreRepository.processGenreNames(this.tapeService.getGenres()),
+        this.creditService.getCredits(),
       ]);
-      const [countriesAdded, soundsAdded, languagesAdded, genresAdded] =
+      const [countriesAdded, soundsAdded, languagesAdded, genresAdded, tapePeopleRoles] =
         await Promise.all([
           this.tapeRepository.addCountries(storedTape.tapeId, countries),
           this.tapeRepository.addSounds(storedTape.tapeId, sounds),
           this.tapeRepository.addLanguages(storedTape.tapeId, languages),
           this.tapeRepository.addGenres(storedTape.tapeId, genres),
+          this.peopleRepository.proccessCredits(credits, storedTape),
         ]);
+      const directors = tapePeopleRoles.filter(r => r.roleId === Constants.roles.director).length;
+      const writers = tapePeopleRoles.filter(r => r.roleId === Constants.roles.writer).length;
+      const cast = tapePeopleRoles.filter(r => r.roleId === Constants.roles.cast).length;
       return {
         objectId: storedTape.objectId,
         tapeId: storedTape.tapeId,
@@ -144,6 +155,9 @@ export class ImdbResolver {
         },
         ranking,
         finished,
+        directors,
+        writers,
+        cast,
         ...tvShowChapter,
       };
     } catch (err) {

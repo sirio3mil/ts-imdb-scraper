@@ -77,6 +77,24 @@ type DbalTape {
   tvShowChapter: TvShowChapter
 }
 
+"""person"""
+type Person {
+  fullName: String!
+  ID: Int!
+  url: URL!
+  alias: String
+}
+
+"""URL custom scalar type"""
+scalar URL
+
+"""credit, cast and crew member"""
+type Credit {
+  person: Person!
+  role: String
+  character: String
+}
+
 """count inserted rows"""
 type Counter {
   total: Int!
@@ -103,6 +121,9 @@ type TapeResult {
   tvShowTapeId: Int
   chapter: Int
   season: Int
+  directors: Int
+  writers: Int
+  cast: Int
 }
 
 """episode data"""
@@ -110,24 +131,6 @@ type Episode {
   chapter: Int!
   season: Int!
   tvShowID: Int!
-}
-
-"""person"""
-type Person {
-  fullName: String!
-  ID: Int!
-  url: URL!
-  alias: String
-}
-
-"""URL custom scalar type"""
-scalar URL
-
-"""credit, cast and crew member"""
-type Credit {
-  person: Person!
-  role: String
-  character: String
 }
 
 """premiere"""
