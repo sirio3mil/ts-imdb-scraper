@@ -108,14 +108,10 @@ export class PeopleRepository extends ObjectRepository {
       .input("tapePeopleRoleId", sql.BigInt, tapePeopleRoleCharacter.tapePeopleRoleId)
       .input("character", sql.NVarChar(300), tapePeopleRoleCharacter.character)
       .query(
-        `MERGE [TapePeopleRoleCharacter] AS target
-        USING (SELECT @tapePeopleRoleId AS tapePeopleRoleId, @character AS character) AS source
-        ON target.tapePeopleRoleId = source.tapePeopleRoleId 
-        WHEN MATCHED THEN UPDATE SET target.character = source.character
-        WHEN NOT MATCHED THEN INSERT (tapePeopleRoleId, character) VALUES (source.tapePeopleRoleId, source.character);`
+        `UPDATE [TapePeopleRoleCharacter] SET character = @character WHERE tapePeopleRoleId = @tapePeopleRoleId`
       );
     if (result.rowsAffected[0] === 0) {
-      throw new Error(`Error upserting character ${tapePeopleRoleCharacter.character}`);
+      return this.insertTapePeopleRoleCharacter(tapePeopleRoleCharacter);
     }
 
     return tapePeopleRoleCharacter;
@@ -161,28 +157,54 @@ export class PeopleRepository extends ObjectRepository {
     return peopleAlias;
   }
 
-  async upsertPeopleAliasTape(peopleAliasTape: PeopleAliasTape): Promise<PeopleAliasTape> {
+  async insertPeopleAliasTape(peopleAliasTape: PeopleAliasTape): Promise<PeopleAliasTape> {
     const result = await this.connection
       .request()
       .input("peopleAliasId", sql.BigInt, peopleAliasTape.peopleAliasId)
       .input("tapeId", sql.BigInt, peopleAliasTape.tapeId)
       .query(
-        `MERGE [PeopleAliasTape] AS target
-        USING (SELECT @peopleAliasId AS peopleAliasId, @tapeId AS tapeId) AS source
-        ON target.peopleAliasId = source.peopleAliasId AND target.tapeId = source.tapeId
-        WHEN NOT MATCHED THEN INSERT (peopleAliasId, tapeId) VALUES (source.peopleAliasId, source.tapeId);`
+        `INSERT INTO [PeopleAliasTape] (peopleAliasId, tapeId) VALUES (@peopleAliasId, @tapeId)`
       );
     if (result.rowsAffected[0] === 0) {
-      throw new Error(`Error upserting people alias tape ${peopleAliasTape.peopleAliasId}`);
+      throw new Error("PeopleAliasTape not inserted");
     }
 
     return peopleAliasTape;
   }
 
+  async getPeopleAliasTapes(peopleAlias: PeopleAlias): Promise<PeopleAliasTape[]> {
+    const result = await this.connection
+      .request()
+      .input("peopleAliasId", sql.BigInt, peopleAlias.peopleAliasId)
+      .query(
+        `SELECT pat.peopleAliasId, pat.tapeId FROM [PeopleAliasTape] pat WHERE pat.peopleAliasId = @peopleAliasId`
+      );
+    result.recordset.map(peopleAliasTape => {
+      peopleAliasTape.peopleAliasId = parseInt(peopleAliasTape.peopleAliasId);
+      peopleAliasTape.tapeId = parseInt(peopleAliasTape.tapeId);
+    });
+    return result.recordset;
+  }
+
+  async getPeopleAliasTape(peopleAlias: PeopleAlias, tape: DbalTape): Promise<PeopleAliasTape[]> {
+    const result = await this.connection
+      .request()
+      .input("peopleAliasId", sql.BigInt, peopleAlias.peopleAliasId)
+      .input("tapeId", sql.BigInt, tape.tapeId)
+      .query(
+        `SELECT pat.peopleAliasId, pat.tapeId FROM [PeopleAliasTape] pat WHERE pat.peopleAliasId = @peopleAliasId AND pat.tapeId = @tapeId`
+      );
+    result.recordset.map(peopleAliasTape => {
+      peopleAliasTape.peopleAliasId = parseInt(peopleAliasTape.peopleAliasId);
+      peopleAliasTape.tapeId = parseInt(peopleAliasTape.tapeId);
+    });
+    return result.recordset[0];
+  }
+
   async proccessCredits(credits: Credit[], tape: DbalTape): Promise<TapePeopleRole[]> {
     const tapePeopleRoles: TapePeopleRole[] = [];
     const peopleProccessed: People[] = [];
-    credits.forEach(async (credit) => {
+    await Promise.all(credits.map(async (credit) => {
       const roleId = Constants.roles[credit.role];
       if (!!roleId) {
         // identify peopleId if exits and update, if not, create new object and people rows
@@ -214,11 +236,19 @@ export class PeopleRepository extends ObjectRepository {
               peopleId: people.peopleId,
               alias: credit.person.alias,
             });
+            await this.insertPeopleAliasTape({  
+              peopleAliasId: peopleAlias.peopleAliasId,
+              tapeId: tape.tapeId,
+            });
+          } else {
+            const peopleAliasTape = await this.getPeopleAliasTape(peopleAlias, tape);
+            if (!peopleAliasTape) {
+              await this.insertPeopleAliasTape({
+                peopleAliasId: peopleAlias.peopleAliasId,
+                tapeId: tape.tapeId,
+              });
+            }
           }
-          await this.upsertPeopleAliasTape({
-            peopleAliasId: peopleAlias.peopleAliasId,
-            tapeId: tape.tapeId,
-          });
         }
         let tapePeopleRole = tapePeopleRoles.find((tapePeopleRole) => tapePeopleRole.roleId === roleId && tapePeopleRole.peopleId === people.peopleId);
         if (!tapePeopleRole) {
@@ -236,7 +266,7 @@ export class PeopleRepository extends ObjectRepository {
           });
         }
       }
-    });
+    }));
 
     return tapePeopleRoles;
   }
