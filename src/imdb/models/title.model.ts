@@ -1,7 +1,7 @@
 import { Field, ObjectType } from "@nestjs/graphql";
 
 @ObjectType({ description: "tape title" })
-export class Title {
+export class ScrappedTitle {
   @Field({ nullable: true })
   country?: string;
 

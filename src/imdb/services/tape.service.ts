@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { Episode } from "../models/episode.model";
-import { Ranking } from "../models/ranking.model";
+import { ScrappedEpisode } from "../models/episode.model";
+import { ScrappedRanking } from "../models/ranking.model";
 import { AbstractProvider } from "../providers/abstract.provider";
 import { HtmlService } from "./html.service";
 
@@ -10,12 +10,12 @@ export class TapeService extends HtmlService {
     super(provider);
   }
 
-  getRanking(): Ranking | null {
+  getRanking(): ScrappedRanking | null {
     const ratingScore = this.$('[class^="AggregateRatingButton__RatingScore"]');
     if (!ratingScore.length) {
       return null;
     }
-    const ranking = new Ranking();
+    const ranking = new ScrappedRanking();
     const ratingAmount = this.$(
       '[class^="AggregateRatingButton__TotalRatingAmount"]'
     );
@@ -152,14 +152,14 @@ export class TapeService extends HtmlService {
     return this.$('[class^="EpisodeNavigationForEpisode"]').length > 0;
   }
 
-  getEpisode(): Episode | null {
+  getEpisode(): ScrappedEpisode | null {
     const items = this.$(
       '[class^="EpisodeNavigationForEpisode__SeasonEpisodeNumbersItem"]'
     );
     if (!items.length) {
       return null;
     }
-    const episode = new Episode();
+    const episode = new ScrappedEpisode();
     items.each((i, item) => {
       const text = this.$(item).text();
       if (text.startsWith("S")) {

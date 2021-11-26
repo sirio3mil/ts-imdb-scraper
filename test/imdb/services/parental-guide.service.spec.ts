@@ -1,5 +1,5 @@
 import { HttpService } from "@nestjs/axios";
-import { Certification } from "../../../src/imdb/models/certification.model";
+import { ScrappedCertification } from "../../../src/imdb/models/certification.model";
 import { FileProvider } from "../../../src/imdb/providers/file.provider";
 import { ParentalGuideService } from "../../../src/imdb/services/parental-guide.service";
 
@@ -9,7 +9,7 @@ describe("ParentalGuideService", () => {
   let fileProvider: FileProvider;
   let httpService: HttpService;
   let parentalGuideService: ParentalGuideService;
-  let certifications: Certification[];
+  let certifications: ScrappedCertification[];
 
   beforeAll(async () => {
     httpService = new HttpService();

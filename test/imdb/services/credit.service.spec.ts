@@ -1,5 +1,5 @@
 import { HttpService } from "@nestjs/axios";
-import { Credit } from "../../../src/imdb/models/credit.model";
+import { ScrappedCredit } from "../../../src/imdb/models/credit.model";
 import { FileProvider } from "../../../src/imdb/providers/file.provider";
 import { CreditService } from "../../../src/imdb/services/credit.service";
 
@@ -9,7 +9,7 @@ describe("CreditService", () => {
   let fileProvider: FileProvider;
   let httpService: HttpService;
   let creditService: CreditService;
-  let credits: Credit[];
+  let credits: ScrappedCredit[];
 
   beforeAll(async () => {
     httpService = new HttpService();

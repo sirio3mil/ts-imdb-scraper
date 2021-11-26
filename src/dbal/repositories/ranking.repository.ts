@@ -1,6 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import * as sql from "mssql";
-import { DbalRanking } from "../models/ranking.model";
+import { Ranking } from "../models/ranking.model";
 
 @Injectable()
 export class RankingRepository {
@@ -10,7 +10,7 @@ export class RankingRepository {
     this.connection = connection;
   }
 
-  async getRanking(objectId: string): Promise<DbalRanking> {
+  async getRanking(objectId: string): Promise<Ranking> {
     const result = await this.connection
       .request()
       .input("objectId", sql.UniqueIdentifier, objectId)
@@ -20,7 +20,7 @@ export class RankingRepository {
     return result.recordset[0];
   }
 
-  async insertRanking(ranking: DbalRanking): Promise<DbalRanking> {
+  async insertRanking(ranking: Ranking): Promise<Ranking> {
     const result = await this.connection
       .request()
       .input("score", sql.Float, ranking.score)
@@ -36,7 +36,7 @@ export class RankingRepository {
     return ranking;
   }
 
-  async upsertRanking(ranking: DbalRanking): Promise<DbalRanking> {
+  async upsertRanking(ranking: Ranking): Promise<Ranking> {
     const result = await this.connection
       .request()
       .input("score", sql.Float, ranking.score)

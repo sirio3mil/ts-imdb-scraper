@@ -2,14 +2,14 @@ import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Country } from "./country.model";
 import { Genre } from "./genre.model";
 import { Language } from "./language.model";
-import { DbalRanking } from "./ranking.model";
+import { Ranking } from "./ranking.model";
 import { Sound } from "./sound.model";
 import { TapeDetail } from "./tape-detail.model";
 import { TvShowChapter } from "./tv-show-chapter.model";
 import { TvShow } from "./tv-show.model";
 
 @ObjectType({ description: "stored tape" })
-export class DbalTape {
+export class Tape {
   @Field()
   originalTitle: string;
 
@@ -35,7 +35,7 @@ export class DbalTape {
   genres?: Genre[];
 
   @Field({ nullable: true })
-  ranking?: DbalRanking;
+  ranking?: Ranking;
 
   @Field({ nullable: true })
   tvShow?: TvShow;

@@ -5,7 +5,7 @@ import { Genre } from "../models/genre.model";
 import { Language } from "../models/language.model";
 import { Sound } from "../models/sound.model";
 import { TapeDetail } from "../models/tape-detail.model";
-import { DbalTape } from "../models/tape.model";
+import { Tape } from "../models/tape.model";
 import { TvShowChapter } from "../models/tv-show-chapter.model";
 import { TvShow } from "../models/tv-show.model";
 import { ObjectRepository } from "./object.repository";
@@ -16,7 +16,7 @@ export class TapeRepository extends ObjectRepository {
     super(connection);
   }
 
-  async getTape(tapeId: number): Promise<DbalTape> {
+  async getTape(tapeId: number): Promise<Tape> {
     const result = await this.connection
       .request()
       .input("tapeId", sql.BigInt, tapeId)
@@ -42,7 +42,7 @@ export class TapeRepository extends ObjectRepository {
     return result.recordset[0];
   }
 
-  async getTapeByImdbNumber(imdbNumber: number): Promise<DbalTape | null> {
+  async getTapeByImdbNumber(imdbNumber: number): Promise<Tape | null> {
     const result = await this.connection
       .request()
       .input("imdbNumber", sql.BigInt, imdbNumber)
@@ -54,7 +54,7 @@ export class TapeRepository extends ObjectRepository {
     return result.recordset[0];
   }
 
-  async insertTape(tape: DbalTape): Promise<DbalTape> {
+  async insertTape(tape: Tape): Promise<Tape> {
     const result = await this.connection
       .request()
       .input("objectId", sql.UniqueIdentifier, tape.objectId)
@@ -68,7 +68,7 @@ export class TapeRepository extends ObjectRepository {
     return tape;
   }
 
-  async upsertTape(tape: DbalTape): Promise<DbalTape> {
+  async upsertTape(tape: Tape): Promise<Tape> {
     const result = await this.connection
       .request()
       .input("tapeId", sql.BigInt, tape.tapeId)
@@ -288,7 +288,7 @@ export class TapeRepository extends ObjectRepository {
     return result.recordset[0];
   }
 
-  async insertTvShow(tape: DbalTape, finished: boolean): Promise<DbalTape> {
+  async insertTvShow(tape: Tape, finished: boolean): Promise<Tape> {
     const result = await this.connection
       .request()
       .input("tapeId", sql.BigInt, tape.tapeId)
@@ -301,7 +301,7 @@ export class TapeRepository extends ObjectRepository {
     return tape;
   }
 
-  async upsertTvShow(tape: DbalTape, finished: boolean): Promise<DbalTape> {
+  async upsertTvShow(tape: Tape, finished: boolean): Promise<Tape> {
     const result = await this.connection
       .request()
       .input("tapeId", sql.BigInt, tape.tapeId)

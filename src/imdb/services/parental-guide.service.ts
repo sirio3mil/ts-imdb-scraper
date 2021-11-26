@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { Certification } from "../models/certification.model";
+import { ScrappedCertification } from "../models/certification.model";
 import { AbstractProvider } from "../providers/abstract.provider";
 import { HtmlService } from "./html.service";
 
@@ -10,7 +10,7 @@ export class ParentalGuideService extends HtmlService {
     this.page = "parentalguide";
   }
 
-  getCertifications(): Certification[] {
+  getCertifications(): ScrappedCertification[] {
     const certifications = [];
     const links = this.$('[href^="/search/title?certificates"]');
     links.each((i, link) => {

@@ -1,6 +1,6 @@
 import { HttpService } from "@nestjs/axios";
-import { Premiere } from "../../../src/imdb/models/premiere.model";
-import { Title } from "../../../src/imdb/models/title.model";
+import { ScrappedPremiere } from "../../../src/imdb/models/premiere.model";
+import { ScrappedTitle } from "../../../src/imdb/models/title.model";
 import { FileProvider } from "../../../src/imdb/providers/file.provider";
 import { ReleaseInfoService } from "../../../src/imdb/services/release-info.service";
 
@@ -20,7 +20,7 @@ describe("ReleaseInfoService", () => {
   });
 
   describe("getTitles", () => {
-    let titles: Title[];
+    let titles: ScrappedTitle[];
 
     beforeEach(async () => {
       titles = await releaseInfoService.getTitles();
@@ -65,7 +65,7 @@ describe("ReleaseInfoService", () => {
   });
 
   describe("getPremieres", () => {
-    let premieres: Premiere[];
+    let premieres: ScrappedPremiere[];
     const premiereTestCases = [
       {
         country: "USA",

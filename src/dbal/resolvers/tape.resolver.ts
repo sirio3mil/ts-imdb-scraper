@@ -7,21 +7,21 @@ import {
   ResolveField,
   Resolver,
 } from "@nestjs/graphql";
-import { DbalTape } from "../models/tape.model";
+import { Tape } from "../models/tape.model";
 import { RankingRepository } from "../repositories/ranking.repository";
 import { TapeRepository } from "../repositories/tape.repository";
 
-@Resolver(() => DbalTape)
+@Resolver(() => Tape)
 export class DbalTapeResolver {
   constructor(
     private readonly tapeRepository: TapeRepository,
     private readonly rankingRepository: RankingRepository
   ) {}
 
-  @Query(() => DbalTape)
+  @Query(() => Tape)
   async getStoredTape(
     @Args("tapeId", { type: () => ID }) tapeId: number
-  ): Promise<DbalTape> {
+  ): Promise<Tape> {
     try {
       return this.tapeRepository.getTape(tapeId);
     } catch (e) {
@@ -30,49 +30,49 @@ export class DbalTapeResolver {
   }
 
   @ResolveField()
-  async detail(@Parent() tape: DbalTape) {
+  async detail(@Parent() tape: Tape) {
     const { tapeId } = tape;
     return this.tapeRepository.getTapeDetail(tapeId);
   }
 
   @ResolveField()
-  async countries(@Parent() tape: DbalTape) {
+  async countries(@Parent() tape: Tape) {
     const { tapeId } = tape;
     return this.tapeRepository.getTapeCountries(tapeId);
   }
 
   @ResolveField()
-  async sounds(@Parent() tape: DbalTape) {
+  async sounds(@Parent() tape: Tape) {
     const { tapeId } = tape;
     return this.tapeRepository.getTapeSounds(tapeId);
   }
 
   @ResolveField()
-  async languages(@Parent() tape: DbalTape) {
+  async languages(@Parent() tape: Tape) {
     const { tapeId } = tape;
     return this.tapeRepository.getTapeLanguages(tapeId);
   }
 
   @ResolveField()
-  async genres(@Parent() tape: DbalTape) {
+  async genres(@Parent() tape: Tape) {
     const { tapeId } = tape;
     return this.tapeRepository.getTapeGenres(tapeId);
   }
 
   @ResolveField()
-  async ranking(@Parent() tape: DbalTape) {
+  async ranking(@Parent() tape: Tape) {
     const { objectId } = tape;
     return this.rankingRepository.getRanking(objectId);
   }
 
   @ResolveField()
-  async tvShow(@Parent() tape: DbalTape) {
+  async tvShow(@Parent() tape: Tape) {
     const { tapeId } = tape;
     return this.tapeRepository.getTvShow(tapeId);
   }
 
   @ResolveField()
-  async tvShowChapter(@Parent() tape: DbalTape) {
+  async tvShowChapter(@Parent() tape: Tape) {
     const { tapeId } = tape;
     return this.tapeRepository.getTvShowChapter(tapeId);
   }

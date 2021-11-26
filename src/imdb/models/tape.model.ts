@@ -1,13 +1,13 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
-import { Certification } from "./certification.model";
-import { Credit } from "./credit.model";
-import { Episode } from "./episode.model";
-import { Premiere } from "./premiere.model";
-import { Ranking } from "./ranking.model";
-import { Title } from "./title.model";
+import { ScrappedCertification } from "./certification.model";
+import { ScrappedCredit } from "./credit.model";
+import { ScrappedEpisode } from "./episode.model";
+import { ScrappedPremiere } from "./premiere.model";
+import { ScrappedRanking } from "./ranking.model";
+import { ScrappedTitle } from "./title.model";
 
 @ObjectType({ description: "tape" })
-export class Tape {
+export class ScrappedTape {
   @Field()
   originalTitle: string;
 
@@ -47,17 +47,17 @@ export class Tape {
   @Field(() => [String], { nullable: true })
   locations?: string[];
 
-  @Field(() => [Credit], { nullable: true })
-  credits?: Credit[];
+  @Field(() => [ScrappedCredit], { nullable: true })
+  credits?: ScrappedCredit[];
 
-  @Field(() => [Premiere], { nullable: true })
-  premieres?: Premiere[];
+  @Field(() => [ScrappedPremiere], { nullable: true })
+  premieres?: ScrappedPremiere[];
 
-  @Field(() => [Title], { nullable: true })
-  titles?: Title[];
+  @Field(() => [ScrappedTitle], { nullable: true })
+  titles?: ScrappedTitle[];
 
-  @Field(() => [Certification], { nullable: true })
-  certifications?: Certification[];
+  @Field(() => [ScrappedCertification], { nullable: true })
+  certifications?: ScrappedCertification[];
 
   @Field(() => [String], { nullable: true })
   keywords?: string[];
@@ -69,8 +69,8 @@ export class Tape {
   url: URL;
 
   @Field({ nullable: true })
-  ranking?: Ranking;
+  ranking?: ScrappedRanking;
 
   @Field({ nullable: true })
-  episode?: Episode;
+  episode?: ScrappedEpisode;
 }

@@ -1,7 +1,7 @@
 import { Field, ObjectType } from "@nestjs/graphql";
 
 @ObjectType({ description: "parental guide tape certifications" })
-export class Certification {
+export class ScrappedCertification {
   @Field()
   certification: string;
 

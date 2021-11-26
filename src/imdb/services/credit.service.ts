@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { Credit } from "../models/credit.model";
+import { ScrappedCredit } from "../models/credit.model";
 import { AbstractProvider } from "../providers/abstract.provider";
 import { HtmlService } from "./html.service";
 
@@ -10,7 +10,7 @@ export class CreditService extends HtmlService {
     this.page = "fullcredits";
   }
 
-  getCredits(): Credit[] {
+  getCredits(): ScrappedCredit[] {
     const credits = [];
     const titles = this.$("#fullcredits_content").find("h4");
     titles.each((i, title) => {

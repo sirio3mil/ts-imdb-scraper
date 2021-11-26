@@ -7,7 +7,7 @@ import {
   ResolveField,
   Resolver,
 } from "@nestjs/graphql";
-import { Tape } from "../models/tape.model";
+import { ScrappedTape } from "../models/tape.model";
 import { CreditService } from "../services/credit.service";
 import { KeywordService } from "../services/keyword.service";
 import { LocationService } from "../services/location.service";
@@ -15,7 +15,7 @@ import { ParentalGuideService } from "../services/parental-guide.service";
 import { ReleaseInfoService } from "../services/release-info.service";
 import { TapeService } from "../services/tape.service";
 
-@Resolver(() => Tape)
+@Resolver(() => ScrappedTape)
 export class TapeResolver {
   constructor(
     private readonly tapeService: TapeService,
@@ -26,10 +26,10 @@ export class TapeResolver {
     private readonly keywordService: KeywordService
   ) {}
 
-  @Query(() => Tape)
+  @Query(() => ScrappedTape)
   async getTape(
     @Args("imdbNumber", { type: () => Int }) imdbNumber: number
-  ): Promise<Tape> {
+  ): Promise<ScrappedTape> {
     try {
       const url = this.tapeService.createUrl(imdbNumber);
       const content = await this.tapeService.getContent(url);
@@ -59,42 +59,42 @@ export class TapeResolver {
   }
 
   @ResolveField()
-  async credits(@Parent() tape: Tape) {
+  async credits(@Parent() tape: ScrappedTape) {
     const { url } = tape;
     const content = await this.creditService.getContent(url);
     return this.creditService.set$(content).getCredits();
   }
 
   @ResolveField()
-  async premieres(@Parent() tape: Tape) {
+  async premieres(@Parent() tape: ScrappedTape) {
     const { url } = tape;
     const content = await this.releaseInfoService.getContent(url);
     return this.releaseInfoService.set$(content).getPremieres();
   }
 
   @ResolveField()
-  async titles(@Parent() tape: Tape) {
+  async titles(@Parent() tape: ScrappedTape) {
     const { url } = tape;
     const content = await this.releaseInfoService.getContent(url);
     return this.releaseInfoService.set$(content).getTitles();
   }
 
   @ResolveField()
-  async locations(@Parent() tape: Tape) {
+  async locations(@Parent() tape: ScrappedTape) {
     const { url } = tape;
     const content = await this.locationService.getContent(url);
     return this.locationService.set$(content).getLocations();
   }
 
   @ResolveField()
-  async certifications(@Parent() tape: Tape) {
+  async certifications(@Parent() tape: ScrappedTape) {
     const { url } = tape;
     const content = await this.parentalGuideService.getContent(url);
     return this.parentalGuideService.set$(content).getCertifications();
   }
 
   @ResolveField()
-  async keywords(@Parent() tape: Tape) {
+  async keywords(@Parent() tape: ScrappedTape) {
     const { url } = tape;
     const content = await this.keywordService.getContent(url);
     return this.keywordService.set$(content).getKeywords();

@@ -1,13 +1,13 @@
 import { Inject, Injectable } from "@nestjs/common";
 import * as sql from "mssql";
 import { Constants } from "src/config/constants";
-import { Credit } from "src/imdb/models/credit.model";
+import { ScrappedCredit } from "src/imdb/models/credit.model";
 import { PeopleAliasTape } from "../models/people-alias-tape.model";
 import { PeopleAlias } from "../models/people-alias.model";
 import { People } from "../models/people.model";
 import { TapePeopleRoleCharacter } from "../models/tape-people-role-character.model";
 import { TapePeopleRole } from "../models/tape-people-role.model";
-import { DbalTape } from "../models/tape.model";
+import { Tape } from "../models/tape.model";
 import { ObjectRepository } from "./object.repository";
 
 @Injectable()
@@ -117,7 +117,7 @@ export class PeopleRepository extends ObjectRepository {
     return tapePeopleRoleCharacter;
   }
 
-  async getTapePeopleRoles(people: People, tape: DbalTape): Promise<TapePeopleRole[]> {
+  async getTapePeopleRoles(people: People, tape: Tape): Promise<TapePeopleRole[]> {
     const result = await this.connection
       .request()
       .input("peopleId", sql.BigInt, people.peopleId)
@@ -186,7 +186,7 @@ export class PeopleRepository extends ObjectRepository {
     return result.recordset;
   }
 
-  async getPeopleAliasTape(peopleAlias: PeopleAlias, tape: DbalTape): Promise<PeopleAliasTape[]> {
+  async getPeopleAliasTape(peopleAlias: PeopleAlias, tape: Tape): Promise<PeopleAliasTape[]> {
     const result = await this.connection
       .request()
       .input("peopleAliasId", sql.BigInt, peopleAlias.peopleAliasId)
@@ -201,7 +201,7 @@ export class PeopleRepository extends ObjectRepository {
     return result.recordset[0];
   }
 
-  async proccessCredits(credits: Credit[], tape: DbalTape): Promise<TapePeopleRole[]> {
+  async proccessCredits(credits: ScrappedCredit[], tape: Tape): Promise<TapePeopleRole[]> {
     const tapePeopleRoles: TapePeopleRole[] = [];
     const peopleProccessed: People[] = [];
     await Promise.all(credits.map(async (credit) => {

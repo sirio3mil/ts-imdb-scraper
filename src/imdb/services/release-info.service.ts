@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { Premiere } from "../models/premiere.model";
-import { Title } from "../models/title.model";
+import { ScrappedPremiere } from "../models/premiere.model";
+import { ScrappedTitle } from "../models/title.model";
 import { AbstractProvider } from "../providers/abstract.provider";
 import { HtmlService } from "./html.service";
 
@@ -11,7 +11,7 @@ export class ReleaseInfoService extends HtmlService {
     this.page = "releaseinfo";
   }
 
-  getPremieres(): Premiere[] {
+  getPremieres(): ScrappedPremiere[] {
     const premieres = [];
     this.$(".release-date-item").each((i, row) => {
       const item = this.$(row);
@@ -38,7 +38,7 @@ export class ReleaseInfoService extends HtmlService {
     return premieres;
   }
 
-  getTitles(): Title[] {
+  getTitles(): ScrappedTitle[] {
     const titles = [];
     this.$(".aka-item").each((i, row) => {
       const item = this.$(row);

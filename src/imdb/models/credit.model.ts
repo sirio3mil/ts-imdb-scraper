@@ -1,10 +1,10 @@
 import { Field, ObjectType } from "@nestjs/graphql";
-import { Person } from "./person.model";
+import { ScrappedPerson } from "./person.model";
 
 @ObjectType({ description: "credit, cast and crew member" })
-export class Credit {
+export class ScrappedCredit {
   @Field()
-  person: Person;
+  person: ScrappedPerson;
 
   @Field({ nullable: true })
   role?: string;

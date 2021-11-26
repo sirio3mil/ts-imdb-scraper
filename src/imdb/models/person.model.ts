@@ -1,7 +1,7 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
 
 @ObjectType({ description: "person" })
-export class Person {
+export class ScrappedPerson {
   @Field()
   fullName: string;
 
