@@ -8,11 +8,11 @@ import { PeopleRepository } from "src/dbal/repositories/people.repository";
 import { RankingRepository } from "src/dbal/repositories/ranking.repository";
 import { SoundRepository } from "src/dbal/repositories/sound.repository";
 import { TapeRepository } from "src/dbal/repositories/tape.repository";
-import { TapeResult } from "../models/tape-result.model";
+import { ImportOutput } from "../models/output/import.model";
 import { CreditService } from "../services/credit.service";
 import { TapeService } from "../services/tape.service";
 
-@Resolver(() => TapeResult)
+@Resolver(() => ImportOutput)
 export class ImdbResolver {
   constructor(
     private readonly tapeService: TapeService,
@@ -26,7 +26,7 @@ export class ImdbResolver {
     private readonly peopleRepository: PeopleRepository,
   ) {}
 
-  @Mutation(() => TapeResult)
+  @Mutation(() => ImportOutput)
   async importTape(
     @Args("imdbNumber", { type: () => Int }) imdbNumber: number
   ) {

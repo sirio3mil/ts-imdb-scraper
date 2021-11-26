@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { ScrappedCredit } from "../models/credit.model";
+import { ScrappedCredit } from "../models/scrapped/credit.model";
 import { AbstractProvider } from "../providers/abstract.provider";
 import { HtmlService } from "./html.service";
 

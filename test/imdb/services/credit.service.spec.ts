@@ -1,5 +1,5 @@
 import { HttpService } from "@nestjs/axios";
-import { ScrappedCredit } from "../../../src/imdb/models/credit.model";
+import { ScrappedCredit } from "../../../src/imdb/models/scrapped/credit.model";
 import { FileProvider } from "../../../src/imdb/providers/file.provider";
 import { CreditService } from "../../../src/imdb/services/credit.service";
 

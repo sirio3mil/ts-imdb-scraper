@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import * as sql from "mssql";
 import { Constants } from "src/config/constants";
-import { ScrappedCredit } from "src/imdb/models/credit.model";
+import { ScrappedCredit } from "src/imdb/models/scrapped/credit.model";
 import { PeopleAliasTape } from "../models/people-alias-tape.model";
 import { PeopleAlias } from "../models/people-alias.model";
 import { People } from "../models/people.model";

@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { ScrappedEpisode } from "../models/episode.model";
-import { ScrappedRanking } from "../models/ranking.model";
+import { ScrappedEpisode } from "../models/scrapped/episode.model";
+import { ScrappedRanking } from "../models/scrapped/ranking.model";
 import { AbstractProvider } from "../providers/abstract.provider";
 import { HtmlService } from "./html.service";
 

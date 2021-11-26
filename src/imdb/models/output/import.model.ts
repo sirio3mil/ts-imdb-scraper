@@ -1,9 +1,9 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
-import { Counter } from "./counter.model";
-import { ScrappedRanking } from "./ranking.model";
+import { ScrappedRanking } from "../scrapped/ranking.model";
+import { CounterOutput } from "./counter.model";
 
 @ObjectType({ description: "tape import result" })
-export class TapeResult {
+export class ImportOutput {
   @Field(() => Int)
   tapeId: number;
 
@@ -11,16 +11,16 @@ export class TapeResult {
   objectId: string;
 
   @Field()
-  countries: Counter;
+  countries: CounterOutput;
 
   @Field()
-  sounds: Counter;
+  sounds: CounterOutput;
 
   @Field()
-  languages: Counter;
+  languages: CounterOutput;
 
   @Field()
-  genres: Counter;
+  genres: CounterOutput;
 
   @Field()
   ranking: ScrappedRanking;

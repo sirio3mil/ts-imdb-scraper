@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { ScrappedCertification } from "../models/certification.model";
+import { ScrappedCertification } from "../models/scrapped/certification.model";
 import { AbstractProvider } from "../providers/abstract.provider";
 import { HtmlService } from "./html.service";
 

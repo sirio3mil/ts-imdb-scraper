@@ -7,7 +7,7 @@ import {
   ResolveField,
   Resolver,
 } from "@nestjs/graphql";
-import { ScrappedTape } from "../models/tape.model";
+import { ScrappedTape } from "../models/scrapped/tape.model";
 import { CreditService } from "../services/credit.service";
 import { KeywordService } from "../services/keyword.service";
 import { LocationService } from "../services/location.service";

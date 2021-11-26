@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { ScrappedPremiere } from "../models/premiere.model";
-import { ScrappedTitle } from "../models/title.model";
+import { ScrappedPremiere } from "../models/scrapped/premiere.model";
+import { ScrappedTitle } from "../models/scrapped/title.model";
 import { AbstractProvider } from "../providers/abstract.provider";
 import { HtmlService } from "./html.service";
 

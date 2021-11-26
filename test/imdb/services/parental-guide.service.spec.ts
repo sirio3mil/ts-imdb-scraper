@@ -1,5 +1,5 @@
 import { HttpService } from "@nestjs/axios";
-import { ScrappedCertification } from "../../../src/imdb/models/certification.model";
+import { ScrappedCertification } from "../../../src/imdb/models/scrapped/certification.model";
 import { FileProvider } from "../../../src/imdb/providers/file.provider";
 import { ParentalGuideService } from "../../../src/imdb/services/parental-guide.service";
 
