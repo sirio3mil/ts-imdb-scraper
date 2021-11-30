@@ -117,13 +117,13 @@ export class PeopleRepository extends ObjectRepository {
     return tapePeopleRoleCharacter;
   }
 
-  async getTapePeopleRoles(people: People, tape: Tape): Promise<TapePeopleRole[]> {
+  async getTapePeopleRoles(peopleId: number, tapeId: number): Promise<TapePeopleRole[]> {
     const result = await this.connection
       .request()
-      .input("peopleId", sql.BigInt, people.peopleId)
-      .input("tapeId", sql.BigInt, tape.tapeId)
+      .input("peopleId", sql.BigInt, peopleId)
+      .input("tapeId", sql.BigInt, tapeId)
       .query(
-        `SELECT tpr.roleId, tpr.peopleId, tpr.tapeId, tpr.tapePeopleRoleId FROM [TapePeopleRole] tpr INNER JOIN [Role] r ON tpr.roleId = r.roleId WHERE tpr.peopleId = @peopleId AND tpr.tapeId = @tapeId`
+        `SELECT tpr.roleId, tpr.peopleId, tpr.tapeId, tpr.tapePeopleRoleId FROM [TapePeopleRole] tpr WHERE tpr.peopleId = @peopleId AND tpr.tapeId = @tapeId`
       );
     result.recordset.map(tapePeopleRole => {
       tapePeopleRole.roleId = parseInt(tapePeopleRole.roleId);
@@ -134,10 +134,10 @@ export class PeopleRepository extends ObjectRepository {
     return result.recordset;
   }
 
-  async getPeopleAlias(people: People): Promise<PeopleAlias[]> {
+  async getPeopleAlias(peopleId: number): Promise<PeopleAlias[]> {
     const result = await this.connection
       .request()
-      .input("peopleId", sql.BigInt, people.peopleId)
+      .input("peopleId", sql.BigInt, peopleId)
       .query(
         `SELECT pa.peopleAliasId, pa.peopleId, pa.alias FROM [PeopleAlias] pa WHERE pa.peopleId = @peopleId`
       );
@@ -172,10 +172,10 @@ export class PeopleRepository extends ObjectRepository {
     return peopleAliasTape;
   }
 
-  async getPeopleAliasTapes(peopleAlias: PeopleAlias): Promise<PeopleAliasTape[]> {
+  async getPeopleAliasTapes(peopleAliasId: number): Promise<PeopleAliasTape[]> {
     const result = await this.connection
       .request()
-      .input("peopleAliasId", sql.BigInt, peopleAlias.peopleAliasId)
+      .input("peopleAliasId", sql.BigInt, peopleAliasId)
       .query(
         `SELECT pat.peopleAliasId, pat.tapeId FROM [PeopleAliasTape] pat WHERE pat.peopleAliasId = @peopleAliasId`
       );
@@ -186,11 +186,11 @@ export class PeopleRepository extends ObjectRepository {
     return result.recordset;
   }
 
-  async getPeopleAliasTape(peopleAlias: PeopleAlias, tape: Tape): Promise<PeopleAliasTape[]> {
+  async getPeopleAliasTape(peopleAliasId: number, tapeId: number): Promise<PeopleAliasTape[]> {
     const result = await this.connection
       .request()
-      .input("peopleAliasId", sql.BigInt, peopleAlias.peopleAliasId)
-      .input("tapeId", sql.BigInt, tape.tapeId)
+      .input("peopleAliasId", sql.BigInt, peopleAliasId)
+      .input("tapeId", sql.BigInt, tapeId)
       .query(
         `SELECT pat.peopleAliasId, pat.tapeId FROM [PeopleAliasTape] pat WHERE pat.peopleAliasId = @peopleAliasId AND pat.tapeId = @tapeId`
       );
@@ -223,9 +223,9 @@ export class PeopleRepository extends ObjectRepository {
           } else {
             people.fullName = credit.person.fullName;
             people = await this.updatePeople(people);
-            const tapeRoles = await this.getTapePeopleRoles(people, tape);
+            const tapeRoles = await this.getTapePeopleRoles(people.peopleId, tape.tapeId);
             tapePeopleRoles.push(...tapeRoles);
-            people.aliases = await this.getPeopleAlias(people);
+            people.aliases = await this.getPeopleAlias(people.peopleId);
           }
           peopleProccessed[credit.person.ID] = people;
         }
@@ -241,7 +241,7 @@ export class PeopleRepository extends ObjectRepository {
               tapeId: tape.tapeId,
             });
           } else {
-            const peopleAliasTape = await this.getPeopleAliasTape(peopleAlias, tape);
+            const peopleAliasTape = await this.getPeopleAliasTape(peopleAlias.peopleAliasId, tape.tapeId);
             if (!peopleAliasTape) {
               await this.insertPeopleAliasTape({
                 peopleAliasId: peopleAlias.peopleAliasId,

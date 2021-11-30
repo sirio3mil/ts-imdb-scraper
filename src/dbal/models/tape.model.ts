@@ -5,6 +5,7 @@ import { Language } from "./language.model";
 import { Ranking } from "./ranking.model";
 import { Sound } from "./sound.model";
 import { TapeDetail } from "./tape-detail.model";
+import { TapePeopleRole } from "./tape-people-role.model";
 import { TvShowChapter } from "./tv-show-chapter.model";
 import { TvShow } from "./tv-show.model";
 
@@ -33,6 +34,9 @@ export class Tape {
 
   @Field(() => [Genre], { nullable: true })
   genres?: Genre[];
+
+  @Field(() => [TapePeopleRole], { nullable: true })
+  people?: TapePeopleRole[];
 
   @Field({ nullable: true })
   ranking?: Ranking;

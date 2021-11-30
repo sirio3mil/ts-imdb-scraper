@@ -5,6 +5,7 @@ import { Genre } from "../models/genre.model";
 import { Language } from "../models/language.model";
 import { Sound } from "../models/sound.model";
 import { TapeDetail } from "../models/tape-detail.model";
+import { TapePeopleRole } from "../models/tape-people-role.model";
 import { Tape } from "../models/tape.model";
 import { TvShowChapter } from "../models/tv-show-chapter.model";
 import { TvShow } from "../models/tv-show.model";
@@ -351,5 +352,21 @@ export class TapeRepository extends ObjectRepository {
     }
 
     return tvShowChapter;
+  }
+
+  async getTapePeopleRoles(tapeId: number): Promise<TapePeopleRole[]> {
+    const result = await this.connection
+      .request()
+      .input("tapeId", sql.BigInt, tapeId)
+      .query(
+        `SELECT tpr.roleId, tpr.peopleId, tpr.tapeId, tpr.tapePeopleRoleId FROM [TapePeopleRole] tpr WHERE tpr.tapeId = @tapeId`
+      );
+    result.recordset.map(tapePeopleRole => {
+      tapePeopleRole.roleId = parseInt(tapePeopleRole.roleId);
+      tapePeopleRole.tapePeopleRoleId = parseInt(tapePeopleRole.tapePeopleRoleId);
+      tapePeopleRole.peopleId = parseInt(tapePeopleRole.peopleId);
+      tapePeopleRole.tapeId = parseInt(tapePeopleRole.tapeId);
+    });
+    return result.recordset;
   }
 }

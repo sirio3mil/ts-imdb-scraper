@@ -76,4 +76,10 @@ export class DbalTapeResolver {
     const { tapeId } = tape;
     return this.tapeRepository.getTvShowChapter(tapeId);
   }
+
+  @ResolveField()
+  async people(@Parent() tape: Tape) {
+    const { tapeId } = tape;
+    return this.tapeRepository.getTapePeopleRoles(tapeId);
+  }
 }
