@@ -41,7 +41,7 @@ type Genre {
 }
 
 """stored ranking"""
-type DbalRanking {
+type Ranking {
   realScore: Float!
   objectId: ID!
   score: Float!
@@ -63,7 +63,7 @@ type TvShowChapter {
 }
 
 """stored tape"""
-type DbalTape {
+type Tape {
   originalTitle: String!
   objectId: String!
   tapeId: ID
@@ -72,13 +72,13 @@ type DbalTape {
   sounds: [Sound!]
   languages: [Language!]
   genres: [Genre!]
-  ranking: DbalRanking
+  ranking: Ranking
   tvShow: TvShow
   tvShowChapter: TvShowChapter
 }
 
 """person"""
-type Person {
+type ScrappedPerson {
   fullName: String!
   ID: Int!
   url: URL!
@@ -89,34 +89,34 @@ type Person {
 scalar URL
 
 """credit, cast and crew member"""
-type Credit {
-  person: Person!
+type ScrappedCredit {
+  person: ScrappedPerson!
   role: String
   character: String
 }
 
 """count inserted rows"""
-type Counter {
+type CounterOutput {
   total: Int!
   added: Int!
 }
 
 """ranking"""
-type Ranking {
+type ScrappedRanking {
   realScore: Float!
   score: Float!
   votes: Int!
 }
 
 """tape import result"""
-type TapeResult {
+type ImportOutput {
   tapeId: Int!
   objectId: String!
-  countries: Counter!
-  sounds: Counter!
-  languages: Counter!
-  genres: Counter!
-  ranking: Ranking!
+  countries: CounterOutput!
+  sounds: CounterOutput!
+  languages: CounterOutput!
+  genres: CounterOutput!
+  ranking: ScrappedRanking!
   finished: Boolean
   tvShowTapeId: Int
   chapter: Int
@@ -127,14 +127,14 @@ type TapeResult {
 }
 
 """episode data"""
-type Episode {
+type ScrappedEpisode {
   chapter: Int!
   season: Int!
   tvShowID: Int!
 }
 
 """premiere"""
-type Premiere {
+type ScrappedPremiere {
   country: String!
   date: Date!
   detail: String
@@ -145,7 +145,7 @@ type Premiere {
 scalar Date
 
 """tape title"""
-type Title {
+type ScrappedTitle {
   country: String
   language: String
   observations: String
@@ -153,13 +153,13 @@ type Title {
 }
 
 """parental guide tape certifications"""
-type Certification {
+type ScrappedCertification {
   certification: String!
   country: String!
 }
 
 """tape"""
-type Tape {
+type ScrappedTape {
   originalTitle: String!
   budget: Float
   colors: [String!]
@@ -173,22 +173,22 @@ type Tape {
   genres: [String!]
   sounds: [String!]
   locations: [String!]
-  credits: [Credit!]
-  premieres: [Premiere!]
-  titles: [Title!]
-  certifications: [Certification!]
+  credits: [ScrappedCredit!]
+  premieres: [ScrappedPremiere!]
+  titles: [ScrappedTitle!]
+  certifications: [ScrappedCertification!]
   keywords: [String!]
   ID: Int!
   url: URL!
-  ranking: Ranking
-  episode: Episode
+  ranking: ScrappedRanking
+  episode: ScrappedEpisode
 }
 
 type Query {
-  getTape(imdbNumber: Int!): Tape!
-  getStoredTape(tapeId: ID!): DbalTape!
+  getScrappedTape(imdbNumber: Int!): ScrappedTape!
+  getTape(tapeId: ID!): Tape!
 }
 
 type Mutation {
-  importTape(imdbNumber: Int!): TapeResult!
+  importTape(imdbNumber: Int!): ImportOutput!
 }

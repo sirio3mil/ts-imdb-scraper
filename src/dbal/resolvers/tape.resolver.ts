@@ -19,7 +19,7 @@ export class DbalTapeResolver {
   ) {}
 
   @Query(() => Tape)
-  async getStoredTape(
+  async getTape(
     @Args("tapeId", { type: () => ID }) tapeId: number
   ): Promise<Tape> {
     try {

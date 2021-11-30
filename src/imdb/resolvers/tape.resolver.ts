@@ -27,7 +27,7 @@ export class TapeResolver {
   ) {}
 
   @Query(() => ScrappedTape)
-  async getTape(
+  async getScrappedTape(
     @Args("imdbNumber", { type: () => Int }) imdbNumber: number
   ): Promise<ScrappedTape> {
     try {
