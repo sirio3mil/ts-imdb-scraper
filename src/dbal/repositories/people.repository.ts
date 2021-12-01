@@ -17,6 +17,7 @@ export class PeopleRepository extends ObjectRepository {
   }
 
   async getPeople(peopleId: number): Promise<People> {
+    console.log(`getPeople(${peopleId})`);
     const result = await this.connection
       .request()
       .input("peopleId", sql.Int, peopleId)

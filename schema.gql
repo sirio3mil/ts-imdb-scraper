@@ -2,24 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-"""person"""
-type ScrappedPerson {
-  fullName: String!
-  ID: Int!
-  url: URL!
-  alias: String
-}
-
-"""URL custom scalar type"""
-scalar URL
-
-"""credit, cast and crew member"""
-type ScrappedCredit {
-  person: ScrappedPerson!
-  role: String
-  character: String
-}
-
 """people alias"""
 type PeopleAlias {
   alias: String!
@@ -66,14 +48,55 @@ type Role {
   role: String!
 }
 
-"""tape people role"""
-type TapePeopleRole {
-  peopleId: Int!
-  roleId: Int!
-  tapeId: Int!
-  tapePeopleRoleId: ID
+"""tape people role output"""
+type CreditOutput {
   people: People!
   role: Role!
+  tapePeopleRoleId: ID!
+}
+
+"""person"""
+type ScrappedPerson {
+  fullName: String!
+  ID: Int!
+  url: URL!
+  alias: String
+}
+
+"""URL custom scalar type"""
+scalar URL
+
+"""credit, cast and crew member"""
+type ScrappedCredit {
+  person: ScrappedPerson!
+  role: String
+  character: String
+}
+
+"""stored genre"""
+type Genre {
+  genreId: ID
+  name: String!
+}
+
+"""stored language"""
+type Language {
+  languageId: ID
+  name: String!
+}
+
+"""stored ranking"""
+type Ranking {
+  realScore: Float!
+  objectId: ID!
+  score: Float!
+  votes: Int!
+}
+
+"""stored sound"""
+type Sound {
+  description: String!
+  soundId: ID
 }
 
 """stored tape detail"""
@@ -89,46 +112,6 @@ type TapeDetail {
   tapeId: ID!
 }
 
-"""stored sound"""
-type Sound {
-  description: String!
-  soundId: ID
-}
-
-"""stored language"""
-type Language {
-  languageId: ID
-  name: String!
-}
-
-"""stored genre"""
-type Genre {
-  genreId: ID
-  name: String!
-}
-
-"""stored ranking"""
-type Ranking {
-  realScore: Float!
-  objectId: ID!
-  score: Float!
-  votes: Int!
-}
-
-"""stored tv show"""
-type TvShow {
-  finished: Boolean!
-  tapeId: ID!
-}
-
-"""stored tv show chapter"""
-type TvShowChapter {
-  chapter: Int!
-  season: Int!
-  tapeId: ID!
-  tvShowTapeId: Int!
-}
-
 """stored tape"""
 type Tape {
   originalTitle: String!
@@ -139,10 +122,24 @@ type Tape {
   sounds: [Sound!]
   languages: [Language!]
   genres: [Genre!]
-  people: [TapePeopleRole!]
   ranking: Ranking
   tvShow: TvShow
   tvShowChapter: TvShowChapter
+  people: [CreditOutput!]
+}
+
+"""stored tv show chapter"""
+type TvShowChapter {
+  chapter: Int!
+  season: Int!
+  tapeId: ID!
+  tvShowTapeId: Int!
+}
+
+"""stored tv show"""
+type TvShow {
+  finished: Boolean!
+  tapeId: ID!
 }
 
 """count inserted rows"""
@@ -234,7 +231,6 @@ type ScrappedTape {
 type Query {
   getScrappedTape(imdbNumber: Int!): ScrappedTape!
   getTape(tapeId: ID!): Tape!
-  getPeople(peopleId: ID!): People!
 }
 
 type Mutation {

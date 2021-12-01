@@ -8,7 +8,7 @@ import { PeopleRepository } from "src/dbal/repositories/people.repository";
 import { RankingRepository } from "src/dbal/repositories/ranking.repository";
 import { SoundRepository } from "src/dbal/repositories/sound.repository";
 import { TapeRepository } from "src/dbal/repositories/tape.repository";
-import { ImportOutput } from "../models/output/import.model";
+import { ImportOutput } from "../models/outputs/import.model";
 import { CreditService } from "../services/credit.service";
 import { TapeService } from "../services/tape.service";
 

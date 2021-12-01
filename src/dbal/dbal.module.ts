@@ -6,8 +6,6 @@ import { TapeRepository } from "src/dbal/repositories/tape.repository";
 import { PeopleRepository } from "./repositories/people.repository";
 import { RankingRepository } from "./repositories/ranking.repository";
 import { RoleRepository } from "./repositories/role.repository";
-import { PeopleResolver } from "./resolvers/people.resolver";
-import { TapePeopleRoleResolver } from "./resolvers/tape-people-role.resolver";
 import { TapeResolver } from "./resolvers/tape.resolver";
 
 const connectionFactory = {
@@ -23,8 +21,6 @@ const connectionFactory = {
   imports: [HttpModule],
   providers: [
     TapeResolver,
-    TapePeopleRoleResolver,
-    PeopleResolver,
     TapeRepository,
     PeopleRepository,
     RankingRepository,

@@ -1,5 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import * as sql from "mssql";
+import { CreditOutput } from "src/domain/dtos/outputs/credit.dto";
 import { Country } from "../models/country.model";
 import { Genre } from "../models/genre.model";
 import { Language } from "../models/language.model";
@@ -368,6 +369,38 @@ export class TapeRepository extends ObjectRepository {
       );
       tapePeopleRole.peopleId = parseInt(tapePeopleRole.peopleId);
       tapePeopleRole.tapeId = parseInt(tapePeopleRole.tapeId);
+    });
+    return result.recordset;
+  }
+
+  async getCreditsOutput(tapeId: number): Promise<CreditOutput[]> {
+    const result = await this.connection
+      .request()
+      .input("tapeId", sql.BigInt, tapeId)
+      .query(
+        `SELECT r.roleId
+          ,r.role
+          ,p.peopleId
+          ,p.fullName
+          ,tpr.tapeId
+          ,tpr.tapePeopleRoleId 
+        FROM [TapePeopleRole] tpr 
+        INNER JOIN [People] p ON p.peopleId = tpr.peopleId
+        INNER JOIN [Role] r ON r.roleId = tpr.roleId
+        WHERE tpr.tapeId = @tapeId`
+      );
+    result.recordset.map((row) => {
+      row.tapePeopleRoleId = parseInt(
+        row.tapePeopleRoleId
+      );
+      row.people = {
+        peopleId: parseInt(row.peopleId),
+        fullName: row.fullName,
+      };
+      row.role = {
+        roleId: parseInt(row.roleId),
+        role: row.role,
+      };
     });
     return result.recordset;
   }
