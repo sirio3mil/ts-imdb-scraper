@@ -147,10 +147,7 @@ export class TapeRepository extends ObjectRepository {
     return result.recordset;
   }
 
-  async addCountries(
-    tapeId: number,
-    countries: Country[]
-  ): Promise<number> {
+  async addCountries(tapeId: number, countries: Country[]): Promise<number> {
     const countryIds = countries.map((c) => c.countryId);
     const tapeCountries = await this.getTapeCountries(tapeId);
     tapeCountries.forEach((country) => {
@@ -218,10 +215,7 @@ export class TapeRepository extends ObjectRepository {
     return result.recordset;
   }
 
-  async addLanguages(
-    tapeId: number,
-    languages: Language[]
-  ): Promise<number> {
+  async addLanguages(tapeId: number, languages: Language[]): Promise<number> {
     const languageIds = languages.map((c) => c.languageId);
     const tapeLanguages = await this.getTapeLanguages(tapeId);
     tapeLanguages.forEach((language) => {
@@ -324,7 +318,9 @@ export class TapeRepository extends ObjectRepository {
     return result.recordset[0];
   }
 
-  async insertTvShowChapter(tvShowChapter: TvShowChapter): Promise<TvShowChapter> {
+  async insertTvShowChapter(
+    tvShowChapter: TvShowChapter
+  ): Promise<TvShowChapter> {
     const result = await this.connection
       .request()
       .input("tapeId", sql.BigInt, tvShowChapter.tapeId)
@@ -333,13 +329,17 @@ export class TapeRepository extends ObjectRepository {
       .input("tvShowTapeId", sql.BigInt, tvShowChapter.tvShowTapeId)
       .query`insert into TvShowChapter (tapeId, chapter, season, tvShowTapeId) values (@tapeId, @chapter, @season, @tvShowTapeId)`;
     if (result.rowsAffected[0] === 0) {
-      throw new NotFoundException(`TvShowChapter with id ${tvShowChapter.tapeId} not found`);
+      throw new NotFoundException(
+        `TvShowChapter with id ${tvShowChapter.tapeId} not found`
+      );
     }
 
     return tvShowChapter;
   }
 
-  async upsertTvShowChapter(tvShowChapter: TvShowChapter): Promise<TvShowChapter> {
+  async upsertTvShowChapter(
+    tvShowChapter: TvShowChapter
+  ): Promise<TvShowChapter> {
     const result = await this.connection
       .request()
       .input("tapeId", sql.BigInt, tvShowChapter.tapeId)
@@ -361,9 +361,11 @@ export class TapeRepository extends ObjectRepository {
       .query(
         `SELECT tpr.roleId, tpr.peopleId, tpr.tapeId, tpr.tapePeopleRoleId FROM [TapePeopleRole] tpr WHERE tpr.tapeId = @tapeId`
       );
-    result.recordset.map(tapePeopleRole => {
+    result.recordset.map((tapePeopleRole) => {
       tapePeopleRole.roleId = parseInt(tapePeopleRole.roleId);
-      tapePeopleRole.tapePeopleRoleId = parseInt(tapePeopleRole.tapePeopleRoleId);
+      tapePeopleRole.tapePeopleRoleId = parseInt(
+        tapePeopleRole.tapePeopleRoleId
+      );
       tapePeopleRole.peopleId = parseInt(tapePeopleRole.peopleId);
       tapePeopleRole.tapeId = parseInt(tapePeopleRole.tapeId);
     });

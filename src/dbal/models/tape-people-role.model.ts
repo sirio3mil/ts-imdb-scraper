@@ -4,7 +4,7 @@ import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 export class TapePeopleRole {
   @Field(() => Int)
   peopleId: number;
-  
+
   @Field(() => Int)
   roleId: number;
 

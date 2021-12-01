@@ -30,4 +30,3 @@ export abstract class ObjectRepository {
     return result.rowsAffected[0] > 0;
   }
 }
-

@@ -2,6 +2,80 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""person"""
+type ScrappedPerson {
+  fullName: String!
+  ID: Int!
+  url: URL!
+  alias: String
+}
+
+"""URL custom scalar type"""
+scalar URL
+
+"""credit, cast and crew member"""
+type ScrappedCredit {
+  person: ScrappedPerson!
+  role: String
+  character: String
+}
+
+"""people alias"""
+type PeopleAlias {
+  alias: String!
+  peopleId: Int!
+  peopleAliasId: ID
+}
+
+"""stored country"""
+type Country {
+  countryId: ID
+  isoCode: String
+  officialName: String!
+}
+
+"""people detailed information"""
+type PeopleDetail {
+  birthDate: Date
+  birthPlace: String
+  country: Country
+  deathDate: Date
+  deathPlace: String
+  gender: String
+  havePhoto: Boolean
+  height: Int
+  peopleId: ID!
+  skip: Boolean
+}
+
+"""Date custom scalar type"""
+scalar Date
+
+"""people main model"""
+type People {
+  aliases: [PeopleAlias!]
+  detail: PeopleDetail
+  fullName: String!
+  objectId: String!
+  peopleId: ID
+}
+
+"""people role"""
+type Role {
+  roleId: ID!
+  role: String!
+}
+
+"""tape people role"""
+type TapePeopleRole {
+  peopleId: Int!
+  roleId: Int!
+  tapeId: Int!
+  tapePeopleRoleId: ID
+  people: People!
+  role: Role!
+}
+
 """stored tape detail"""
 type TapeDetail {
   budget: Float
@@ -13,13 +87,6 @@ type TapeDetail {
   tvShowChapter: Boolean
   year: Int
   tapeId: ID!
-}
-
-"""stored country"""
-type Country {
-  countryId: ID
-  isoCode: String
-  officialName: String!
 }
 
 """stored sound"""
@@ -72,27 +139,10 @@ type Tape {
   sounds: [Sound!]
   languages: [Language!]
   genres: [Genre!]
+  people: [TapePeopleRole!]
   ranking: Ranking
   tvShow: TvShow
   tvShowChapter: TvShowChapter
-}
-
-"""person"""
-type ScrappedPerson {
-  fullName: String!
-  ID: Int!
-  url: URL!
-  alias: String
-}
-
-"""URL custom scalar type"""
-scalar URL
-
-"""credit, cast and crew member"""
-type ScrappedCredit {
-  person: ScrappedPerson!
-  role: String
-  character: String
 }
 
 """count inserted rows"""
@@ -141,9 +191,6 @@ type ScrappedPremiere {
   place: String
 }
 
-"""Date custom scalar type"""
-scalar Date
-
 """tape title"""
 type ScrappedTitle {
   country: String
@@ -187,6 +234,7 @@ type ScrappedTape {
 type Query {
   getScrappedTape(imdbNumber: Int!): ScrappedTape!
   getTape(tapeId: ID!): Tape!
+  getPeople(peopleId: ID!): People!
 }
 
 type Mutation {

@@ -73,7 +73,9 @@ export class PeopleRepository extends ObjectRepository {
     return result.recordset[0];
   }
 
-  async insertTapePeopleRole(tapePeopleRole: TapePeopleRole): Promise<TapePeopleRole> {
+  async insertTapePeopleRole(
+    tapePeopleRole: TapePeopleRole
+  ): Promise<TapePeopleRole> {
     const result = await this.connection
       .request()
       .input("peopleId", sql.BigInt, tapePeopleRole.peopleId)
@@ -82,30 +84,46 @@ export class PeopleRepository extends ObjectRepository {
       .query(
         `INSERT INTO [TapePeopleRole] (peopleId, roleId, tapeId) OUTPUT inserted.tapePeopleRoleId VALUES (@peopleId, @roleId, @tapeId)`
       );
-    tapePeopleRole.tapePeopleRoleId = parseInt(result.recordset[0].tapePeopleRoleId);
+    tapePeopleRole.tapePeopleRoleId = parseInt(
+      result.recordset[0].tapePeopleRoleId
+    );
 
     return tapePeopleRole;
   }
 
-  async insertTapePeopleRoleCharacter(tapePeopleRoleCharacter: TapePeopleRoleCharacter): Promise<TapePeopleRoleCharacter> {
+  async insertTapePeopleRoleCharacter(
+    tapePeopleRoleCharacter: TapePeopleRoleCharacter
+  ): Promise<TapePeopleRoleCharacter> {
     const result = await this.connection
       .request()
-      .input("tapePeopleRoleId", sql.BigInt, tapePeopleRoleCharacter.tapePeopleRoleId)
+      .input(
+        "tapePeopleRoleId",
+        sql.BigInt,
+        tapePeopleRoleCharacter.tapePeopleRoleId
+      )
       .input("character", sql.NVarChar(300), tapePeopleRoleCharacter.character)
       .query(
         `INSERT INTO [TapePeopleRoleCharacter] (tapePeopleRoleId, character) VALUES (@tapePeopleRoleId, @character)`
       );
     if (result.rowsAffected[0] === 0) {
-      throw new Error(`Duplicate character ${tapePeopleRoleCharacter.character} found`);
+      throw new Error(
+        `Duplicate character ${tapePeopleRoleCharacter.character} found`
+      );
     }
-    
+
     return tapePeopleRoleCharacter;
   }
 
-  async upsertTapePeopleRoleCharacter(tapePeopleRoleCharacter: TapePeopleRoleCharacter): Promise<TapePeopleRoleCharacter> {
+  async upsertTapePeopleRoleCharacter(
+    tapePeopleRoleCharacter: TapePeopleRoleCharacter
+  ): Promise<TapePeopleRoleCharacter> {
     const result = await this.connection
       .request()
-      .input("tapePeopleRoleId", sql.BigInt, tapePeopleRoleCharacter.tapePeopleRoleId)
+      .input(
+        "tapePeopleRoleId",
+        sql.BigInt,
+        tapePeopleRoleCharacter.tapePeopleRoleId
+      )
       .input("character", sql.NVarChar(300), tapePeopleRoleCharacter.character)
       .query(
         `UPDATE [TapePeopleRoleCharacter] SET character = @character WHERE tapePeopleRoleId = @tapePeopleRoleId`
@@ -117,7 +135,10 @@ export class PeopleRepository extends ObjectRepository {
     return tapePeopleRoleCharacter;
   }
 
-  async getTapePeopleRoles(peopleId: number, tapeId: number): Promise<TapePeopleRole[]> {
+  async getTapePeopleRoles(
+    peopleId: number,
+    tapeId: number
+  ): Promise<TapePeopleRole[]> {
     const result = await this.connection
       .request()
       .input("peopleId", sql.BigInt, peopleId)
@@ -125,9 +146,11 @@ export class PeopleRepository extends ObjectRepository {
       .query(
         `SELECT tpr.roleId, tpr.peopleId, tpr.tapeId, tpr.tapePeopleRoleId FROM [TapePeopleRole] tpr WHERE tpr.peopleId = @peopleId AND tpr.tapeId = @tapeId`
       );
-    result.recordset.map(tapePeopleRole => {
+    result.recordset.map((tapePeopleRole) => {
       tapePeopleRole.roleId = parseInt(tapePeopleRole.roleId);
-      tapePeopleRole.tapePeopleRoleId = parseInt(tapePeopleRole.tapePeopleRoleId);
+      tapePeopleRole.tapePeopleRoleId = parseInt(
+        tapePeopleRole.tapePeopleRoleId
+      );
       tapePeopleRole.peopleId = parseInt(tapePeopleRole.peopleId);
       tapePeopleRole.tapeId = parseInt(tapePeopleRole.tapeId);
     });
@@ -157,7 +180,9 @@ export class PeopleRepository extends ObjectRepository {
     return peopleAlias;
   }
 
-  async insertPeopleAliasTape(peopleAliasTape: PeopleAliasTape): Promise<PeopleAliasTape> {
+  async insertPeopleAliasTape(
+    peopleAliasTape: PeopleAliasTape
+  ): Promise<PeopleAliasTape> {
     const result = await this.connection
       .request()
       .input("peopleAliasId", sql.BigInt, peopleAliasTape.peopleAliasId)
@@ -179,14 +204,17 @@ export class PeopleRepository extends ObjectRepository {
       .query(
         `SELECT pat.peopleAliasId, pat.tapeId FROM [PeopleAliasTape] pat WHERE pat.peopleAliasId = @peopleAliasId`
       );
-    result.recordset.map(peopleAliasTape => {
+    result.recordset.map((peopleAliasTape) => {
       peopleAliasTape.peopleAliasId = parseInt(peopleAliasTape.peopleAliasId);
       peopleAliasTape.tapeId = parseInt(peopleAliasTape.tapeId);
     });
     return result.recordset;
   }
 
-  async getPeopleAliasTape(peopleAliasId: number, tapeId: number): Promise<PeopleAliasTape[]> {
+  async getPeopleAliasTape(
+    peopleAliasId: number,
+    tapeId: number
+  ): Promise<PeopleAliasTape[]> {
     const result = await this.connection
       .request()
       .input("peopleAliasId", sql.BigInt, peopleAliasId)
@@ -194,79 +222,98 @@ export class PeopleRepository extends ObjectRepository {
       .query(
         `SELECT pat.peopleAliasId, pat.tapeId FROM [PeopleAliasTape] pat WHERE pat.peopleAliasId = @peopleAliasId AND pat.tapeId = @tapeId`
       );
-    result.recordset.map(peopleAliasTape => {
+    result.recordset.map((peopleAliasTape) => {
       peopleAliasTape.peopleAliasId = parseInt(peopleAliasTape.peopleAliasId);
       peopleAliasTape.tapeId = parseInt(peopleAliasTape.tapeId);
     });
     return result.recordset[0];
   }
 
-  async proccessCredits(credits: ScrappedCredit[], tape: Tape): Promise<TapePeopleRole[]> {
+  async proccessCredits(
+    credits: ScrappedCredit[],
+    tape: Tape
+  ): Promise<TapePeopleRole[]> {
     const tapePeopleRoles: TapePeopleRole[] = [];
     const peopleProccessed: People[] = [];
-    await Promise.all(credits.map(async (credit) => {
-      const roleId = Constants.roles[credit.role];
-      if (!!roleId) {
-        // identify peopleId if exits and update, if not, create new object and people rows
-        let people = peopleProccessed[credit.person.ID]
-        if (!people) {
-          people = await this.getPeopleByImdbNumber(credit.person.ID);
+    await Promise.all(
+      credits.map(async (credit) => {
+        const roleId = Constants.roles[credit.role];
+        if (!!roleId) {
+          // identify peopleId if exits and update, if not, create new object and people rows
+          let people = peopleProccessed[credit.person.ID];
           if (!people) {
-            const objectId = await this.insertObject(Constants.rowTypes.person);
-            [, people] = await Promise.all([
-              this.insertImdbNumber(objectId, credit.person.ID),
-              this.insertPeople({
-                objectId,
-                fullName: credit.person.fullName,
-              }),
-            ]);
-          } else {
-            people.fullName = credit.person.fullName;
-            people = await this.updatePeople(people);
-            const tapeRoles = await this.getTapePeopleRoles(people.peopleId, tape.tapeId);
-            tapePeopleRoles.push(...tapeRoles);
-            people.aliases = await this.getPeopleAlias(people.peopleId);
+            people = await this.getPeopleByImdbNumber(credit.person.ID);
+            if (!people) {
+              const objectId = await this.insertObject(
+                Constants.rowTypes.person
+              );
+              [, people] = await Promise.all([
+                this.insertImdbNumber(objectId, credit.person.ID),
+                this.insertPeople({
+                  objectId,
+                  fullName: credit.person.fullName,
+                }),
+              ]);
+            } else {
+              people.fullName = credit.person.fullName;
+              people = await this.updatePeople(people);
+              const tapeRoles = await this.getTapePeopleRoles(
+                people.peopleId,
+                tape.tapeId
+              );
+              tapePeopleRoles.push(...tapeRoles);
+              people.aliases = await this.getPeopleAlias(people.peopleId);
+            }
+            peopleProccessed[credit.person.ID] = people;
           }
-          peopleProccessed[credit.person.ID] = people;
-        }
-        if (!!credit.person.alias) {
-          let peopleAlias = people.aliases.find(a => a.alias === credit.person.alias);
-          if (!peopleAlias) {
-            peopleAlias = await this.insertPeopleAlias({
-              peopleId: people.peopleId,
-              alias: credit.person.alias,
-            });
-            await this.insertPeopleAliasTape({  
-              peopleAliasId: peopleAlias.peopleAliasId,
-              tapeId: tape.tapeId,
-            });
-          } else {
-            const peopleAliasTape = await this.getPeopleAliasTape(peopleAlias.peopleAliasId, tape.tapeId);
-            if (!peopleAliasTape) {
+          if (!!credit.person.alias) {
+            let peopleAlias = people.aliases.find(
+              (a) => a.alias === credit.person.alias
+            );
+            if (!peopleAlias) {
+              peopleAlias = await this.insertPeopleAlias({
+                peopleId: people.peopleId,
+                alias: credit.person.alias,
+              });
               await this.insertPeopleAliasTape({
                 peopleAliasId: peopleAlias.peopleAliasId,
                 tapeId: tape.tapeId,
               });
+            } else {
+              const peopleAliasTape = await this.getPeopleAliasTape(
+                peopleAlias.peopleAliasId,
+                tape.tapeId
+              );
+              if (!peopleAliasTape) {
+                await this.insertPeopleAliasTape({
+                  peopleAliasId: peopleAlias.peopleAliasId,
+                  tapeId: tape.tapeId,
+                });
+              }
             }
           }
+          let tapePeopleRole = tapePeopleRoles.find(
+            (tapePeopleRole) =>
+              tapePeopleRole.roleId === roleId &&
+              tapePeopleRole.peopleId === people.peopleId
+          );
+          if (!tapePeopleRole) {
+            tapePeopleRole = await this.insertTapePeopleRole({
+              peopleId: people.peopleId,
+              roleId,
+              tapeId: tape.tapeId,
+            });
+            tapePeopleRoles.push(tapePeopleRole);
+          }
+          if (!!credit.character) {
+            this.upsertTapePeopleRoleCharacter({
+              tapePeopleRoleId: tapePeopleRole.tapePeopleRoleId,
+              character: credit.character,
+            });
+          }
         }
-        let tapePeopleRole = tapePeopleRoles.find((tapePeopleRole) => tapePeopleRole.roleId === roleId && tapePeopleRole.peopleId === people.peopleId);
-        if (!tapePeopleRole) {
-          tapePeopleRole = await this.insertTapePeopleRole({
-            peopleId: people.peopleId,
-            roleId,
-            tapeId: tape.tapeId,
-          });
-          tapePeopleRoles.push(tapePeopleRole);
-        }
-        if (!!credit.character) {
-          this.upsertTapePeopleRoleCharacter({
-            tapePeopleRoleId: tapePeopleRole.tapePeopleRoleId,
-            character: credit.character,
-          });
-        }
-      }
-    }));
+      })
+    );
 
     return tapePeopleRoles;
   }

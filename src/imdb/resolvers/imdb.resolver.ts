@@ -23,7 +23,7 @@ export class ImdbResolver {
     private readonly languageRepository: LanguageRepository,
     private readonly genreRepository: GenreRepository,
     private readonly rankingRepository: RankingRepository,
-    private readonly peopleRepository: PeopleRepository,
+    private readonly peopleRepository: PeopleRepository
   ) {}
 
   @Mutation(() => ImportOutput)
@@ -101,39 +101,54 @@ export class ImdbResolver {
         this.tapeRepository.upsertTvShow(storedTape, finished);
       } else if (isTvShowChapter) {
         const episode = this.tapeService.getEpisode();
-        const tvShow = await this.tapeRepository.getTapeByImdbNumber(episode.tvShowID);
+        const tvShow = await this.tapeRepository.getTapeByImdbNumber(
+          episode.tvShowID
+        );
         tvShowChapter = {
           tapeId: storedTape.tapeId,
           tvShowTapeId: tvShow.tapeId,
           season: episode.season,
           chapter: episode.chapter,
-        }
+        };
         this.tapeRepository.upsertTvShowChapter(tvShowChapter);
       }
-      const [countries, sounds, languages, genres, credits] = await Promise.all([
-        this.countryRepository.processCountriesOfficialNames(
-          this.tapeService.getCountries()
-        ),
-        this.soundRepository.processSoundDescriptions(
-          this.tapeService.getSounds()
-        ),
-        this.languageRepository.processLanguageNames(
-          this.tapeService.getLanguages()
-        ),
-        this.genreRepository.processGenreNames(this.tapeService.getGenres()),
-        this.creditService.getCredits(),
+      const [countries, sounds, languages, genres, credits] = await Promise.all(
+        [
+          this.countryRepository.processCountriesOfficialNames(
+            this.tapeService.getCountries()
+          ),
+          this.soundRepository.processSoundDescriptions(
+            this.tapeService.getSounds()
+          ),
+          this.languageRepository.processLanguageNames(
+            this.tapeService.getLanguages()
+          ),
+          this.genreRepository.processGenreNames(this.tapeService.getGenres()),
+          this.creditService.getCredits(),
+        ]
+      );
+      const [
+        countriesAdded,
+        soundsAdded,
+        languagesAdded,
+        genresAdded,
+        tapePeopleRoles,
+      ] = await Promise.all([
+        this.tapeRepository.addCountries(storedTape.tapeId, countries),
+        this.tapeRepository.addSounds(storedTape.tapeId, sounds),
+        this.tapeRepository.addLanguages(storedTape.tapeId, languages),
+        this.tapeRepository.addGenres(storedTape.tapeId, genres),
+        this.peopleRepository.proccessCredits(credits, storedTape),
       ]);
-      const [countriesAdded, soundsAdded, languagesAdded, genresAdded, tapePeopleRoles] =
-        await Promise.all([
-          this.tapeRepository.addCountries(storedTape.tapeId, countries),
-          this.tapeRepository.addSounds(storedTape.tapeId, sounds),
-          this.tapeRepository.addLanguages(storedTape.tapeId, languages),
-          this.tapeRepository.addGenres(storedTape.tapeId, genres),
-          this.peopleRepository.proccessCredits(credits, storedTape),
-        ]);
-      const directors = tapePeopleRoles.filter(r => r.roleId === Constants.roles.director).length;
-      const writers = tapePeopleRoles.filter(r => r.roleId === Constants.roles.writer).length;
-      const cast = tapePeopleRoles.filter(r => r.roleId === Constants.roles.cast).length;
+      const directors = tapePeopleRoles.filter(
+        (r) => r.roleId === Constants.roles.director
+      ).length;
+      const writers = tapePeopleRoles.filter(
+        (r) => r.roleId === Constants.roles.writer
+      ).length;
+      const cast = tapePeopleRoles.filter(
+        (r) => r.roleId === Constants.roles.cast
+      ).length;
       return {
         objectId: storedTape.objectId,
         tapeId: storedTape.tapeId,

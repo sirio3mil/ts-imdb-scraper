@@ -12,7 +12,7 @@ import { RankingRepository } from "../repositories/ranking.repository";
 import { TapeRepository } from "../repositories/tape.repository";
 
 @Resolver(() => Tape)
-export class DbalTapeResolver {
+export class TapeResolver {
   constructor(
     private readonly tapeRepository: TapeRepository,
     private readonly rankingRepository: RankingRepository
