@@ -9,6 +9,7 @@ import { PeopleRepository } from "src/dbal/repositories/people.repository";
 import { RankingRepository } from "src/dbal/repositories/ranking.repository";
 import { SoundRepository } from "src/dbal/repositories/sound.repository";
 import { TapeRepository } from "src/dbal/repositories/tape.repository";
+import { TitleRepository } from "src/dbal/repositories/title.repository";
 import { AbstractProvider } from "./providers/abstract.provider";
 import { FileProvider } from "./providers/file.provider";
 import { ImdbResolver } from "./resolvers/imdb.resolver";
@@ -51,6 +52,7 @@ const connectionFactory = {
     GenreRepository,
     RankingRepository,
     PeopleRepository,
+    TitleRepository,
     {
       provide: AbstractProvider,
       useClass: FileProvider,

@@ -8,8 +8,10 @@ import { PeopleRepository } from "src/dbal/repositories/people.repository";
 import { RankingRepository } from "src/dbal/repositories/ranking.repository";
 import { SoundRepository } from "src/dbal/repositories/sound.repository";
 import { TapeRepository } from "src/dbal/repositories/tape.repository";
+import { TitleRepository } from "src/dbal/repositories/title.repository";
 import { ImportOutput } from "../models/outputs/import.model";
 import { CreditService } from "../services/credit.service";
+import { ReleaseInfoService } from "../services/release-info.service";
 import { TapeService } from "../services/tape.service";
 
 @Resolver(() => ImportOutput)
@@ -17,13 +19,15 @@ export class ImdbResolver {
   constructor(
     private readonly tapeService: TapeService,
     private readonly creditService: CreditService,
+    private readonly releaseInfoService: ReleaseInfoService,
     private readonly tapeRepository: TapeRepository,
     private readonly countryRepository: CountryRepository,
     private readonly soundRepository: SoundRepository,
     private readonly languageRepository: LanguageRepository,
     private readonly genreRepository: GenreRepository,
     private readonly rankingRepository: RankingRepository,
-    private readonly peopleRepository: PeopleRepository
+    private readonly peopleRepository: PeopleRepository,
+    private readonly titleRepository: TitleRepository
   ) {}
 
   @Mutation(() => ImportOutput)
@@ -32,12 +36,14 @@ export class ImdbResolver {
   ) {
     try {
       const url = this.tapeService.createUrl(imdbNumber);
-      const [tapeContent, creditsContent] = await Promise.all([
+      const [tapeContent, creditsContent, releaseInfoContent] = await Promise.all([
         this.tapeService.getContent(url),
         this.creditService.getContent(url),
+        this.releaseInfoService.getContent(url)
       ]);
       this.tapeService.set$(tapeContent);
       this.creditService.set$(creditsContent);
+      this.releaseInfoService.set$(releaseInfoContent);
       let storedTape = await this.tapeRepository.getTapeByImdbNumber(
         imdbNumber
       );
@@ -112,7 +118,7 @@ export class ImdbResolver {
         };
         this.tapeRepository.upsertTvShowChapter(tvShowChapter);
       }
-      const [countries, sounds, languages, genres, credits] = await Promise.all(
+      const [countries, sounds, languages, genres, credits, titles] = await Promise.all(
         [
           this.countryRepository.processCountriesOfficialNames(
             this.tapeService.getCountries()
@@ -125,6 +131,7 @@ export class ImdbResolver {
           ),
           this.genreRepository.processGenreNames(this.tapeService.getGenres()),
           this.creditService.getCredits(),
+          this.releaseInfoService.getTitles(),
         ]
       );
       const [
@@ -133,12 +140,14 @@ export class ImdbResolver {
         languagesAdded,
         genresAdded,
         tapePeopleRoles,
+        tapeTitlesAdded,
       ] = await Promise.all([
         this.tapeRepository.addCountries(storedTape.tapeId, countries),
         this.tapeRepository.addSounds(storedTape.tapeId, sounds),
         this.tapeRepository.addLanguages(storedTape.tapeId, languages),
         this.tapeRepository.addGenres(storedTape.tapeId, genres),
         this.peopleRepository.proccessCredits(credits, storedTape),
+        this.titleRepository.processTitles(titles, storedTape),
       ]);
       const directors = tapePeopleRoles.filter(
         (r) => r.roleId === Constants.roles.director
@@ -167,6 +176,10 @@ export class ImdbResolver {
         genres: {
           total: genres.length,
           added: genresAdded,
+        },
+        titles: {
+          total: titles.length,
+          added: tapeTitlesAdded,
         },
         ranking,
         finished,

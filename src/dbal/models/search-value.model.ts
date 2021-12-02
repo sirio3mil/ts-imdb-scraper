@@ -12,7 +12,7 @@ export class SearchValue {
   searchParam: string;
 
   @Field(() => ID)
-  searchValueId: number;
+  searchValueId?: number;
 
   @Field()
   slug: string;

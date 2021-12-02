@@ -23,6 +23,9 @@ export class ImportOutput {
   genres: CounterOutput;
 
   @Field()
+  titles: CounterOutput;
+
+  @Field()
   ranking: ScrappedRanking;
 
   @Field({ nullable: true })
