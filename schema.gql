@@ -55,6 +55,21 @@ type CreditOutput {
   tapePeopleRoleId: ID!
 }
 
+"""stored language"""
+type Language {
+  languageId: ID
+  name: String!
+}
+
+"""tape title output"""
+type TitleOutput {
+  country: Country
+  language: Language
+  observations: String
+  tapeTitleId: ID!
+  title: String!
+}
+
 """person"""
 type ScrappedPerson {
   fullName: String!
@@ -73,15 +88,17 @@ type ScrappedCredit {
   character: String
 }
 
+"""tape title"""
+type ScrappedTitle {
+  country: String
+  language: String
+  observations: String
+  title: String!
+}
+
 """stored genre"""
 type Genre {
   genreId: ID
-  name: String!
-}
-
-"""stored language"""
-type Language {
-  languageId: ID
   name: String!
 }
 
@@ -126,6 +143,7 @@ type Tape {
   tvShow: TvShow
   tvShowChapter: TvShowChapter
   people: [CreditOutput!]
+  titles: [TitleOutput!]
 }
 
 """stored tv show chapter"""
@@ -140,14 +158,6 @@ type TvShowChapter {
 type TvShow {
   finished: Boolean!
   tapeId: ID!
-}
-
-"""tape title"""
-type ScrappedTitle {
-  country: String
-  language: String
-  observations: String
-  title: String!
 }
 
 """count inserted rows"""
@@ -167,6 +177,7 @@ type ScrappedRanking {
 type ImportOutput {
   tapeId: Int!
   objectId: String!
+  time: Float!
   countries: CounterOutput!
   sounds: CounterOutput!
   languages: CounterOutput!

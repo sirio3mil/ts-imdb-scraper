@@ -1,5 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import * as sql from "mssql";
+import slug from 'limax';
 import { Constants } from "src/config/constants";
 import { ScrappedCredit } from "src/imdb/models/scrapped/credit.model";
 import { PeopleAliasTape } from "../models/people-alias-tape.model";
@@ -9,11 +10,15 @@ import { TapePeopleRoleCharacter } from "../models/tape-people-role-character.mo
 import { TapePeopleRole } from "../models/tape-people-role.model";
 import { Tape } from "../models/tape.model";
 import { ObjectRepository } from "./object.repository";
+import { TitleRepository } from "./title.repository";
 
 @Injectable()
 export class PeopleRepository extends ObjectRepository {
-  constructor(@Inject("CONNECTION") connection: sql.ConnectionPool) {
+  private titleRepository: TitleRepository;
+
+  constructor(@Inject("CONNECTION") connection: sql.ConnectionPool, titleRepository: TitleRepository) {
     super(connection);
+    this.titleRepository = titleRepository;
   }
 
   async getPeople(peopleId: number): Promise<People> {
@@ -32,26 +37,38 @@ export class PeopleRepository extends ObjectRepository {
   }
 
   async insertPeople(people: People): Promise<People> {
-    const result = await this.connection
-      .request()
-      .input("objectId", sql.UniqueIdentifier, people.objectId)
-      .input("fullName", sql.NVarChar(100), people.fullName)
-      .query(
-        `INSERT INTO people (objectId, fullName) OUTPUT inserted.peopleId VALUES (@objectId, @fullName)`
-      );
+    const [result, ] = await Promise.all([
+      this.connection
+        .request()
+        .input("objectId", sql.UniqueIdentifier, people.objectId)
+        .input("fullName", sql.NVarChar(100), people.fullName)
+        .query`INSERT INTO people (objectId, fullName) OUTPUT inserted.peopleId VALUES (@objectId, @fullName)`,
+      this.titleRepository.insertSearchValue({
+        objectId: people.objectId,
+        searchParam: people.fullName,
+        primaryParam: true,
+        slug: slug(people.fullName)
+      })
+    ]);
     people.peopleId = parseInt(result.recordset[0].peopleId);
 
     return people;
   }
 
   async updatePeople(people: People): Promise<People> {
-    const result = await this.connection
-      .request()
-      .input("peopleId", sql.BigInt, people.peopleId)
-      .input("fullName", sql.NVarChar(100), people.fullName)
-      .query(
-        `UPDATE people SET fullName = @fullName WHERE peopleId = @peopleId`
-      );
+    const [result, ] = await Promise.all([
+      this.connection
+        .request()
+        .input("peopleId", sql.BigInt, people.peopleId)
+        .input("fullName", sql.NVarChar(100), people.fullName)
+        .query`UPDATE people SET fullName = @fullName WHERE peopleId = @peopleId`,
+      this.titleRepository.insertSearchValue({
+        objectId: people.objectId,
+        searchParam: people.fullName,
+        primaryParam: true,
+        slug: slug(people.fullName)
+      })
+    ]);
     if (result.rowsAffected[0] === 0) {
       throw new Error("People not found");
     }
@@ -168,17 +185,26 @@ export class PeopleRepository extends ObjectRepository {
     return result.recordset;
   }
 
-  async insertPeopleAlias(peopleAlias: PeopleAlias): Promise<PeopleAlias> {
-    const result = await this.connection
-      .request()
-      .input("peopleId", sql.BigInt, peopleAlias.peopleId)
-      .input("alias", sql.NVarChar(100), peopleAlias.alias)
-      .query(
-        `INSERT INTO [PeopleAlias] (peopleId, alias) OUTPUT inserted.peopleAliasId VALUES (@peopleId, @alias)`
-      );
-    peopleAlias.peopleAliasId = parseInt(result.recordset[0].peopleAliasId);
+  async insertPeopleAlias(alias: string, people: People): Promise<PeopleAlias> {
+    const [result, ] = await Promise.all([
+      this.connection
+        .request()
+        .input("peopleId", sql.BigInt, people.peopleId)
+        .input("alias", sql.NVarChar(100), alias)
+        .query`INSERT INTO [PeopleAlias] (peopleId, alias) OUTPUT inserted.peopleAliasId VALUES (@peopleId, @alias)`,
+      this.titleRepository.insertSearchValue({
+        objectId: people.objectId,
+        searchParam: alias,
+        primaryParam: false,
+        slug: slug(alias)
+      })
+    ]);
 
-    return peopleAlias;
+    return {
+      peopleAliasId: parseInt(result.recordset[0].peopleAliasId),
+      peopleId: people.peopleId,
+      alias
+    };
   }
 
   async insertPeopleAliasTape(
@@ -256,8 +282,10 @@ export class PeopleRepository extends ObjectRepository {
                 }),
               ]);
             } else {
-              people.fullName = credit.person.fullName;
-              people = await this.updatePeople(people);
+              if (people.fullName !== credit.person.fullName) {
+                people.fullName = credit.person.fullName;
+                people = await this.updatePeople(people);
+              }
               const tapeRoles = await this.getTapePeopleRoles(
                 people.peopleId,
                 tape.tapeId
@@ -272,10 +300,7 @@ export class PeopleRepository extends ObjectRepository {
               (a) => a.alias === credit.person.alias
             );
             if (!peopleAlias) {
-              peopleAlias = await this.insertPeopleAlias({
-                peopleId: people.peopleId,
-                alias: credit.person.alias,
-              });
+              peopleAlias = await this.insertPeopleAlias(credit.person.alias, people);
               await this.insertPeopleAliasTape({
                 peopleAliasId: peopleAlias.peopleAliasId,
                 tapeId: tape.tapeId,

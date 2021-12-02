@@ -1,4 +1,4 @@
-import { Field, Int, ObjectType } from "@nestjs/graphql";
+import { Field, Float, Int, ObjectType } from "@nestjs/graphql";
 import { ScrappedRanking } from "../scrapped/ranking.model";
 import { CounterOutput } from "./counter.model";
 
@@ -9,6 +9,9 @@ export class ImportOutput {
 
   @Field()
   objectId: string;
+
+  @Field(() => Float)
+  time: number;
 
   @Field()
   countries: CounterOutput;
