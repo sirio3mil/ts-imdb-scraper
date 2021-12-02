@@ -1,5 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import * as sql from "mssql";
+import slug from 'limax';
 import { CreditOutput } from "src/domain/dtos/outputs/credit.dto";
 import { TitleOutput } from "src/domain/dtos/outputs/title.dto";
 import { Country } from "../models/country.model";
@@ -12,11 +13,15 @@ import { Tape } from "../models/tape.model";
 import { TvShowChapter } from "../models/tv-show-chapter.model";
 import { TvShow } from "../models/tv-show.model";
 import { ObjectRepository } from "./object.repository";
+import { TitleRepository } from "./title.repository";
 
 @Injectable()
 export class TapeRepository extends ObjectRepository {
-  constructor(@Inject("CONNECTION") connection: sql.ConnectionPool) {
+  private titleRepository: TitleRepository;
+
+  constructor(@Inject("CONNECTION") connection: sql.ConnectionPool, titleRepository: TitleRepository) {
     super(connection);
+    this.titleRepository = titleRepository;
   }
 
   async getTape(tapeId: number): Promise<Tape> {
@@ -58,11 +63,19 @@ export class TapeRepository extends ObjectRepository {
   }
 
   async insertTape(tape: Tape): Promise<Tape> {
-    const result = await this.connection
-      .request()
-      .input("objectId", sql.UniqueIdentifier, tape.objectId)
-      .input("originalTitle", sql.NVarChar(150), tape.originalTitle)
-      .query`insert into [Tape] (objectId, originalTitle) OUTPUT inserted.tapeId values (@objectId, @originalTitle)`;
+    const [result, ] = await Promise.all([
+      this.connection
+        .request()
+        .input("objectId", sql.UniqueIdentifier, tape.objectId)
+        .input("originalTitle", sql.NVarChar(150), tape.originalTitle)
+        .query`insert into [Tape] (objectId, originalTitle) OUTPUT inserted.tapeId values (@objectId, @originalTitle)`,
+      this.titleRepository.insertSearchValue({
+        objectId: tape.objectId,
+        searchParam: tape.originalTitle,
+        primaryParam: true,
+        slug: slug(tape.originalTitle)
+      })
+    ]);
     if (result.rowsAffected[0] === 0) {
       throw new NotFoundException("Tape not found");
     }
@@ -72,13 +85,19 @@ export class TapeRepository extends ObjectRepository {
   }
 
   async upsertTape(tape: Tape): Promise<Tape> {
-    const result = await this.connection
-      .request()
-      .input("tapeId", sql.BigInt, tape.tapeId)
-      .input("originalTitle", sql.NVarChar(150), tape.originalTitle)
-      .query`update Tape set 
-        originalTitle = @originalTitle
-        where tapeId = @tapeId`;
+    const [result, ] = await Promise.all([
+      this.connection
+        .request()
+        .input("tapeId", sql.BigInt, tape.tapeId)
+        .input("originalTitle", sql.NVarChar(150), tape.originalTitle)
+        .query`update Tape set originalTitle = @originalTitle where tapeId = @tapeId`,
+      this.titleRepository.insertSearchValue({
+        objectId: tape.objectId,
+        searchParam: tape.originalTitle,
+        primaryParam: true,
+        slug: slug(tape.originalTitle)
+      })
+    ]);
 
     if (result.rowsAffected[0] === 0) {
       return this.insertTape(tape);

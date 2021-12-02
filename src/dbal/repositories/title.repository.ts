@@ -127,17 +127,11 @@ export class TitleRepository {
         total++;
       }
       let searchValue = searchValues.find((s) => s.searchParam === title.title);
-      let primaryExists = searchValues.find((s) => s.primaryParam === true) ? true : false;
       if (!searchValue) {
-        let primaryParam = false;
-        if (!primaryExists && title.title === tape.originalTitle) {
-          primaryParam = true;
-          primaryExists = true;
-        }
         searchValue = {
           objectId: tape.objectId,
           searchParam: title.title,
-          primaryParam,
+          primaryParam: false,
           slug: slug(title.title)
         };
         await stmtSearch.execute(searchValue);
