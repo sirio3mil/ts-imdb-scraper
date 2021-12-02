@@ -8,3 +8,4 @@
   - add missing people alias to search values
   - add missing tape titles to search vales
 - split repositories for modules
+- use prepared statments inserting people bulk
