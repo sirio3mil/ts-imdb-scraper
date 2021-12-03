@@ -70,32 +70,6 @@ type TitleOutput {
   title: String!
 }
 
-"""tape title"""
-type ScrappedTitle {
-  country: String
-  language: String
-  observations: String
-  title: String!
-}
-
-"""person"""
-type ScrappedPerson {
-  fullName: String!
-  ID: Int!
-  url: URL!
-  alias: String
-}
-
-"""URL custom scalar type"""
-scalar URL
-
-"""credit, cast and crew member"""
-type ScrappedCredit {
-  person: ScrappedPerson!
-  role: String
-  character: String
-}
-
 """stored genre"""
 type Genre {
   genreId: ID
@@ -158,6 +132,32 @@ type TvShowChapter {
 type TvShow {
   finished: Boolean!
   tapeId: ID!
+}
+
+"""person"""
+type ScrappedPerson {
+  fullName: String!
+  ID: Int!
+  url: URL!
+  alias: String
+}
+
+"""URL custom scalar type"""
+scalar URL
+
+"""credit, cast and crew member"""
+type ScrappedCredit {
+  person: ScrappedPerson!
+  role: String
+  character: String
+}
+
+"""tape title"""
+type ScrappedTitle {
+  country: String
+  language: String
+  observations: String
+  title: String!
 }
 
 """count inserted rows"""

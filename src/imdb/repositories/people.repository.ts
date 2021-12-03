@@ -3,12 +3,12 @@ import * as sql from "mssql";
 import slug from 'limax';
 import { Constants } from "src/config/constants";
 import { ScrappedCredit } from "src/imdb/models/scrapped/credit.model";
-import { PeopleAliasTape } from "../models/people-alias-tape.model";
-import { PeopleAlias } from "../models/people-alias.model";
-import { People } from "../models/people.model";
-import { TapePeopleRoleCharacter } from "../models/tape-people-role-character.model";
-import { TapePeopleRole } from "../models/tape-people-role.model";
-import { Tape } from "../models/tape.model";
+import { PeopleAliasTape } from "src/dbal/models/people-alias-tape.model";
+import { PeopleAlias } from "src/dbal/models/people-alias.model";
+import { People } from "src/dbal/models/people.model";
+import { TapePeopleRoleCharacter } from "src/dbal/models/tape-people-role-character.model";
+import { TapePeopleRole } from "src/dbal/models/tape-people-role.model";
+import { Tape } from "src/dbal/models/tape.model";
 import { ObjectRepository } from "./object.repository";
 import { TitleRepository } from "./title.repository";
 
@@ -19,21 +19,6 @@ export class PeopleRepository extends ObjectRepository {
   constructor(@Inject("CONNECTION") connection: sql.ConnectionPool, titleRepository: TitleRepository) {
     super(connection);
     this.titleRepository = titleRepository;
-  }
-
-  async getPeople(peopleId: number): Promise<People> {
-    console.log(`getPeople(${peopleId})`);
-    const result = await this.connection
-      .request()
-      .input("peopleId", sql.Int, peopleId)
-      .query(
-        `SELECT peopleId, objectId, fullName FROM people WHERE peopleId = @peopleId`
-      );
-    if (result.recordset.length === 0) {
-      return null;
-    }
-    result.recordset[0].peopleId = peopleId;
-    return result.recordset[0];
   }
 
   async insertPeople(people: People): Promise<People> {
@@ -222,20 +207,6 @@ export class PeopleRepository extends ObjectRepository {
     }
 
     return peopleAliasTape;
-  }
-
-  async getPeopleAliasTapes(peopleAliasId: number): Promise<PeopleAliasTape[]> {
-    const result = await this.connection
-      .request()
-      .input("peopleAliasId", sql.BigInt, peopleAliasId)
-      .query(
-        `SELECT pat.peopleAliasId, pat.tapeId FROM [PeopleAliasTape] pat WHERE pat.peopleAliasId = @peopleAliasId`
-      );
-    result.recordset.map((peopleAliasTape) => {
-      peopleAliasTape.peopleAliasId = parseInt(peopleAliasTape.peopleAliasId);
-      peopleAliasTape.tapeId = parseInt(peopleAliasTape.tapeId);
-    });
-    return result.recordset;
   }
 
   async getPeopleAliasTape(

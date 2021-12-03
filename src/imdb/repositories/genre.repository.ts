@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import * as sql from "mssql";
-import { Genre } from "../models/genre.model";
+import { Genre } from "src/dbal/models/genre.model";
 
 @Injectable()
 export class GenreRepository {

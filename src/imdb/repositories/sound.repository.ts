@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import * as sql from "mssql";
-import { Sound } from "../models/sound.model";
+import { Sound } from "src/dbal/models/sound.model";
 
 @Injectable()
 export class SoundRepository {

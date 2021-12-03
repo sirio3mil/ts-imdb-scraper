@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import * as sql from "mssql";
-import { Language } from "../models/language.model";
+import { Language } from "src/dbal/models/language.model";
 
 @Injectable()
 export class LanguageRepository {

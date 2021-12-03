@@ -1,12 +1,12 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import * as sql from "mssql";
 import slug from 'limax';
-import { SearchValue } from "../models/search-value.model";
+import { SearchValue } from "src/dbal/models/search-value.model";
 import { ScrappedTitle } from "src/imdb/models/scrapped/title.model";
-import { TapeTitle } from "../models/tape-title.model";
+import { TapeTitle } from "src/dbal/models/tape-title.model";
 import { CountryRepository } from "./country.repository";
 import { LanguageRepository } from "./language.repository";
-import { Tape } from "../models/tape.model";
+import { Tape } from "src/dbal/models/tape.model";
 
 @Injectable()
 export class TitleRepository {
