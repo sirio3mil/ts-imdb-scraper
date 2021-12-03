@@ -11,7 +11,6 @@ import { TapeDetail } from "src/dbal/models/tape-detail.model";
 import { TapePeopleRole } from "src/dbal/models/tape-people-role.model";
 import { Tape } from "src/dbal/models/tape.model";
 import { TvShowChapter } from "src/dbal/models/tv-show-chapter.model";
-import { TvShow } from "src/dbal/models/tv-show.model";
 import { ObjectRepository } from "./object.repository";
 import { TitleRepository } from "./title.repository";
 
