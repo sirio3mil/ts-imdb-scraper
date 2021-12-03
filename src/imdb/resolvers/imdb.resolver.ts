@@ -13,6 +13,7 @@ import { ImportOutput } from "../models/outputs/import.model";
 import { CreditService } from "../services/credit.service";
 import { ReleaseInfoService } from "../services/release-info.service";
 import { TapeService } from "../services/tape.service";
+import { hrtime } from 'process';
 
 @Resolver(() => ImportOutput)
 export class ImdbResolver {
@@ -34,9 +35,7 @@ export class ImdbResolver {
   async importTape(
     @Args("imdbNumber", { type: () => Int }) imdbNumber: number
   ) {
-    const NS_PER_SEC = 1e9;
-    const MS_PER_NS = 1e-6
-    const time = process.hrtime();
+    const start = hrtime.bigint();
     try {
       const url = this.tapeService.createUrl(imdbNumber);
       const [tapeContent, creditsContent, releaseInfoContent] = await Promise.all([
@@ -161,11 +160,11 @@ export class ImdbResolver {
       const cast = tapePeopleRoles.filter(
         (r) => r.roleId === Constants.roles.cast
       ).length;
-      const diff = process.hrtime(time);
+      const end = hrtime.bigint();
       return {
         objectId: storedTape.objectId,
         tapeId: storedTape.tapeId,
-        time: (diff[0] * NS_PER_SEC + diff[1])  * MS_PER_NS,
+        time: Number(end - start) / 1e+9,
         countries: {
           total: countries.length,
           added: countriesAdded,

@@ -8,7 +8,6 @@ import { Genre } from "src/dbal/models/genre.model";
 import { Language } from "src/dbal/models/language.model";
 import { Sound } from "src/dbal/models/sound.model";
 import { TapeDetail } from "src/dbal/models/tape-detail.model";
-import { TapePeopleRole } from "src/dbal/models/tape-people-role.model";
 import { Tape } from "src/dbal/models/tape.model";
 import { TvShowChapter } from "src/dbal/models/tv-show-chapter.model";
 import { ObjectRepository } from "./object.repository";
@@ -328,24 +327,6 @@ export class TapeRepository extends ObjectRepository {
     }
 
     return tvShowChapter;
-  }
-
-  async getTapePeopleRoles(tapeId: number): Promise<TapePeopleRole[]> {
-    const result = await this.connection
-      .request()
-      .input("tapeId", sql.BigInt, tapeId)
-      .query(
-        `SELECT tpr.roleId, tpr.peopleId, tpr.tapeId, tpr.tapePeopleRoleId FROM [TapePeopleRole] tpr WHERE tpr.tapeId = @tapeId`
-      );
-    result.recordset.map((tapePeopleRole) => {
-      tapePeopleRole.roleId = parseInt(tapePeopleRole.roleId);
-      tapePeopleRole.tapePeopleRoleId = parseInt(
-        tapePeopleRole.tapePeopleRoleId
-      );
-      tapePeopleRole.peopleId = parseInt(tapePeopleRole.peopleId);
-      tapePeopleRole.tapeId = parseInt(tapePeopleRole.tapeId);
-    });
-    return result.recordset;
   }
 
   async getCreditsOutput(tapeId: number): Promise<CreditOutput[]> {

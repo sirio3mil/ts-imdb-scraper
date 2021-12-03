@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { Constants } from "src/config/constants";
 import { ScrappedCredit } from "../models/scrapped/credit.model";
 import { AbstractProvider } from "../providers/abstract.provider";
 import { HtmlService } from "./html.service";
@@ -18,6 +19,9 @@ export class CreditService extends HtmlService {
       const simpleCreditsTable = table.hasClass("simpleCreditsTable");
       const rows = table.find("tr");
       const role = this.$(title).attr("id");
+      if (!Constants.roles[role]) {
+        return;
+      }
       rows.each((i, row) => {
         const cells = this.$(row).find("td");
         const nameCellPosition = simpleCreditsTable ? 0 : 1;
