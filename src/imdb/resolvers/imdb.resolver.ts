@@ -152,8 +152,8 @@ export class ImdbResolver {
         this.tapeRepository.addSounds(storedTape.tapeId, sounds),
         this.tapeRepository.addLanguages(storedTape.tapeId, languages),
         this.tapeRepository.addGenres(storedTape.tapeId, genres),
-        this.peopleRepository.proccessCredits(credits, storedTape),
-        this.titleRepository.processTitles(titles, storedTape),
+        this.peopleRepository.proccessCredits(storedTape.tapeId, credits),
+        this.titleRepository.processTitles(storedTape, titles),
         this.premiereRepository.processPremieres(storedTape.tapeId, premieres),
       ]);
       const directors = tapePeopleRoles.filter(

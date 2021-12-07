@@ -78,7 +78,7 @@ export class TitleRepository {
     return result.recordset;
   }
 
-  async processTitles(titles: ScrappedTitle[], tape: Tape): Promise<number> {
+  async processTitles(tape: Tape, titles: ScrappedTitle[]): Promise<number> {
     let total = 0;
     const countryNames: string[] = [];
     const languageNames: string[] = [];

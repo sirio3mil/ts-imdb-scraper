@@ -8,7 +8,6 @@ import { PeopleAlias } from "src/dbal/models/people-alias.model";
 import { People } from "src/dbal/models/people.model";
 import { TapePeopleRoleCharacter } from "src/dbal/models/tape-people-role-character.model";
 import { TapePeopleRole } from "src/dbal/models/tape-people-role.model";
-import { Tape } from "src/dbal/models/tape.model";
 import { ObjectRepository } from "./object.repository";
 import { TitleRepository } from "./title.repository";
 
@@ -223,13 +222,13 @@ export class PeopleRepository extends ObjectRepository {
   }
 
   async proccessCredits(
-    credits: ScrappedCredit[],
-    tape: Tape
+    tapeId: number,
+    credits: ScrappedCredit[]
   ): Promise<TapePeopleRole[]> {
     const peopleProccessed: People[] = [];
     const [tapePeopleRoles, tapePeopleAlias] = await Promise.all([
-      this.getTapePeopleRoles(tape.tapeId),
-      this.getTapePeopleAlias(tape.tapeId)
+      this.getTapePeopleRoles(tapeId),
+      this.getTapePeopleAlias(tapeId)
     ]);
 
     await Promise.all(
@@ -264,12 +263,12 @@ export class PeopleRepository extends ObjectRepository {
             peopleAlias = await this.insertPeopleAlias(credit.person.alias, people);
             await this.insertPeopleAliasTape({
               peopleAliasId: peopleAlias.peopleAliasId,
-              tapeId: tape.tapeId,
+              tapeId,
             });
           } else if (!tapePeopleAlias.find((a) => a.peopleAliasId === peopleAlias.peopleAliasId)) {
             await this.insertPeopleAliasTape({
               peopleAliasId: peopleAlias.peopleAliasId,
-              tapeId: tape.tapeId,
+              tapeId,
             });
           }
         }
@@ -278,7 +277,7 @@ export class PeopleRepository extends ObjectRepository {
           tapePeopleRole = await this.insertTapePeopleRole({
             peopleId: people.peopleId,
             roleId,
-            tapeId: tape.tapeId,
+            tapeId,
           });
           tapePeopleRoles.push(tapePeopleRole);
         }
