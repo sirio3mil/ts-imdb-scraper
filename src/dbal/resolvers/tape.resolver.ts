@@ -17,6 +17,7 @@ import { Language } from "../models/language.model";
 import { Location } from "../models/location.model";
 import { Ranking } from "../models/ranking.model";
 import { Sound } from "../models/sound.model";
+import { Tag } from "../models/tag.model";
 import { TapeDetail } from "../models/tape-detail.model";
 import { Tape } from "../models/tape.model";
 import { TvShowChapter } from "../models/tv-show-chapter.model";
@@ -118,5 +119,11 @@ export class TapeResolver {
   async getCertifications(@Parent() tape: Tape) {
     const { tapeId } = tape;
     return this.tapeRepository.getCertificationsOutput(tapeId);
+  }
+
+  @ResolveField(() => [Tag], { name: "tags", nullable: true })
+  async getTags(@Parent() tape: Tape) {
+    const { tapeId } = tape;
+    return this.tapeRepository.getTapeTags(tapeId);
   }
 }

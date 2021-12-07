@@ -30,7 +30,7 @@ export class LocationRepository {
       `SELECT locationId, place FROM location WHERE place = @place`
     );
     for (const place of places) {
-      const result = await stmt.execute({ name: place });
+      const result = await stmt.execute({ place });
       if (result.recordset.length > 0) {
         locations.push(<Location>result.recordset[0]);
       } else {
@@ -71,9 +71,9 @@ export class LocationRepository {
     await stmt.prepare(
       `INSERT INTO TapeLocation (tapeId, locationId) VALUES (@tapeId, @locationId)`
     );
-    await Promise.all(
-      locations.map(async (location) => stmt.execute({ tapeId, locationId: location.locationId }))
-    );
+    for (const location of locations) {
+      await stmt.execute({ tapeId, locationId: location.locationId });
+    }
     await stmt.unprepare();
     return locations.length;
   }

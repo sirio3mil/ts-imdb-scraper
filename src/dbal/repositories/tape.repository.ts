@@ -8,6 +8,7 @@ import { Country } from "../models/country.model";
 import { Genre } from "../models/genre.model";
 import { Language } from "../models/language.model";
 import { Sound } from "../models/sound.model";
+import { Tag } from "../models/tag.model";
 import { TapeDetail } from "../models/tape-detail.model";
 import { Tape } from "../models/tape.model";
 import { TvShowChapter } from "../models/tv-show-chapter.model";
@@ -100,6 +101,15 @@ export class TapeRepository extends ObjectRepository {
       .input("tapeId", sql.BigInt, tapeId)
       .query`SELECT l.locationId, l.place FROM [Location] l INNER JOIN [TapeLocation] tl ON tl.locationId = l.locationId WHERE tl.tapeId = @tapeId`;
     
+    return result.recordset;
+  }
+
+  async getTapeTags(tapeId: number): Promise<Tag[]> {
+    const result = await this.connection
+      .request()
+      .input("tapeId", sql.BigInt, tapeId)
+      .query`SELECT t.tagId, t.keyword FROM [Tag] t INNER JOIN [TapeTag] tt ON tt.tagId = t.tagId WHERE tt.tapeId = @tapeId`;
+
     return result.recordset;
   }
 

@@ -38,6 +38,9 @@ export class ImportOutput {
   certifications: CounterOutput;
 
   @Field()
+  keywords: CounterOutput;
+
+  @Field()
   ranking: ScrappedRanking;
 
   @Field({ nullable: true })

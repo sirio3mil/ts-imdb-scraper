@@ -19,6 +19,8 @@ import { LocationRepository } from "../repositories/location.repository";
 import { LocationService } from "../services/location.service";
 import { ParentalGuideService } from "../services/parental-guide.service";
 import { CertificationRepository } from "../repositories/certification.repository";
+import { KeywordService } from "../services/keyword.service";
+import { TagRepository } from "../repositories/tag.repository";
 
 @Resolver(() => ImportOutput)
 export class ImdbResolver {
@@ -28,6 +30,7 @@ export class ImdbResolver {
     private readonly releaseInfoService: ReleaseInfoService,
     private readonly locationService: LocationService,
     private readonly parentalGuideService: ParentalGuideService,
+    private readonly keywordService: KeywordService,
     private readonly tapeRepository: TapeRepository,
     private readonly countryRepository: CountryRepository,
     private readonly soundRepository: SoundRepository,
@@ -39,6 +42,7 @@ export class ImdbResolver {
     private readonly premiereRepository: PremiereRepository,
     private readonly locationRepository: LocationRepository,
     private readonly certificationRepository: CertificationRepository,
+    private readonly tagRepository: TagRepository,
   ) {}
 
   @Mutation(() => ImportOutput)
@@ -48,18 +52,20 @@ export class ImdbResolver {
     const start = hrtime.bigint();
     try {
       const url = this.tapeService.createUrl(imdbNumber);
-      const [tapeContent, creditsContent, releaseInfoContent, locationContent, parentalGuideContent] = await Promise.all([
+      const [tapeContent, creditsContent, releaseInfoContent, locationContent, parentalGuideContent, keywordContent] = await Promise.all([
         this.tapeService.getContent(url),
         this.creditService.getContent(url),
         this.releaseInfoService.getContent(url),
         this.locationService.getContent(url),
         this.parentalGuideService.getContent(url),
+        this.keywordService.getContent(url),
       ]);
       this.tapeService.set$(tapeContent);
       this.creditService.set$(creditsContent);
       this.releaseInfoService.set$(releaseInfoContent);
       this.locationService.set$(locationContent);
       this.parentalGuideService.set$(parentalGuideContent);
+      this.keywordService.set$(keywordContent);
       let storedTape = await this.tapeRepository.getTapeByImdbNumber(
         imdbNumber
       );
@@ -134,7 +140,7 @@ export class ImdbResolver {
         };
         this.tapeRepository.upsertTvShowChapter(tvShowChapter);
       }
-      const [countries, sounds, languages, genres, credits, titles, premieres, locations, certifications] = await Promise.all(
+      const [countries, sounds, languages, genres, credits, titles, premieres, locations, certifications, keywords] = await Promise.all(
         [
           this.countryRepository.processCountriesOfficialNames(
             this.tapeService.getCountries()
@@ -151,6 +157,7 @@ export class ImdbResolver {
           this.releaseInfoService.getPremieres(),
           this.locationService.getLocations(),
           this.parentalGuideService.getCertifications(),
+          this.keywordService.getKeywords(),
         ]
       );
       const [
@@ -163,6 +170,7 @@ export class ImdbResolver {
         premieresAdded,
         locationAdded,
         certificationsAdded,
+        keywordsAdded,
       ] = await Promise.all([
         this.tapeRepository.addCountries(storedTape.tapeId, countries),
         this.tapeRepository.addSounds(storedTape.tapeId, sounds),
@@ -173,6 +181,7 @@ export class ImdbResolver {
         this.premiereRepository.processPremieres(storedTape.tapeId, premieres),
         this.locationRepository.processLocations(storedTape.tapeId, locations),
         this.certificationRepository.processCertifications(storedTape.tapeId, certifications),
+        this.tagRepository.processKeywords(storedTape.tapeId, keywords),
       ]);
       const directors = tapePeopleRoles.filter(
         (r) => r.roleId === Constants.roles.director
@@ -188,6 +197,10 @@ export class ImdbResolver {
         objectId: storedTape.objectId,
         tapeId: storedTape.tapeId,
         time: Number(end - start) / 1e+9,
+        keywords: {
+          total: keywords.length,
+          added: keywordsAdded,
+        },
         certifications: {
           total: certifications.length,
           added: certificationsAdded,

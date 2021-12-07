@@ -25,6 +25,7 @@ import { TapeService } from "./services/tape.service";
 import { PremiereRepository } from "./repositories/premiere.repository";
 import { LocationRepository } from "./repositories/location.repository";
 import { CertificationRepository } from "./repositories/certification.repository";
+import { TagRepository } from "./repositories/tag.repository";
 
 const connectionFactory = {
   provide: "CONNECTION",
@@ -59,6 +60,7 @@ const connectionFactory = {
     PremiereRepository,
     LocationRepository,
     CertificationRepository,
+    TagRepository,
     {
       provide: AbstractProvider,
       useClass: FileProvider,

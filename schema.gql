@@ -113,6 +113,12 @@ type Sound {
   soundId: ID
 }
 
+"""stored country"""
+type Tag {
+  keyword: String!
+  tagId: ID!
+}
+
 """stored tape detail"""
 type TapeDetail {
   budget: Float
@@ -144,6 +150,7 @@ type Tape {
   premieres: [PremiereOutput!]
   locations: [Location!]
   certifications: [CertificationOutput!]
+  tags: [Tag!]
 }
 
 """stored tv show chapter"""
@@ -212,6 +219,7 @@ type ImportOutput {
   premieres: CounterOutput!
   locations: CounterOutput!
   certifications: CounterOutput!
+  keywords: CounterOutput!
   ranking: ScrappedRanking!
   finished: Boolean
   tvShowTapeId: Int
