@@ -219,7 +219,7 @@ export class PeopleRepository extends ObjectRepository {
       peopleAliasTape.peopleAliasId = parseInt(peopleAliasTape.peopleAliasId);
       peopleAliasTape.tapeId = parseInt(peopleAliasTape.tapeId);
     });
-    return result.recordset[0];
+    return result.recordset;
   }
 
   async proccessCredits(
@@ -231,6 +231,7 @@ export class PeopleRepository extends ObjectRepository {
       this.getTapePeopleRoles(tape.tapeId),
       this.getTapePeopleAlias(tape.tapeId)
     ]);
+
     await Promise.all(
       credits.map(async (credit) => {
         const roleId = Constants.roles[credit.role];

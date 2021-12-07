@@ -55,6 +55,15 @@ type CreditOutput {
   tapePeopleRoleId: ID!
 }
 
+"""premiere"""
+type PremiereOutput {
+  country: Country
+  date: Date!
+  place: String
+  premiereId: ID!
+  observation: String
+}
+
 """stored language"""
 type Language {
   languageId: ID
@@ -118,6 +127,7 @@ type Tape {
   tvShowChapter: TvShowChapter
   people: [CreditOutput!]
   titles: [TitleOutput!]
+  premieres: [PremiereOutput!]
 }
 
 """stored tv show chapter"""
@@ -183,6 +193,7 @@ type ImportOutput {
   languages: CounterOutput!
   genres: CounterOutput!
   titles: CounterOutput!
+  premieres: CounterOutput!
   ranking: ScrappedRanking!
   finished: Boolean
   tvShowTapeId: Int

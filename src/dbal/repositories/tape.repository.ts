@@ -1,6 +1,7 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import * as sql from "mssql";
 import { CreditOutput } from "src/domain/dtos/outputs/credit.dto";
+import { PremiereOutput } from "src/domain/dtos/outputs/premiere.dto";
 import { TitleOutput } from "src/domain/dtos/outputs/title.dto";
 import { Country } from "../models/country.model";
 import { Genre } from "../models/genre.model";
@@ -177,6 +178,37 @@ export class TapeRepository extends ObjectRepository {
       row.tapeTitleId = parseInt(
         row.tapeTitleId
       );
+    });
+    return result.recordset;
+  }
+
+  async getPremieresOutput(tapeId: number): Promise<PremiereOutput[]> { 
+    const result = await this.connection
+      .request()
+      .input("tapeId", sql.BigInt, tapeId)
+      .query(
+        `SELECT p.premiereId
+          ,p.date
+          ,p.place
+          ,d.observation
+          ,c.countryId
+          ,c.officialName
+        FROM [Premiere] p 
+        LEFT JOIN [Country] c ON c.countryId = p.countryId
+        LEFT JOIN [PremiereDetail] d ON d.premiereId = p.premiereId
+        WHERE p.tapeId = @tapeId`
+      );
+    result.recordset.map((row) => {
+      row.premiereId = parseInt(
+        row.premiereId
+      );
+      row.country = null;
+      if (row.countryId) {
+        row.country = {
+          countryId: parseInt(row.countryId),
+          officialName: row.officialName,
+        }
+      }
     });
     return result.recordset;
   }

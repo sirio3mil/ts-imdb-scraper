@@ -8,6 +8,7 @@ import {
   Resolver,
 } from "@nestjs/graphql";
 import { CreditOutput } from "src/domain/dtos/outputs/credit.dto";
+import { PremiereOutput } from "src/domain/dtos/outputs/premiere.dto";
 import { TitleOutput } from "src/domain/dtos/outputs/title.dto";
 import { Country } from "../models/country.model";
 import { Genre } from "../models/genre.model";
@@ -97,5 +98,11 @@ export class TapeResolver {
   async getTitles(@Parent() tape: Tape) {
     const { tapeId } = tape;
     return this.tapeRepository.getTitlesOutput(tapeId);
+  }
+
+  @ResolveField(() => [PremiereOutput], { name: "premieres", nullable: true })
+  async getPremieres(@Parent() tape: Tape) {
+    const { tapeId } = tape;
+    return this.tapeRepository.getPremieresOutput(tapeId);
   }
 }

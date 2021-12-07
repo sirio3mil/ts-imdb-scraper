@@ -14,6 +14,7 @@ import { CreditService } from "../services/credit.service";
 import { ReleaseInfoService } from "../services/release-info.service";
 import { TapeService } from "../services/tape.service";
 import { hrtime } from 'process';
+import { PremiereRepository } from "../repositories/premiere.repository";
 
 @Resolver(() => ImportOutput)
 export class ImdbResolver {
@@ -28,7 +29,8 @@ export class ImdbResolver {
     private readonly genreRepository: GenreRepository,
     private readonly rankingRepository: RankingRepository,
     private readonly peopleRepository: PeopleRepository,
-    private readonly titleRepository: TitleRepository
+    private readonly titleRepository: TitleRepository,
+    private readonly premiereRepository: PremiereRepository
   ) {}
 
   @Mutation(() => ImportOutput)
@@ -120,7 +122,7 @@ export class ImdbResolver {
         };
         this.tapeRepository.upsertTvShowChapter(tvShowChapter);
       }
-      const [countries, sounds, languages, genres, credits, titles] = await Promise.all(
+      const [countries, sounds, languages, genres, credits, titles, premieres] = await Promise.all(
         [
           this.countryRepository.processCountriesOfficialNames(
             this.tapeService.getCountries()
@@ -134,6 +136,7 @@ export class ImdbResolver {
           this.genreRepository.processGenreNames(this.tapeService.getGenres()),
           this.creditService.getCredits(),
           this.releaseInfoService.getTitles(),
+          this.releaseInfoService.getPremieres(),
         ]
       );
       const [
@@ -143,6 +146,7 @@ export class ImdbResolver {
         genresAdded,
         tapePeopleRoles,
         tapeTitlesAdded,
+        premieresAdded,
       ] = await Promise.all([
         this.tapeRepository.addCountries(storedTape.tapeId, countries),
         this.tapeRepository.addSounds(storedTape.tapeId, sounds),
@@ -150,6 +154,7 @@ export class ImdbResolver {
         this.tapeRepository.addGenres(storedTape.tapeId, genres),
         this.peopleRepository.proccessCredits(credits, storedTape),
         this.titleRepository.processTitles(titles, storedTape),
+        this.premiereRepository.processPremieres(storedTape.tapeId, premieres),
       ]);
       const directors = tapePeopleRoles.filter(
         (r) => r.roleId === Constants.roles.director
@@ -184,6 +189,10 @@ export class ImdbResolver {
         titles: {
           total: titles.length,
           added: tapeTitlesAdded,
+        },
+        premieres: {
+          total: premieres.length,
+          added: premieresAdded,
         },
         ranking,
         finished,

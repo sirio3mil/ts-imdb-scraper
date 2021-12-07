@@ -16,7 +16,7 @@ export class ReleaseInfoService extends HtmlService {
     this.$(".release-date-item").each((i, row) => {
       const item = this.$(row);
       const country = item.find(".release-date-item__country-name").text();
-      const date = item.find(".release-date-item__date").text();
+      const date = new Date(item.find(".release-date-item__date").text());
       const details = item.find(".release-date-item__attributes").text();
       const regExp = /\(([^)]+)\)/g;
       const matches = details.match(regExp);
@@ -27,9 +27,10 @@ export class ReleaseInfoService extends HtmlService {
         detail = matches[1].substring(1, matches[1].length - 1);
         place = matches[0].substring(1, matches[0].length - 1);
       }
+      date.setUTCHours(0,0,0,0);
       premieres.push({
         country,
-        date: new Date(date),
+        date,
         detail,
         place,
       });
