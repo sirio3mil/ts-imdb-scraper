@@ -12,4 +12,7 @@ export class CreditOutput {
 
   @Field(() => ID)
   tapePeopleRoleId?: number;
+
+  @Field({ nullable: true })
+  character?: string;
 }

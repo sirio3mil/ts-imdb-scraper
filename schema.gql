@@ -53,6 +53,7 @@ type CreditOutput {
   people: People!
   role: Role!
   tapePeopleRoleId: ID!
+  character: String
 }
 
 """premiere"""

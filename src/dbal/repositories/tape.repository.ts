@@ -122,9 +122,11 @@ export class TapeRepository extends ObjectRepository {
           ,p.fullName
           ,tpr.tapeId
           ,tpr.tapePeopleRoleId 
+          ,tprc.character
         FROM [TapePeopleRole] tpr 
         INNER JOIN [People] p ON p.peopleId = tpr.peopleId
         INNER JOIN [Role] r ON r.roleId = tpr.roleId
+        LEFT JOIN [TapePeopleRoleCharacter] tprc ON tprc.tapePeopleRoleId = tpr.tapePeopleRoleId
         WHERE tpr.tapeId = @tapeId`
       );
     result.recordset.map((row) => {
