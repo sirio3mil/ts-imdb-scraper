@@ -279,7 +279,7 @@ type ScrappedTape {
 
 type Query {
   getScrappedTape(imdbNumber: Int!): ScrappedTape!
-  getTape(tapeId: ID!): Tape!
+  tape(tapeId: ID!): Tape!
 }
 
 type Mutation {

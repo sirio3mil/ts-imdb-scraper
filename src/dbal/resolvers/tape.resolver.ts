@@ -32,7 +32,7 @@ export class TapeResolver {
     private readonly rankingRepository: RankingRepository
   ) {}
 
-  @Query(() => Tape)
+  @Query(() => Tape, { name: "tape" })
   async getTape(
     @Args("tapeId", { type: () => ID }) tapeId: number
   ): Promise<Tape> {
