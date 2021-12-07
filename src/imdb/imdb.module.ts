@@ -23,6 +23,7 @@ import { ParentalGuideService } from "./services/parental-guide.service";
 import { ReleaseInfoService } from "./services/release-info.service";
 import { TapeService } from "./services/tape.service";
 import { PremiereRepository } from "./repositories/premiere.repository";
+import { LocationRepository } from "./repositories/location.repository";
 
 const connectionFactory = {
   provide: "CONNECTION",
@@ -55,6 +56,7 @@ const connectionFactory = {
     PeopleRepository,
     TitleRepository,
     PremiereRepository,
+    LocationRepository,
     {
       provide: AbstractProvider,
       useClass: FileProvider,

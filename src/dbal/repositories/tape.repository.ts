@@ -93,6 +93,15 @@ export class TapeRepository extends ObjectRepository {
     return result.recordset;
   }
 
+  async getTapeLocations(tapeId: number): Promise<Location[]> {
+    const result = await this.connection
+      .request()
+      .input("tapeId", sql.BigInt, tapeId)
+      .query`SELECT l.locationId, l.place FROM [Location] l INNER JOIN [TapeLocation] tl ON tl.locationId = l.locationId WHERE tl.tapeId = @tapeId`;
+    
+    return result.recordset;
+  }
+
   async getTvShow(tapeId: number): Promise<TvShow> {
     const result = await this.connection
       .request()

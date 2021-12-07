@@ -32,6 +32,9 @@ export class ImportOutput {
   premieres: CounterOutput;
 
   @Field()
+  locations: CounterOutput;
+
+  @Field()
   ranking: ScrappedRanking;
 
   @Field({ nullable: true })

@@ -86,6 +86,12 @@ type Genre {
   name: String!
 }
 
+"""stored locations"""
+type Location {
+  locationId: ID!
+  place: String!
+}
+
 """stored ranking"""
 type Ranking {
   realScore: Float!
@@ -129,6 +135,7 @@ type Tape {
   people: [CreditOutput!]
   titles: [TitleOutput!]
   premieres: [PremiereOutput!]
+  locations: [Location!]
 }
 
 """stored tv show chapter"""
@@ -195,6 +202,7 @@ type ImportOutput {
   genres: CounterOutput!
   titles: CounterOutput!
   premieres: CounterOutput!
+  locations: CounterOutput!
   ranking: ScrappedRanking!
   finished: Boolean
   tvShowTapeId: Int

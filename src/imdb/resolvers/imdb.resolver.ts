@@ -15,6 +15,8 @@ import { ReleaseInfoService } from "../services/release-info.service";
 import { TapeService } from "../services/tape.service";
 import { hrtime } from 'process';
 import { PremiereRepository } from "../repositories/premiere.repository";
+import { LocationRepository } from "../repositories/location.repository";
+import { LocationService } from "../services/location.service";
 
 @Resolver(() => ImportOutput)
 export class ImdbResolver {
@@ -22,6 +24,7 @@ export class ImdbResolver {
     private readonly tapeService: TapeService,
     private readonly creditService: CreditService,
     private readonly releaseInfoService: ReleaseInfoService,
+    private readonly locationService: LocationService,
     private readonly tapeRepository: TapeRepository,
     private readonly countryRepository: CountryRepository,
     private readonly soundRepository: SoundRepository,
@@ -30,7 +33,8 @@ export class ImdbResolver {
     private readonly rankingRepository: RankingRepository,
     private readonly peopleRepository: PeopleRepository,
     private readonly titleRepository: TitleRepository,
-    private readonly premiereRepository: PremiereRepository
+    private readonly premiereRepository: PremiereRepository,
+    private readonly locationRepository: LocationRepository,
   ) {}
 
   @Mutation(() => ImportOutput)
@@ -40,14 +44,16 @@ export class ImdbResolver {
     const start = hrtime.bigint();
     try {
       const url = this.tapeService.createUrl(imdbNumber);
-      const [tapeContent, creditsContent, releaseInfoContent] = await Promise.all([
+      const [tapeContent, creditsContent, releaseInfoContent, locationContent] = await Promise.all([
         this.tapeService.getContent(url),
         this.creditService.getContent(url),
-        this.releaseInfoService.getContent(url)
+        this.releaseInfoService.getContent(url),
+        this.locationService.getContent(url),
       ]);
       this.tapeService.set$(tapeContent);
       this.creditService.set$(creditsContent);
       this.releaseInfoService.set$(releaseInfoContent);
+      this.locationService.set$(locationContent);
       let storedTape = await this.tapeRepository.getTapeByImdbNumber(
         imdbNumber
       );
@@ -122,7 +128,7 @@ export class ImdbResolver {
         };
         this.tapeRepository.upsertTvShowChapter(tvShowChapter);
       }
-      const [countries, sounds, languages, genres, credits, titles, premieres] = await Promise.all(
+      const [countries, sounds, languages, genres, credits, titles, premieres, locations] = await Promise.all(
         [
           this.countryRepository.processCountriesOfficialNames(
             this.tapeService.getCountries()
@@ -137,6 +143,7 @@ export class ImdbResolver {
           this.creditService.getCredits(),
           this.releaseInfoService.getTitles(),
           this.releaseInfoService.getPremieres(),
+          this.locationService.getLocations(),
         ]
       );
       const [
@@ -147,6 +154,7 @@ export class ImdbResolver {
         tapePeopleRoles,
         tapeTitlesAdded,
         premieresAdded,
+        locationAdded,
       ] = await Promise.all([
         this.tapeRepository.addCountries(storedTape.tapeId, countries),
         this.tapeRepository.addSounds(storedTape.tapeId, sounds),
@@ -155,6 +163,7 @@ export class ImdbResolver {
         this.peopleRepository.proccessCredits(storedTape.tapeId, credits),
         this.titleRepository.processTitles(storedTape, titles),
         this.premiereRepository.processPremieres(storedTape.tapeId, premieres),
+        this.locationRepository.processLocations(storedTape.tapeId, locations),
       ]);
       const directors = tapePeopleRoles.filter(
         (r) => r.roleId === Constants.roles.director
@@ -170,6 +179,10 @@ export class ImdbResolver {
         objectId: storedTape.objectId,
         tapeId: storedTape.tapeId,
         time: Number(end - start) / 1e+9,
+        locations: {
+          total: locations.length,
+          added: locationAdded,
+        },
         countries: {
           total: countries.length,
           added: countriesAdded,

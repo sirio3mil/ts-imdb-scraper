@@ -13,6 +13,7 @@ import { TitleOutput } from "src/domain/dtos/outputs/title.dto";
 import { Country } from "../models/country.model";
 import { Genre } from "../models/genre.model";
 import { Language } from "../models/language.model";
+import { Location } from "../models/location.model";
 import { Ranking } from "../models/ranking.model";
 import { Sound } from "../models/sound.model";
 import { TapeDetail } from "../models/tape-detail.model";
@@ -104,5 +105,11 @@ export class TapeResolver {
   async getPremieres(@Parent() tape: Tape) {
     const { tapeId } = tape;
     return this.tapeRepository.getPremieresOutput(tapeId);
+  }
+
+  @ResolveField(() => [Location], { name: "locations", nullable: true })
+  async getLocations(@Parent() tape: Tape) {
+    const { tapeId } = tape;
+    return this.tapeRepository.getTapeLocations(tapeId);
   }
 }
