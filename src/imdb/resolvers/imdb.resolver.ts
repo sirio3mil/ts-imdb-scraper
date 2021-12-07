@@ -17,6 +17,8 @@ import { hrtime } from 'process';
 import { PremiereRepository } from "../repositories/premiere.repository";
 import { LocationRepository } from "../repositories/location.repository";
 import { LocationService } from "../services/location.service";
+import { ParentalGuideService } from "../services/parental-guide.service";
+import { CertificationRepository } from "../repositories/certification.repository";
 
 @Resolver(() => ImportOutput)
 export class ImdbResolver {
@@ -25,6 +27,7 @@ export class ImdbResolver {
     private readonly creditService: CreditService,
     private readonly releaseInfoService: ReleaseInfoService,
     private readonly locationService: LocationService,
+    private readonly parentalGuideService: ParentalGuideService,
     private readonly tapeRepository: TapeRepository,
     private readonly countryRepository: CountryRepository,
     private readonly soundRepository: SoundRepository,
@@ -35,6 +38,7 @@ export class ImdbResolver {
     private readonly titleRepository: TitleRepository,
     private readonly premiereRepository: PremiereRepository,
     private readonly locationRepository: LocationRepository,
+    private readonly certificationRepository: CertificationRepository,
   ) {}
 
   @Mutation(() => ImportOutput)
@@ -44,16 +48,18 @@ export class ImdbResolver {
     const start = hrtime.bigint();
     try {
       const url = this.tapeService.createUrl(imdbNumber);
-      const [tapeContent, creditsContent, releaseInfoContent, locationContent] = await Promise.all([
+      const [tapeContent, creditsContent, releaseInfoContent, locationContent, parentalGuideContent] = await Promise.all([
         this.tapeService.getContent(url),
         this.creditService.getContent(url),
         this.releaseInfoService.getContent(url),
         this.locationService.getContent(url),
+        this.parentalGuideService.getContent(url),
       ]);
       this.tapeService.set$(tapeContent);
       this.creditService.set$(creditsContent);
       this.releaseInfoService.set$(releaseInfoContent);
       this.locationService.set$(locationContent);
+      this.parentalGuideService.set$(parentalGuideContent);
       let storedTape = await this.tapeRepository.getTapeByImdbNumber(
         imdbNumber
       );
@@ -128,7 +134,7 @@ export class ImdbResolver {
         };
         this.tapeRepository.upsertTvShowChapter(tvShowChapter);
       }
-      const [countries, sounds, languages, genres, credits, titles, premieres, locations] = await Promise.all(
+      const [countries, sounds, languages, genres, credits, titles, premieres, locations, certifications] = await Promise.all(
         [
           this.countryRepository.processCountriesOfficialNames(
             this.tapeService.getCountries()
@@ -144,6 +150,7 @@ export class ImdbResolver {
           this.releaseInfoService.getTitles(),
           this.releaseInfoService.getPremieres(),
           this.locationService.getLocations(),
+          this.parentalGuideService.getCertifications(),
         ]
       );
       const [
@@ -155,6 +162,7 @@ export class ImdbResolver {
         tapeTitlesAdded,
         premieresAdded,
         locationAdded,
+        certificationsAdded,
       ] = await Promise.all([
         this.tapeRepository.addCountries(storedTape.tapeId, countries),
         this.tapeRepository.addSounds(storedTape.tapeId, sounds),
@@ -164,6 +172,7 @@ export class ImdbResolver {
         this.titleRepository.processTitles(storedTape, titles),
         this.premiereRepository.processPremieres(storedTape.tapeId, premieres),
         this.locationRepository.processLocations(storedTape.tapeId, locations),
+        this.certificationRepository.processCertifications(storedTape.tapeId, certifications),
       ]);
       const directors = tapePeopleRoles.filter(
         (r) => r.roleId === Constants.roles.director
@@ -179,6 +188,10 @@ export class ImdbResolver {
         objectId: storedTape.objectId,
         tapeId: storedTape.tapeId,
         time: Number(end - start) / 1e+9,
+        certifications: {
+          total: certifications.length,
+          added: certificationsAdded,
+        },
         locations: {
           total: locations.length,
           added: locationAdded,

@@ -1,5 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import * as sql from "mssql";
+import { CertificationOutput } from "src/domain/dtos/outputs/certification.dto";
 import { CreditOutput } from "src/domain/dtos/outputs/credit.dto";
 import { PremiereOutput } from "src/domain/dtos/outputs/premiere.dto";
 import { TitleOutput } from "src/domain/dtos/outputs/title.dto";
@@ -213,6 +214,30 @@ export class TapeRepository extends ObjectRepository {
       row.premiereId = parseInt(
         row.premiereId
       );
+      row.country = null;
+      if (row.countryId) {
+        row.country = {
+          countryId: parseInt(row.countryId),
+          officialName: row.officialName,
+        }
+      }
+    });
+    return result.recordset;
+  }
+
+  async getCertificationsOutput(tapeId: number): Promise<CertificationOutput[]> {
+    const result = await this.connection
+      .request()
+      .input("tapeId", sql.BigInt, tapeId)
+      .query`SELECT t.tapeCertificationId
+          ,c.countryId
+          ,c.officialName
+          ,t.certification 
+        FROM [TapeCertification] t
+        LEFT JOIN [Country] c ON c.countryId = t.countryId
+        WHERE t.tapeId = @tapeId`;
+    result.recordset.map((row) => {
+      row.tapeCertificationId = parseInt(row.tapeCertificationId);
       row.country = null;
       if (row.countryId) {
         row.country = {

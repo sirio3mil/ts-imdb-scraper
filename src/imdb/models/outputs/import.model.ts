@@ -35,6 +35,9 @@ export class ImportOutput {
   locations: CounterOutput;
 
   @Field()
+  certifications: CounterOutput;
+
+  @Field()
   ranking: ScrappedRanking;
 
   @Field({ nullable: true })

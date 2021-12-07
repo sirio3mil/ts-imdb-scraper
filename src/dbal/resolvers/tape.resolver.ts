@@ -7,6 +7,7 @@ import {
   ResolveField,
   Resolver,
 } from "@nestjs/graphql";
+import { CertificationOutput } from "src/domain/dtos/outputs/certification.dto";
 import { CreditOutput } from "src/domain/dtos/outputs/credit.dto";
 import { PremiereOutput } from "src/domain/dtos/outputs/premiere.dto";
 import { TitleOutput } from "src/domain/dtos/outputs/title.dto";
@@ -111,5 +112,11 @@ export class TapeResolver {
   async getLocations(@Parent() tape: Tape) {
     const { tapeId } = tape;
     return this.tapeRepository.getTapeLocations(tapeId);
+  }
+
+  @ResolveField(() => [CertificationOutput], { name: "certifications", nullable: true })
+  async getCertifications(@Parent() tape: Tape) {
+    const { tapeId } = tape;
+    return this.tapeRepository.getCertificationsOutput(tapeId);
   }
 }

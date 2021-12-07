@@ -2,18 +2,25 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-"""people alias"""
-type PeopleAlias {
-  alias: String!
-  peopleId: Int!
-  peopleAliasId: ID
-}
-
 """stored country"""
 type Country {
   countryId: ID
   isoCode: String
   officialName: String!
+}
+
+"""tape certification output"""
+type CertificationOutput {
+  certification: String!
+  country: Country
+  tapeCertificationId: ID!
+}
+
+"""people alias"""
+type PeopleAlias {
+  alias: String!
+  peopleId: Int!
+  peopleAliasId: ID
 }
 
 """people detailed information"""
@@ -136,6 +143,7 @@ type Tape {
   titles: [TitleOutput!]
   premieres: [PremiereOutput!]
   locations: [Location!]
+  certifications: [CertificationOutput!]
 }
 
 """stored tv show chapter"""
@@ -203,6 +211,7 @@ type ImportOutput {
   titles: CounterOutput!
   premieres: CounterOutput!
   locations: CounterOutput!
+  certifications: CounterOutput!
   ranking: ScrappedRanking!
   finished: Boolean
   tvShowTapeId: Int
