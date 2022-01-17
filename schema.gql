@@ -167,32 +167,6 @@ type TvShow {
   tapeId: ID!
 }
 
-"""person"""
-type ScrappedPerson {
-  fullName: String!
-  ID: Int!
-  url: URL!
-  alias: String
-}
-
-"""URL custom scalar type"""
-scalar URL
-
-"""credit, cast and crew member"""
-type ScrappedCredit {
-  person: ScrappedPerson!
-  role: String
-  character: String
-}
-
-"""tape title"""
-type ScrappedTitle {
-  country: String
-  language: String
-  observations: String
-  title: String!
-}
-
 """count inserted rows"""
 type CounterOutput {
   total: Int!
@@ -237,12 +211,38 @@ type ScrappedEpisode {
   tvShowID: Int!
 }
 
+"""person"""
+type ScrappedPerson {
+  fullName: String!
+  ID: Int!
+  url: URL!
+  alias: String
+}
+
+"""URL custom scalar type"""
+scalar URL
+
+"""credit, cast and crew member"""
+type ScrappedCredit {
+  person: ScrappedPerson!
+  role: String
+  character: String
+}
+
 """premiere"""
 type ScrappedPremiere {
   country: String!
   date: Date!
   detail: String
   place: String
+}
+
+"""tape title"""
+type ScrappedTitle {
+  country: String
+  language: String
+  observations: String
+  title: String!
 }
 
 """parental guide tape certifications"""
