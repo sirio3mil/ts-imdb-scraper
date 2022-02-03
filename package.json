@@ -34,7 +34,7 @@
     "@nestjs/testing": "^8.2.6",
     "@types/cheerio": "^0.22.30",
     "@types/jest": "^27.4.0",
-    "@types/memory-cache": "^0.2.1",
+    "@types/memory-cache": "^0.2.2",
     "@types/mssql": "^7.1.4",
     "@typescript-eslint/eslint-plugin": "^5.10.2",
     "@typescript-eslint/parser": "^5.10.2",
