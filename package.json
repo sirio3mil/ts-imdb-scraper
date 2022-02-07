@@ -32,7 +32,7 @@
     "@nestjs/cli": "^8.2.0",
     "@nestjs/schematics": "^8.0.5",
     "@nestjs/testing": "^8.2.6",
-    "@types/cheerio": "^0.22.30",
+    "@types/cheerio": "^0.22.31",
     "@types/jest": "^27.4.0",
     "@types/memory-cache": "^0.2.2",
     "@types/mssql": "^7.1.4",
