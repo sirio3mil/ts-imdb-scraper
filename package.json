@@ -53,7 +53,7 @@
     "@nestjs/config": "^1.1.6",
     "@nestjs/graphql": "^9.1.2",
     "@nestjs/platform-express": "^8.2.6",
-    "apollo-server-express": "^3.6.2",
+    "apollo-server-express": "^3.6.3",
     "cheerio": "^1.0.0-rc.10",
     "class-validator": "^0.13.2",
     "graphql": "^16.3.0",
