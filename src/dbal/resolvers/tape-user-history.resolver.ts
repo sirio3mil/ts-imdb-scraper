@@ -1,10 +1,10 @@
 import {
   Args,
-  Int,
   Parent,
   ResolveField,
   Resolver,
 } from "@nestjs/graphql";
+import { Place } from "../enums/place.enum";
 import { TapeUserHistoryDetail } from "../models/tape-user-history-detail.model";
 import { TapeUserHistory } from "../models/tape-user-history.model";
 import { TapeUserHistoryDetailRepository } from "../repositories/tape-user-history-detail.repository";
@@ -17,7 +17,7 @@ export class TapeUserHistoryResolver {
   ) {}
 
   @ResolveField(() => TapeUserHistoryDetail)
-  async addPlace(@Args("placeId", { type: () => Int }) placeId: number, @Parent() tapeUserHistory: TapeUserHistory): Promise<TapeUserHistoryDetail> {
-    return this.detailRepository.insertTapeUserHistoryDetail(tapeUserHistory.tapeUserHistoryId, placeId);
+  async addPlace(@Args("place", { type: () => Place }) place: Place, @Parent() tapeUserHistory: TapeUserHistory): Promise<TapeUserHistoryDetail> {
+    return this.detailRepository.insertTapeUserHistoryDetail(tapeUserHistory.tapeUserHistoryId, place);
   }
 }

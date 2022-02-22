@@ -1,10 +1,24 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
-import { GraphQLModule } from "@nestjs/graphql";
+import { GraphQLModule, registerEnumType } from "@nestjs/graphql";
 import configuration from "./config/configuration";
 import { DbalModule } from "./dbal/dbal.module";
 import { ImdbModule } from "./imdb/imdb.module";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
+import { Place } from "./dbal/enums/place.enum";
+
+registerEnumType(Place, {
+  name: 'Place',
+  description: 'The supported places.',
+  valuesMap: {
+    PrimeVideo: {
+      description: 'Amazon Prime Video.',
+    },
+    HBO: {
+      deprecationReason: 'Service no longer available.',
+    },
+  },
+});
 
 @Module({
   imports: [

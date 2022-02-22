@@ -5,14 +5,33 @@
 type TapeUserHistoryDetail {
   tapeUserHistoryDetailId: Int!
   tapeUserHistoryId: Float!
-  placeId: Float
+  place: Place!
+}
+
+"""The supported places."""
+enum Place {
+  Online
+  Television
+  Downloaded
+  MovieTheater
+  VideoClub
+  Netflix
+  AppleTv
+  DisneyPlus
+
+  """Amazon Prime Video."""
+  PrimeVideo
+  HBO @deprecated(reason: "Service no longer available.")
+  Filmin
+  HBOMax
+  MovistarPlus
 }
 
 type TapeUserHistory {
   tapeUserHistoryId: Int!
   tapeUserId: Float!
   tapeUserStatusId: Float!
-  addPlace(placeId: Int!): TapeUserHistoryDetail!
+  addPlace(place: Place!): TapeUserHistoryDetail!
 }
 
 """stored tape"""
