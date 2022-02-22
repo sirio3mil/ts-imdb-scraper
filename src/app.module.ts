@@ -6,6 +6,7 @@ import { DbalModule } from "./dbal/dbal.module";
 import { ImdbModule } from "./imdb/imdb.module";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { Place } from "./dbal/enums/place.enum";
+import { TapeUserStatus } from "./dbal/enums/tape-user-status.enum";
 
 registerEnumType(Place, {
   name: 'Place',
@@ -18,6 +19,10 @@ registerEnumType(Place, {
       deprecationReason: 'Service no longer available.',
     },
   },
+});
+registerEnumType(TapeUserStatus, {
+  name: 'TapeUserStatus',
+  description: 'Tape user status.',
 });
 
 @Module({

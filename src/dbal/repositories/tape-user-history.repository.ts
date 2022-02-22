@@ -1,5 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import * as sql from "mssql";
+import { TapeUserStatus } from "../enums/tape-user-status.enum";
 import { TapeUserHistory } from "../models/tape-user-history.model";
 import { ObjectRepository } from "./object.repository";
 
@@ -9,12 +10,12 @@ export class TapeUserHistoryRepository extends ObjectRepository {
     super(connection);
   }
 
-  async getTapeUserHistory(tapeUserId: number, tapeUserStatusId: number): Promise<TapeUserHistory | null> {
+  async getTapeUserHistory(tapeUserId: number, tapeUserStatus: TapeUserStatus): Promise<TapeUserHistory | null> {
     const result = await this.connection
       .request()
       .input("tapeUserId", sql.BigInt, tapeUserId)
-      .input("tapeUserStatusId", sql.BigInt, tapeUserStatusId)
-      .query`select tapeUserHistoryId, tapeUserId, tapeUserStatusId from TapeUserHistory where tapeUserId = @tapeUserId and tapeUserStatusId = @tapeUserStatusId`;
+      .input("tapeUserStatusId", sql.BigInt, tapeUserStatus)
+      .query`select tapeUserHistoryId, tapeUserId, tapeUserStatusId as tapeUserStatus from TapeUserHistory where tapeUserId = @tapeUserId and tapeUserStatusId = @tapeUserStatusId`;
     if (result.recordset.length === 0) {
       return null;
     }
@@ -22,20 +23,20 @@ export class TapeUserHistoryRepository extends ObjectRepository {
     return result.recordset[0];
   }
 
-  async insertTapeUserHistory(tapeUserId: number, tapeUserStatusId: number): Promise<TapeUserHistory> {
+  async insertTapeUserHistory(tapeUserId: number, tapeUserStatus: TapeUserStatus): Promise<TapeUserHistory> {
     const result = await this.connection
       .request()
       .input("tapeUserId", sql.BigInt, tapeUserId)
-      .input("tapeUserStatusId", sql.BigInt, tapeUserStatusId)
+      .input("tapeUserStatusId", sql.BigInt, tapeUserStatus)
       .query`insert into [TapeUserHistory] (tapeUserId, tapeUserStatusId) OUTPUT inserted.tapeUserHistoryId values (@tapeUserId, @tapeUserStatusId)`;
     if (result.rowsAffected[0] === 0) {
-      throw new NotFoundException(`User tape ${tapeUserId} can not be saved with status ${tapeUserStatusId}`);
+      throw new NotFoundException(`User tape ${tapeUserId} can not be saved with status ${tapeUserStatus}`);
     }
     
     return {
       tapeUserHistoryId: result.recordset[0].tapeUserHistoryId,
       tapeUserId,
-      tapeUserStatusId
+      tapeUserStatus
     };
   }
 }

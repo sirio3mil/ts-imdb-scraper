@@ -30,8 +30,15 @@ enum Place {
 type TapeUserHistory {
   tapeUserHistoryId: Int!
   tapeUserId: Float!
-  tapeUserStatusId: Float!
+  tapeUserStatus: TapeUserStatus!
   addPlace(place: Place!): TapeUserHistoryDetail!
+}
+
+"""Tape user status."""
+enum TapeUserStatus {
+  Downloaded
+  View
+  WishList
 }
 
 """stored tape"""
@@ -60,7 +67,7 @@ type TapeUser {
   tapeId: Int!
   userId: Int!
   tape: Tape
-  byStatus(tapeUserStatusId: Int!): TapeUserHistory
+  byStatus(tapeUserStatus: TapeUserStatus!): TapeUserHistory
 }
 
 """stored country"""

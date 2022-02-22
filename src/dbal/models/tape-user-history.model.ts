@@ -1,4 +1,5 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
+import { TapeUserStatus } from "../enums/tape-user-status.enum";
 
 @ObjectType()
 export class TapeUserHistory {
@@ -6,7 +7,8 @@ export class TapeUserHistory {
   tapeUserHistoryId: number;
 
   tapeUserId: number;
-  tapeUserStatusId: number;
+  
+  tapeUserStatus: TapeUserStatus;
 }
 
 

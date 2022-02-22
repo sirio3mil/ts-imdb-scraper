@@ -7,6 +7,7 @@ import {
   ResolveField,
   Resolver,
 } from "@nestjs/graphql";
+import { TapeUserStatus } from "../enums/tape-user-status.enum";
 import { TapeUserHistory } from "../models/tape-user-history.model";
 import { TapeUser } from "../models/tape-user.model";
 import { Tape } from "../models/tape.model";
@@ -46,10 +47,10 @@ export class TapeUserResolver {
   }
 
   @ResolveField(() => TapeUserHistory, { nullable: true })
-  async byStatus(@Args("tapeUserStatusId", { type: () => Int }) tapeUserStatusId: number, @Parent() tapeUser: TapeUser): Promise<TapeUserHistory> {
-    let tapeUserHistory = await this.tapeUserHistoryRepository.getTapeUserHistory(tapeUser.tapeUserId, tapeUserStatusId);
+  async byStatus(@Args("tapeUserStatus", { type: () => TapeUserStatus }) tapeUserStatus: TapeUserStatus, @Parent() tapeUser: TapeUser): Promise<TapeUserHistory> {
+    let tapeUserHistory = await this.tapeUserHistoryRepository.getTapeUserHistory(tapeUser.tapeUserId, tapeUserStatus);
     if (!tapeUserHistory) {
-      tapeUserHistory = await this.tapeUserHistoryRepository.insertTapeUserHistory(tapeUser.tapeUserId, tapeUserStatusId);
+      tapeUserHistory = await this.tapeUserHistoryRepository.insertTapeUserHistory(tapeUser.tapeUserId, tapeUserStatus);
     }
 
     return tapeUserHistory;
