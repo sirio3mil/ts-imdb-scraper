@@ -2,6 +2,34 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""stored tape"""
+type Tape {
+  originalTitle: String!
+  objectId: String!
+  tapeId: ID
+  detail: TapeDetail
+  countries: [Country!]
+  sounds: [Sound!]
+  languages: [Language!]
+  genres: [Genre!]
+  ranking: Ranking
+  tvShow: TvShow
+  tvShowChapter: TvShowChapter
+  people: [CreditOutput!]
+  titles: [TitleOutput!]
+  premieres: [PremiereOutput!]
+  locations: [Location!]
+  certifications: [CertificationOutput!]
+  tags: [Tag!]
+}
+
+type TapeUser {
+  tapeUserId: ID!
+  tapeId: Float!
+  userId: Float!
+  tape: Tape
+}
+
 """stored country"""
 type Country {
   countryId: ID
@@ -130,27 +158,6 @@ type TapeDetail {
   tvShowChapter: Boolean
   year: Int
   tapeId: ID!
-}
-
-"""stored tape"""
-type Tape {
-  originalTitle: String!
-  objectId: String!
-  tapeId: ID
-  detail: TapeDetail
-  countries: [Country!]
-  sounds: [Sound!]
-  languages: [Language!]
-  genres: [Genre!]
-  ranking: Ranking
-  tvShow: TvShow
-  tvShowChapter: TvShowChapter
-  people: [CreditOutput!]
-  titles: [TitleOutput!]
-  premieres: [PremiereOutput!]
-  locations: [Location!]
-  certifications: [CertificationOutput!]
-  tags: [Tag!]
 }
 
 """stored tv show chapter"""
@@ -284,4 +291,5 @@ type Query {
 
 type Mutation {
   importTape(imdbNumber: Int!): ImportOutput!
+  editTapeUser(tapeId: ID!, userId: ID!, tapeUserStatusId: ID!, placeId: ID): TapeUser!
 }

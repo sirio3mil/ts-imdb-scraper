@@ -4,6 +4,8 @@ import { ConfigService } from "@nestjs/config";
 import * as sql from "mssql";
 import { TapeRepository } from "src/dbal/repositories/tape.repository";
 import { RankingRepository } from "./repositories/ranking.repository";
+import { TapeUserRepository } from "./repositories/tape-user.repository";
+import { TapeUserResolver } from "./resolvers/tape-user.resolver";
 import { TapeResolver } from "./resolvers/tape.resolver";
 
 const connectionFactory = {
@@ -19,7 +21,9 @@ const connectionFactory = {
   imports: [HttpModule],
   providers: [
     TapeResolver,
+    TapeUserResolver,
     TapeRepository,
+    TapeUserRepository,
     RankingRepository,
     connectionFactory,
   ],
