@@ -1,5 +1,5 @@
 import { HttpService } from "@nestjs/axios";
-import { ScrappedPremiere } from "../../../src/imdb/models/premiere.model";
+import { ScrappedPremiere } from "../../../src/imdb/models/scrapped/premiere.model";
 import { ScrappedTitle } from "../../../src/imdb/models/scrapped/title.model";
 import { FileProvider } from "../../../src/imdb/providers/file.provider";
 import { ReleaseInfoService } from "../../../src/imdb/services/release-info.service";
