@@ -1,4 +1,4 @@
-import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { Country } from "./country.model";
 
 @ObjectType({ description: "people detailed information" })
@@ -27,7 +27,7 @@ export class PeopleDetail {
   @Field(() => Int, { nullable: true })
   height?: number;
 
-  @Field(() => ID)
+  @Field(() => Int)
   peopleId: number;
 
   @Field({ nullable: true })

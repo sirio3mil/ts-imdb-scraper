@@ -54,7 +54,7 @@ export class TapeUserRepository extends ObjectRepository {
     }
     
     return {
-      tapeUserId: parseInt(result.recordset[0].tapeUserId),
+      tapeUserId: result.recordset[0].tapeUserId,
       tapeId,
       userId
     };
@@ -84,7 +84,7 @@ export class TapeUserRepository extends ObjectRepository {
     }
     
     return {
-      tapeUserHistoryId: parseInt(result.recordset[0].tapeUserHistoryId),
+      tapeUserHistoryId: result.recordset[0].tapeUserHistoryId,
       tapeUserId,
       tapeUserStatusId
     };
@@ -101,7 +101,7 @@ export class TapeUserRepository extends ObjectRepository {
     }
     
     return {
-      tapeUserHistoryDetailId: parseInt(result.recordset[0].tapeUserHistoryDetailId),
+      tapeUserHistoryDetailId: result.recordset[0].tapeUserHistoryDetailId,
       tapeUserHistoryId,
       placeId
     };

@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { Country } from "src/dbal/models/country.model";
 
 @ObjectType({ description: "tape certification output" })
@@ -9,6 +9,6 @@ export class CertificationOutput {
   @Field({ nullable: true })
   country?: Country;
 
-  @Field(() => ID)
+  @Field(() => Int)
   tapeCertificationId: number;
 }

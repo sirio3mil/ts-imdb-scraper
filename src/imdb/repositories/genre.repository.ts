@@ -35,7 +35,7 @@ export class GenreRepository {
         const result = await stmt.execute({ name });
         if (result.recordset.length > 0) {
           genres.push({
-            genreId: parseInt(result.recordset[0].genreId),
+            genreId: result.recordset[0].genreId,
             name,
           });
         }

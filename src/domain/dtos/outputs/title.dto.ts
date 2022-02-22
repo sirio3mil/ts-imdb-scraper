@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { Country } from "src/dbal/models/country.model";
 import { Language } from "src/dbal/models/language.model";
 
@@ -13,7 +13,7 @@ export class TitleOutput {
   @Field({ nullable: true })
   observations?: string;
 
-  @Field(() => ID)
+  @Field(() => Int)
   tapeTitleId?: number;
   
   @Field()

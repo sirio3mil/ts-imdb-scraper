@@ -34,7 +34,7 @@ export class PeopleRepository extends ObjectRepository {
         slug: slug(people.fullName)
       })
     ]);
-    people.peopleId = parseInt(result.recordset[0].peopleId);
+    people.peopleId = result.recordset[0].peopleId;
 
     return people;
   }
@@ -80,12 +80,12 @@ export class PeopleRepository extends ObjectRepository {
     }
 
     return {
-      peopleId: parseInt(result.recordset[0].peopleId),
+      peopleId: result.recordset[0].peopleId,
       objectId: result.recordset[0].objectId,
       fullName: result.recordset[0].fullName,
       aliases: result.recordset.filter(r => !!r.peopleAliasId).map(r => {
         return <PeopleAlias>{
-          peopleAliasId: parseInt(r.peopleAliasId),
+          peopleAliasId: r.peopleAliasId,
           alias: r.alias
         };
       }),
@@ -103,9 +103,7 @@ export class PeopleRepository extends ObjectRepository {
       .query(
         `INSERT INTO [TapePeopleRole] (peopleId, roleId, tapeId) OUTPUT inserted.tapePeopleRoleId VALUES (@peopleId, @roleId, @tapeId)`
       );
-    tapePeopleRole.tapePeopleRoleId = parseInt(
-      result.recordset[0].tapePeopleRoleId
-    );
+    tapePeopleRole.tapePeopleRoleId = result.recordset[0].tapePeopleRoleId;
 
     return tapePeopleRole;
   }
@@ -159,14 +157,7 @@ export class PeopleRepository extends ObjectRepository {
       .request()
       .input("tapeId", sql.BigInt, tapeId)
       .query`SELECT tpr.roleId, tpr.peopleId, tpr.tapeId, tpr.tapePeopleRoleId FROM [TapePeopleRole] tpr WHERE tpr.tapeId = @tapeId`;
-    result.recordset.map((tapePeopleRole) => {
-      tapePeopleRole.roleId = parseInt(tapePeopleRole.roleId);
-      tapePeopleRole.tapePeopleRoleId = parseInt(
-        tapePeopleRole.tapePeopleRoleId
-      );
-      tapePeopleRole.peopleId = parseInt(tapePeopleRole.peopleId);
-      tapePeopleRole.tapeId = parseInt(tapePeopleRole.tapeId);
-    });
+
     return result.recordset;
   }
 
@@ -186,7 +177,7 @@ export class PeopleRepository extends ObjectRepository {
     ]);
 
     return {
-      peopleAliasId: parseInt(result.recordset[0].peopleAliasId),
+      peopleAliasId: result.recordset[0].peopleAliasId,
       peopleId: people.peopleId,
       alias
     };
@@ -214,10 +205,7 @@ export class PeopleRepository extends ObjectRepository {
       .request()
       .input("tapeId", sql.BigInt, tapeId)
       .query`SELECT pat.peopleAliasId, pat.tapeId FROM [PeopleAliasTape] pat WHERE pat.tapeId = @tapeId`;
-    result.recordset.map((peopleAliasTape) => {
-      peopleAliasTape.peopleAliasId = parseInt(peopleAliasTape.peopleAliasId);
-      peopleAliasTape.tapeId = parseInt(peopleAliasTape.tapeId);
-    });
+
     return result.recordset;
   }
 

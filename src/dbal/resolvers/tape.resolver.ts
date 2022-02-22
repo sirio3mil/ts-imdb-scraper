@@ -1,7 +1,7 @@
 import { NotFoundException } from "@nestjs/common";
 import {
   Args,
-  ID,
+  Int,
   Parent,
   Query,
   ResolveField,
@@ -34,7 +34,7 @@ export class TapeResolver {
 
   @Query(() => Tape, { name: "tape" })
   async getTape(
-    @Args("tapeId", { type: () => ID }) tapeId: number
+    @Args("tapeId", { type: () => Int }) tapeId: number
   ): Promise<Tape> {
     try {
       return this.tapeRepository.getTape(tapeId);

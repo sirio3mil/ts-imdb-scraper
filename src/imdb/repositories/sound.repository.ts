@@ -37,7 +37,7 @@ export class SoundRepository {
         const result = await stmt.execute({ description });
         if (result.recordset.length > 0) {
           sounds.push({
-            soundId: parseInt(result.recordset[0].soundId),
+            soundId: result.recordset[0].soundId,
             description,
           });
         }

@@ -15,9 +15,7 @@ export class LocationRepository {
       .request()
       .input("tapeId", sql.BigInt, tapeId)
       .query`SELECT l.locationId, l.place FROM [Location] l INNER JOIN [TapeLocation] tl ON tl.locationId = l.locationId WHERE tl.tapeId = @tapeId`;
-    result.recordset.map((row) => {
-      row.locationId = parseInt(row.locationId);
-    });
+
     return result.recordset;
   }
 
@@ -48,7 +46,7 @@ export class LocationRepository {
         const result = await stmt.execute({ place });
         if (result.recordset.length > 0) {
           locations.push({
-            locationId: parseInt(result.recordset[0].locationId),
+            locationId: result.recordset[0].locationId,
             place,
           });
         }

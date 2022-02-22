@@ -2,11 +2,17 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type TapeUserHistory {
+  tapeUserHistoryId: Int!
+  tapeUserId: Float!
+  tapeUserStatusId: Float!
+}
+
 """stored tape"""
 type Tape {
   originalTitle: String!
   objectId: String!
-  tapeId: ID
+  tapeId: Int
   detail: TapeDetail
   countries: [Country!]
   sounds: [Sound!]
@@ -24,15 +30,16 @@ type Tape {
 }
 
 type TapeUser {
-  tapeUserId: ID!
-  tapeId: Float!
-  userId: Float!
+  tapeUserId: Int!
+  tapeId: Int!
+  userId: Int!
   tape: Tape
+  byStatus(tapeUserStatusId: Int!): TapeUserHistory
 }
 
 """stored country"""
 type Country {
-  countryId: ID
+  countryId: Int
   isoCode: String
   officialName: String!
 }
@@ -41,14 +48,14 @@ type Country {
 type CertificationOutput {
   certification: String!
   country: Country
-  tapeCertificationId: ID!
+  tapeCertificationId: Int!
 }
 
 """people alias"""
 type PeopleAlias {
   alias: String!
   peopleId: Int!
-  peopleAliasId: ID
+  peopleAliasId: Int
 }
 
 """people detailed information"""
@@ -61,7 +68,7 @@ type PeopleDetail {
   gender: String
   havePhoto: Boolean
   height: Int
-  peopleId: ID!
+  peopleId: Int!
   skip: Boolean
 }
 
@@ -74,12 +81,12 @@ type People {
   detail: PeopleDetail
   fullName: String!
   objectId: String!
-  peopleId: ID
+  peopleId: Int
 }
 
 """people role"""
 type Role {
-  roleId: ID!
+  roleId: Int!
   role: String!
 }
 
@@ -87,7 +94,7 @@ type Role {
 type CreditOutput {
   people: People!
   role: Role!
-  tapePeopleRoleId: ID!
+  tapePeopleRoleId: Int!
   character: String
 }
 
@@ -96,13 +103,13 @@ type PremiereOutput {
   country: Country
   date: Date!
   place: String
-  premiereId: ID!
+  premiereId: Int!
   observation: String
 }
 
 """stored language"""
 type Language {
-  languageId: ID
+  languageId: Int
   name: String!
 }
 
@@ -111,19 +118,19 @@ type TitleOutput {
   country: Country
   language: Language
   observations: String
-  tapeTitleId: ID!
+  tapeTitleId: Int!
   title: String!
 }
 
 """stored genre"""
 type Genre {
-  genreId: ID
+  genreId: Int
   name: String!
 }
 
 """stored locations"""
 type Location {
-  locationId: ID!
+  locationId: Int!
   place: String!
 }
 
@@ -138,13 +145,13 @@ type Ranking {
 """stored sound"""
 type Sound {
   description: String!
-  soundId: ID
+  soundId: Int
 }
 
 """stored country"""
 type Tag {
   keyword: String!
-  tagId: ID!
+  tagId: Int!
 }
 
 """stored tape detail"""
@@ -157,21 +164,21 @@ type TapeDetail {
   tvShow: Boolean
   tvShowChapter: Boolean
   year: Int
-  tapeId: ID!
+  tapeId: Int!
 }
 
 """stored tv show chapter"""
 type TvShowChapter {
   chapter: Int!
   season: Int!
-  tapeId: ID!
+  tapeId: Int!
   tvShowTapeId: Int!
 }
 
 """stored tv show"""
 type TvShow {
   finished: Boolean!
-  tapeId: ID!
+  tapeId: Int!
 }
 
 """count inserted rows"""
@@ -286,10 +293,10 @@ type ScrappedTape {
 
 type Query {
   getScrappedTape(imdbNumber: Int!): ScrappedTape!
-  tape(tapeId: ID!): Tape!
+  tape(tapeId: Int!): Tape!
 }
 
 type Mutation {
   importTape(imdbNumber: Int!): ImportOutput!
-  editTapeUser(tapeId: ID!, userId: ID!, tapeUserStatusId: ID!, placeId: ID): TapeUser!
+  editTapeUser(tapeId: Int!, userId: Int!): TapeUser!
 }

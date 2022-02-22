@@ -1,4 +1,4 @@
-import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 
 @ObjectType({ description: "stored tv show chapter" })
 export class TvShowChapter {
@@ -8,7 +8,7 @@ export class TvShowChapter {
   @Field(() => Int)
   season: number;
 
-  @Field(() => ID)
+  @Field(() => Int)
   tapeId: number;
 
   @Field(() => Int)

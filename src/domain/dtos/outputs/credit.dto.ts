@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { People } from "src/dbal/models/people.model";
 import { Role } from "src/dbal/models/role.model";
 
@@ -10,7 +10,7 @@ export class CreditOutput {
   @Field()
   role: Role;
 
-  @Field(() => ID)
+  @Field(() => Int)
   tapePeopleRoleId?: number;
 
   @Field({ nullable: true })

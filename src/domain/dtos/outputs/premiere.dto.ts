@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { Country } from "src/dbal/models/country.model";
 
 @ObjectType({ description: "premiere" })
@@ -12,7 +12,7 @@ export class PremiereOutput {
   @Field({ nullable: true })
   place?: string;
 
-  @Field(() => ID)
+  @Field(() => Int)
   premiereId?: number;
 
   @Field({ nullable: true })

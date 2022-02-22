@@ -39,7 +39,7 @@ export class CountryRepository {
         const result = await stmt.execute({ officialName });
         if (result.recordset.length > 0) {
           countries.push({
-            countryId: parseInt(result.recordset[0].countryId),
+            countryId: result.recordset[0].countryId,
             officialName,
           });
         }

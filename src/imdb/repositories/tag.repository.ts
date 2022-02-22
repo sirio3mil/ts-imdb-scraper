@@ -15,9 +15,7 @@ export class TagRepository {
       .request()
       .input("tapeId", sql.BigInt, tapeId)
       .query`SELECT t.tagId, t.keyword FROM [Tag] t INNER JOIN [TapeTag] tt ON tt.tagId = t.tagId WHERE tt.tapeId = @tapeId`;
-    result.recordset.map((row) => {
-      row.tagId = parseInt(row.tagId);
-    });
+
     return result.recordset;
   }
 
@@ -48,7 +46,7 @@ export class TagRepository {
         const result = await stmt.execute({ keyword });
         if (result.recordset.length > 0) {
           tags.push({
-            tagId: parseInt(result.recordset[0].tagId),
+            tagId: result.recordset[0].tagId,
             keyword,
           });
         }

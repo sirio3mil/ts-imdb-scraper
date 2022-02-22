@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 import { PeopleAlias } from "./people-alias.model";
 import { PeopleDetail } from "./people-detail.model";
 
@@ -16,6 +16,6 @@ export class People {
   @Field()
   objectId: string;
 
-  @Field(() => ID)
+  @Field(() => Int)
   peopleId?: number;
 }

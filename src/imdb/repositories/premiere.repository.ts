@@ -19,11 +19,7 @@ export class PremiereRepository {
       .request()
       .input("tapeId", sql.BigInt, tapeId)
       .query`SELECT p.premiereId, p.tapeId, p.date, p.countryId, p.place, d.observation FROM [Premiere] p LEFT JOIN [PremiereDetail] d ON d.premiereId = p.premiereId WHERE p.tapeId = @tapeId AND p.place = 'Movie'`;
-    result.recordset.map((row) => {
-      row.premiereId = parseInt(row.premiereId);
-      row.tapeId = parseInt(row.tapeId);
-      row.countryId = row.countryId ? parseInt(row.countryId) : null;
-    });
+
     return result.recordset;
   }
 
@@ -58,7 +54,7 @@ export class PremiereRepository {
           countryId: country?.countryId || null,
         }
         const result = await stmtPremiere.execute(premiere);
-        premiere.premiereId = parseInt(result.recordset[0].premiereId);
+        premiere.premiereId = result.recordset[0].premiereId;
         total++;
       }
       if (!!item.detail && premiere.observation !== item.detail) {

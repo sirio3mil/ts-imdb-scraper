@@ -1,12 +1,13 @@
 import { NotFoundException } from "@nestjs/common";
 import {
   Args,
-  ID,
+  Int,
   Mutation,
   Parent,
   ResolveField,
   Resolver,
 } from "@nestjs/graphql";
+import { TapeUserHistory } from "../models/tape-user-history.model";
 import { TapeUser } from "../models/tape-user.model";
 import { Tape } from "../models/tape.model";
 import { TapeUserRepository } from "../repositories/tape-user.repository";
@@ -21,13 +22,16 @@ export class TapeUserResolver {
 
   @Mutation(() => TapeUser)
   async editTapeUser(
-    @Args("tapeId", { type: () => ID }) tapeId: number,
-    @Args("userId", { type: () => ID }) userId: number,
-    @Args("tapeUserStatusId", { type: () => ID }) tapeUserStatusId: number,
-    @Args("placeId", { type: () => ID, nullable: true }) placeId: number
+    @Args("tapeId", { type: () => Int }) tapeId: number,
+    @Args("userId", { type: () => Int }) userId: number
   ): Promise<TapeUser> {
     try {
-      return this.tapeUserRepository.updateTapeUser(tapeId, userId, tapeUserStatusId, placeId);
+      let tapeUser = await this.tapeUserRepository.getTapeUser(tapeId, userId);
+      if (!tapeUser) {
+        tapeUser = await this.tapeUserRepository.insertTapeUser(tapeId, userId);
+      }
+
+      return tapeUser;
     } catch (e) {
       throw new NotFoundException(`Tape ${tapeId} for user ${userId} not found`);
     }
@@ -37,5 +41,15 @@ export class TapeUserResolver {
   async getTape(@Parent() tapeUser: TapeUser): Promise<Tape> {
     const { tapeId } = tapeUser;
     return this.tapeRepository.getTape(tapeId);
+  }
+
+  @ResolveField(() => TapeUserHistory, { nullable: true })
+  async byStatus(@Args("tapeUserStatusId", { type: () => Int }) tapeUserStatusId: number, @Parent() tapeUser: TapeUser): Promise<TapeUserHistory> {
+    let tapeUserHistory = await this.tapeUserRepository.getTapeUserHistory(tapeUser.tapeUserId, tapeUserStatusId);
+    if (!tapeUserHistory) {
+      tapeUserHistory = await this.tapeUserRepository.insertTapeUserHistory(tapeUser.tapeUserId, tapeUserStatusId);
+    }
+
+    return tapeUserHistory;
   }
 }

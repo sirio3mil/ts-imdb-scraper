@@ -1,8 +1,8 @@
-import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 
 @ObjectType({ description: "stored language" })
 export class Language {
-  @Field(() => ID)
+  @Field(() => Int)
   languageId?: number;
 
   @Field()

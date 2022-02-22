@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 
 @ObjectType({ description: "people role" })
 export class SearchValue {
@@ -11,7 +11,7 @@ export class SearchValue {
   @Field()
   searchParam: string;
 
-  @Field(() => ID)
+  @Field(() => Int)
   searchValueId?: number;
 
   @Field()

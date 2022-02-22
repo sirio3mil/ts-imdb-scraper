@@ -1,4 +1,4 @@
-import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 
 @ObjectType({ description: "people alias" })
 export class PeopleAlias {
@@ -8,6 +8,6 @@ export class PeopleAlias {
   @Field(() => Int)
   peopleId: number;
 
-  @Field(() => ID)
+  @Field(() => Int)
   peopleAliasId?: number;
 }

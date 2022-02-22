@@ -151,15 +151,12 @@ export class TapeRepository extends ObjectRepository {
         WHERE tpr.tapeId = @tapeId`
       );
     result.recordset.map((row) => {
-      row.tapePeopleRoleId = parseInt(
-        row.tapePeopleRoleId
-      );
       row.people = {
-        peopleId: parseInt(row.peopleId),
+        peopleId: row.peopleId,
         fullName: row.fullName,
       };
       row.role = {
-        roleId: parseInt(row.roleId),
+        roleId: row.roleId,
         role: row.role,
       };
     });
@@ -187,20 +184,17 @@ export class TapeRepository extends ObjectRepository {
       row.language = null;
       if (row.languageId) {
         row.language = {
-          languageId: parseInt(row.languageId),
+          languageId: row.languageId,
           name: row.name,
         }
       }
       row.country = null;
       if (row.countryId) {
         row.country = {
-          countryId: parseInt(row.countryId),
+          countryId: row.countryId,
           officialName: row.officialName,
         }
       }
-      row.tapeTitleId = parseInt(
-        row.tapeTitleId
-      );
     });
     return result.recordset;
   }
@@ -222,13 +216,10 @@ export class TapeRepository extends ObjectRepository {
         WHERE p.tapeId = @tapeId`
       );
     result.recordset.map((row) => {
-      row.premiereId = parseInt(
-        row.premiereId
-      );
       row.country = null;
       if (row.countryId) {
         row.country = {
-          countryId: parseInt(row.countryId),
+          countryId: row.countryId,
           officialName: row.officialName,
         }
       }
@@ -248,11 +239,10 @@ export class TapeRepository extends ObjectRepository {
         LEFT JOIN [Country] c ON c.countryId = t.countryId
         WHERE t.tapeId = @tapeId`;
     result.recordset.map((row) => {
-      row.tapeCertificationId = parseInt(row.tapeCertificationId);
       row.country = null;
       if (row.countryId) {
         row.country = {
-          countryId: parseInt(row.countryId),
+          countryId: row.countryId,
           officialName: row.officialName,
         }
       }

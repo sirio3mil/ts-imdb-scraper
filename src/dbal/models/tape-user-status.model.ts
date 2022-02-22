@@ -1,8 +1,8 @@
-import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 
 @ObjectType()
 export class TapeUserStatus {
-  @Field(() => ID)
+  @Field(() => Int)
   tapeUserStatusId: number;
 
   @Field()

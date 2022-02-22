@@ -1,8 +1,8 @@
-import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 
 @ObjectType({ description: "stored genre" })
 export class Genre {
-  @Field(() => ID)
+  @Field(() => Int)
   genreId?: number;
 
   @Field()

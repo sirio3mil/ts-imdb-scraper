@@ -32,7 +32,7 @@ export class TitleRepository {
     if (result.rowsAffected[0] === 0) {
       throw new NotFoundException("Title not found");
     }
-    tapeTitle.tapeTitleId = parseInt(result.recordset[0].tapeTitleId);
+    tapeTitle.tapeTitleId = result.recordset[0].tapeTitleId;
     
     return tapeTitle;
   }
@@ -42,12 +42,7 @@ export class TitleRepository {
       .request()
       .input("tapeId", sql.BigInt, tapeId)
       .query`SELECT tapeTitleId, tapeId, title, countryId, languageId, observations FROM [TapeTitle] WHERE tapeId = @tapeId`;
-    result.recordset.map((row) => {
-      row.tapeTitleId = parseInt(row.tapeTitleId);
-      row.tapeId = parseInt(row.tapeId);
-      row.countryId = row.countryId ? parseInt(row.countryId) : null;
-      row.languageId = row.languageId ? parseInt(row.languageId) : null;
-    });
+
     return result.recordset;
   }
 
@@ -62,7 +57,7 @@ export class TitleRepository {
     if (result.rowsAffected[0] === 0) {
       throw new NotFoundException("Search value not found");
     }
-    searchValue.searchValueId = parseInt(result.recordset[0].searchValueId);
+    searchValue.searchValueId = result.recordset[0].searchValueId;
     
     return searchValue;
   }
@@ -72,9 +67,7 @@ export class TitleRepository {
       .request()
       .input("objectId", sql.UniqueIdentifier, objectId)
       .query`SELECT searchValueId, objectId, searchParam, primaryParam, slug FROM SearchValue WHERE objectId = @objectId`;
-    result.recordset.map((row) => {
-      row.searchValueId = parseInt(row.searchValueId);
-    });
+
     return result.recordset;
   }
 

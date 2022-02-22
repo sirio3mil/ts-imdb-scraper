@@ -37,7 +37,7 @@ export class LanguageRepository {
         const result = await stmt.execute({ name });
         if (result.recordset.length > 0) {
           languages.push({
-            languageId: parseInt(result.recordset[0].languageId),
+            languageId: result.recordset[0].languageId,
             name,
           });
         }

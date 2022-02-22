@@ -19,11 +19,7 @@ export class CertificationRepository {
       .request()
       .input("tapeId", sql.BigInt, tapeId)
       .query`SELECT tapeCertificationId, tapeId, countryId, certification FROM [TapeCertification] WHERE tapeId = @tapeId`;
-    result.recordset.map((row) => {
-      row.tapeCertificationId = parseInt(row.tapeCertificationId);
-      row.tapeId = parseInt(row.tapeId);
-      row.countryId = row.countryId ? parseInt(row.countryId) : null;
-    });
+    
     return result.recordset;
   }
 
