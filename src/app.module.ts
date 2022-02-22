@@ -4,12 +4,14 @@ import { GraphQLModule } from "@nestjs/graphql";
 import configuration from "./config/configuration";
 import { DbalModule } from "./dbal/dbal.module";
 import { ImdbModule } from "./imdb/imdb.module";
+import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 
 @Module({
   imports: [
     ImdbModule,
     DbalModule,
-    GraphQLModule.forRoot({
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
       autoSchemaFile: "schema.gql",
       subscriptions: {
         "graphql-ws": true,
