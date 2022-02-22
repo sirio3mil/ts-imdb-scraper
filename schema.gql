@@ -2,10 +2,17 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type TapeUserHistoryDetail {
+  tapeUserHistoryDetailId: Int!
+  tapeUserHistoryId: Float!
+  placeId: Float
+}
+
 type TapeUserHistory {
   tapeUserHistoryId: Int!
   tapeUserId: Float!
   tapeUserStatusId: Float!
+  addPlace(placeId: Int!): TapeUserHistoryDetail!
 }
 
 """stored tape"""

@@ -10,6 +10,7 @@ import {
 import { TapeUserHistory } from "../models/tape-user-history.model";
 import { TapeUser } from "../models/tape-user.model";
 import { Tape } from "../models/tape.model";
+import { TapeUserHistoryRepository } from "../repositories/tape-user-history.repository";
 import { TapeUserRepository } from "../repositories/tape-user.repository";
 import { TapeRepository } from "../repositories/tape.repository";
 
@@ -17,7 +18,8 @@ import { TapeRepository } from "../repositories/tape.repository";
 export class TapeUserResolver {
   constructor(
     private readonly tapeUserRepository: TapeUserRepository,
-    private readonly tapeRepository: TapeRepository
+    private readonly tapeRepository: TapeRepository,
+    private readonly tapeUserHistoryRepository: TapeUserHistoryRepository
   ) {}
 
   @Mutation(() => TapeUser)
@@ -45,9 +47,9 @@ export class TapeUserResolver {
 
   @ResolveField(() => TapeUserHistory, { nullable: true })
   async byStatus(@Args("tapeUserStatusId", { type: () => Int }) tapeUserStatusId: number, @Parent() tapeUser: TapeUser): Promise<TapeUserHistory> {
-    let tapeUserHistory = await this.tapeUserRepository.getTapeUserHistory(tapeUser.tapeUserId, tapeUserStatusId);
+    let tapeUserHistory = await this.tapeUserHistoryRepository.getTapeUserHistory(tapeUser.tapeUserId, tapeUserStatusId);
     if (!tapeUserHistory) {
-      tapeUserHistory = await this.tapeUserRepository.insertTapeUserHistory(tapeUser.tapeUserId, tapeUserStatusId);
+      tapeUserHistory = await this.tapeUserHistoryRepository.insertTapeUserHistory(tapeUser.tapeUserId, tapeUserStatusId);
     }
 
     return tapeUserHistory;
