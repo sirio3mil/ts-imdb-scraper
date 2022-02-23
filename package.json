@@ -57,6 +57,8 @@
     "apollo-server-express": "^3.6.3",
     "cheerio": "^1.0.0-rc.10",
     "class-validator": "^0.13.2",
+    "db-migrate": "^0.11.13",
+    "db-migrate-mssql": "github:sirio3mil/db-migrate-mssql",
     "graphql": "^16.3.0",
     "graphql-subscriptions": "^2.0.0",
     "limax": "^3.0.0",
