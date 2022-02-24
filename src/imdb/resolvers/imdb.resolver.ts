@@ -73,15 +73,18 @@ export class ImdbResolver {
       const isTvShow = this.tapeService.isTvShow();
       const isTvShowChapter = this.tapeService.isTvShowChapter();
       if (!storedTape) {
-        const objectId = await this.tapeRepository.insertObject(
-          Constants.rowTypes.tape
-        );
-        [, storedTape] = await Promise.all([
-          this.tapeRepository.insertImdbNumber(objectId, imdbNumber),
-          this.tapeRepository.insertTape({
-            objectId,
-            originalTitle: this.tapeService.getOriginalTitle(),
-          }),
+        let objectId = await this.tapeRepository.getObjectId(Constants.rowTypes.tape, imdbNumber)
+        if (!objectId) {
+          objectId = await this.tapeRepository.insertObject(
+            Constants.rowTypes.tape
+          );
+          this.tapeRepository.insertImdbNumber(objectId, imdbNumber);
+        }
+        storedTape = await this.tapeRepository.insertTape({
+          objectId,
+          originalTitle: this.tapeService.getOriginalTitle(),
+        });
+        await Promise.all([
           this.tapeRepository.insertTapeDetail({
             duration: this.tapeService.getDuration(),
             year: this.tapeService.getYear(),
@@ -91,12 +94,16 @@ export class ImdbResolver {
             tvShowChapter: isTvShowChapter,
             tapeId: storedTape.tapeId,
           }),
-          this.rankingRepository.insertRanking({
-            score: ranking.score,
-            votes: ranking.votes,
-            realScore: ranking.realScore,
-            objectId: storedTape.objectId,
-          }),
+          () => {
+            if (ranking?.score) {
+              return this.rankingRepository.insertRanking({
+                score: ranking.score,
+                votes: ranking.votes,
+                realScore: ranking.realScore,
+                objectId: storedTape.objectId,
+              })
+            }
+          }
         ]);
       } else {
         [storedTape] = await Promise.all([
@@ -114,12 +121,16 @@ export class ImdbResolver {
             tvShowChapter: isTvShowChapter,
             tapeId: storedTape.tapeId,
           }),
-          this.rankingRepository.upsertRanking({
-            score: ranking.score,
-            votes: ranking.votes,
-            realScore: ranking.realScore,
-            objectId: storedTape.objectId,
-          }),
+          () => {
+            if (ranking?.score) {
+              return this.rankingRepository.upsertRanking({
+                score: ranking.score,
+                votes: ranking.votes,
+                realScore: ranking.realScore,
+                objectId: storedTape.objectId,
+              })
+            }
+          }
         ]);
       }
       let finished: boolean;
