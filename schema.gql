@@ -241,7 +241,7 @@ type ImportOutput {
   locations: CounterOutput!
   certifications: CounterOutput!
   keywords: CounterOutput!
-  ranking: ScrappedRanking!
+  ranking: ScrappedRanking
   finished: Boolean
   tvShowTapeId: Int
   chapter: Int
