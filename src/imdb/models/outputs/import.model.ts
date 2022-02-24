@@ -40,7 +40,7 @@ export class ImportOutput {
   @Field()
   keywords: CounterOutput;
 
-  @Field()
+  @Field({ nullable: true })
   ranking: ScrappedRanking;
 
   @Field({ nullable: true })
