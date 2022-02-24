@@ -26,6 +26,7 @@ import { PremiereRepository } from "./repositories/premiere.repository";
 import { LocationRepository } from "./repositories/location.repository";
 import { CertificationRepository } from "./repositories/certification.repository";
 import { TagRepository } from "./repositories/tag.repository";
+import { ImportAggregator } from "./aggregators/import.aggregator";
 
 const connectionFactory = {
   provide: "CONNECTION",
@@ -61,6 +62,7 @@ const connectionFactory = {
     LocationRepository,
     CertificationRepository,
     TagRepository,
+    ImportAggregator,
     {
       provide: AbstractProvider,
       useClass: FileProvider,
