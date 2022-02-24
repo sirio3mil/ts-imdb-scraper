@@ -21,7 +21,7 @@ describe("CreditService", () => {
 
   describe("getCredits", () => {
     it("should match credits length", async () => {
-      expect(credits.length).toEqual(660);
+      expect(credits.length).toEqual(45);
     });
 
     it("should match directors", async () => {
@@ -47,12 +47,19 @@ describe("CreditService", () => {
 
     it("should match cast", async () => {
       const cast = credits.filter((credit) => credit.role === "cast");
-
       expect(cast.length).toEqual(41);
-      expect(cast[0].person.fullName).toEqual("Keanu Reeves");
-      expect(cast[0].person.alias).toBeNull();
-      expect(cast[0].person.ID).toEqual(206);
-      expect(cast[0].character).toEqual("Neo");
+
+      const keanuReeves = cast.find((credit) => credit.person.fullName === "Keanu Reeves");
+      expect(keanuReeves).not.toBeNull();
+      expect(keanuReeves.person.alias).toBeNull();
+      expect(keanuReeves.person.ID).toEqual(206);
+      expect(keanuReeves.character).toEqual("Neo");
+
+      const bernardLedger = cast.find((credit) => credit.person.fullName === "Bernard Ledger");
+      expect(bernardLedger).not.toBeNull();
+      expect(bernardLedger.person.alias).toEqual("Bernie Ledger");
+      expect(bernardLedger.person.ID).toEqual(496567);
+      expect(bernardLedger.character).toEqual("Big Cop");
     });
   });
 });

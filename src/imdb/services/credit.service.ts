@@ -31,14 +31,17 @@ export class CreditService extends HtmlService {
         if (!!id) {
           const url = new URL(href, "https://www.imdb.com");
           const fullName = nameCell.text().trim();
-          const lastCell = cells.last();
-          let character = lastCell.find("a").text();
-          const matchs = lastCell
-            .text()
-            .replace(character, "")
-            .match(/\(as ([\w\s]+)\)/);
-          if (!character) character = null;
-          const alias = !!matchs ? matchs[1] : null;
+          const characterCell = cells.last();
+          let character = characterCell.text()?.trim();
+          let alias = null;
+          const matchs = character?.match(/\(as ([\w\s]+)\)/);
+          if (matchs?.length) {
+            character = character.replace(matchs[0], "").trim();
+            alias = matchs[1];
+          }
+          if (Constants.roles[role] !== Constants.roles.cast) {
+            character = null;
+          }
           credits.push({
             person: {
               fullName,

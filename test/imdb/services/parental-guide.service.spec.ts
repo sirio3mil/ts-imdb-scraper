@@ -21,7 +21,7 @@ describe("ParentalGuideService", () => {
 
   describe("getCertifications", () => {
     it("should match certifications length", async () => {
-      expect(certifications.length).toEqual(59);
+      expect(certifications.length).toBeGreaterThan(50);
     });
 
     it("should match certifications", async () => {
