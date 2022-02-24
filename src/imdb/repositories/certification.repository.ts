@@ -42,14 +42,16 @@ export class CertificationRepository {
       .prepare(`INSERT INTO [TapeCertification] (tapeId, countryId, certification) OUTPUT inserted.tapeCertificationId VALUES (@tapeId, @countryId, @certification)`);
     for (const certification of certifications) {
       const country = !!certification.country && countries.find(c => c.officialName === certification.country);
-      const tapeCertification = tapeCertifications.find((tapeCertification) => tapeCertification.countryId === country.countryId);
+      let tapeCertification = tapeCertifications.find((tapeCertification) => tapeCertification.countryId === country.countryId);
       if (!tapeCertification) {
-        await stmt.execute({
-          tapeId: tapeId,
+        tapeCertification = {
           certification: certification.certification,
-          countryId: country?.countryId || null,
-        });
+          countryId: country?.countryId,
+          tapeId
+        }
+        await stmt.execute(tapeCertification);
         total++;
+        tapeCertifications.push(tapeCertification);
       }
     }
     await stmt.unprepare();
