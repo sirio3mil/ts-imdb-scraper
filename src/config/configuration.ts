@@ -4,10 +4,12 @@ export default () => ({
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE_NAME,
     server: process.env.DATABASE_HOST,
+    connectionTimeout: 300000,
+    requestTimeout: 300000,
     pool: {
-      max: 10,
+      max: 100,
       min: 0,
-      idleTimeoutMillis: 30000,
+      idleTimeoutMillis: 300000,
     },
     options: {
       trustServerCertificate: true,

@@ -331,5 +331,6 @@ type Query {
 
 type Mutation {
   importTape(imdbNumber: Int!): ImportOutput!
+  importEpisodes(imdbNumber: Int!, seasonNumber: Int!): [ImportOutput!]!
   editTapeUser(tapeId: Int!, userId: Int!): TapeUser!
 }
