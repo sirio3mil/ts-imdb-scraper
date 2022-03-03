@@ -41,6 +41,14 @@ enum TapeUserStatus {
   WishList
 }
 
+type TapeUser {
+  tapeUserId: Int!
+  tapeId: Int!
+  userId: Int!
+  tape: Tape
+  byStatus(tapeUserStatus: TapeUserStatus!): TapeUserHistory
+}
+
 """stored tape"""
 type Tape {
   originalTitle: String!
@@ -60,14 +68,6 @@ type Tape {
   locations: [Location!]
   certifications: [CertificationOutput!]
   tags: [Tag!]
-}
-
-type TapeUser {
-  tapeUserId: Int!
-  tapeId: Int!
-  userId: Int!
-  tape: Tape
-  byStatus(tapeUserStatus: TapeUserStatus!): TapeUserHistory
 }
 
 """stored country"""

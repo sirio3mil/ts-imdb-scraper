@@ -253,6 +253,7 @@ export class PeopleRepository extends ObjectRepository {
               peopleAliasId: peopleAlias.peopleAliasId,
               tapeId,
             });
+            people.aliases.push(peopleAlias);
           } else if (!tapePeopleAlias.find((a) => a.peopleAliasId === peopleAlias.peopleAliasId)) {
             await this.insertPeopleAliasTape({
               peopleAliasId: peopleAlias.peopleAliasId,
