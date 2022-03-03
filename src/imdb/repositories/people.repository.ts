@@ -227,16 +227,17 @@ export class PeopleRepository extends ObjectRepository {
         if (!people) {
           people = await this.getPeopleByImdbNumber(credit.person.ID);
           if (!people) {
-            const objectId = await this.insertObject(
-              Constants.rowTypes.person
-            );
-            [, people] = await Promise.all([
-              this.insertImdbNumber(objectId, credit.person.ID),
-              this.insertPeople({
-                objectId,
-                fullName: credit.person.fullName,
-              }),
-            ]);
+            let objectId = await this.getObjectId(Constants.rowTypes.tape, credit.person.ID)
+            if (!objectId) {
+              objectId = await this.insertObject(
+                Constants.rowTypes.person
+              );
+              this.insertImdbNumber(objectId, credit.person.ID);
+            }
+            people = await this.insertPeople({
+              objectId,
+              fullName: credit.person.fullName,
+            });
           } else if (people.fullName !== credit.person.fullName) {
             people.fullName = credit.person.fullName;
             people = await this.updatePeople(people);
