@@ -62,7 +62,7 @@ export class TagRepository {
     const notFound = keywords.filter((keyword) => {
       return tags.findIndex((l) => l.keyword === keyword) === -1;
     });
-    tags = await this.insertMissingTags(notFound);
+    tags = await this.insertMissingTags([...new Set(notFound)]);
     const stmt = new sql.PreparedStatement(this.connection);
     stmt.input("tapeId", sql.BigInt);
     stmt.input("tagId", sql.BigInt);
