@@ -23,7 +23,7 @@ export class LocationRepository {
     const locations: Location[] = [];
     const notFound: string[] = [];
     let stmt = new sql.PreparedStatement(this.connection);
-    stmt.input("place", sql.NVarChar(100));
+    stmt.input("place", sql.NVarChar(250));
     await stmt.prepare(
       `SELECT locationId, place FROM location WHERE place = @place`
     );
@@ -38,7 +38,7 @@ export class LocationRepository {
     await stmt.unprepare();
     if (notFound.length > 0) {
       stmt = new sql.PreparedStatement(this.connection);
-      stmt.input("place", sql.NVarChar(50));
+      stmt.input("place", sql.NVarChar(250));
       await stmt.prepare(
         `INSERT INTO location (place) OUTPUT inserted.locationId VALUES (@place)`
       );
