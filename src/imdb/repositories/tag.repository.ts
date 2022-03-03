@@ -69,7 +69,7 @@ export class TagRepository {
     await stmt.prepare(
       `INSERT INTO TapeTag (tapeId, tagId) VALUES (@tapeId, @tagId)`
     );
-    for (const tag of tags) {
+    for (const tag of [...new Set(tags)]) {
       await stmt.execute({ tapeId, tagId: tag.tagId });
     }
     await stmt.unprepare();

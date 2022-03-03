@@ -62,17 +62,21 @@ export class LocationRepository {
     const notFound = places.filter((place) => {
       return locations.findIndex((l) => l.place === place) === -1;
     });
-    locations = await this.insertMissingPlaces(notFound);
+    locations = await this.insertMissingPlaces([...new Set(notFound)]);
     const stmt = new sql.PreparedStatement(this.connection);
     stmt.input("tapeId", sql.BigInt);
     stmt.input("locationId", sql.BigInt);
     await stmt.prepare(
       `INSERT INTO TapeLocation (tapeId, locationId) VALUES (@tapeId, @locationId)`
     );
-    for (const location of locations) {
-      await stmt.execute({ tapeId, locationId: location.locationId });
+    try {
+      for (const location of [...new Set(locations)]) {
+        await stmt.execute({ tapeId, locationId: location.locationId });
+      }
+    } catch (error) {
+    } finally {
+      await stmt.unprepare();
     }
-    await stmt.unprepare();
     return locations.length;
   }
 }
