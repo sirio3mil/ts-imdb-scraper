@@ -245,7 +245,7 @@ export class PeopleRepository extends ObjectRepository {
           peopleProccessed[credit.person.ID] = people;
         }
         if (!!credit.person.alias) {
-          let peopleAlias = people.aliases.find(
+          let peopleAlias = people.aliases?.find(
             (a) => a.alias === credit.person.alias
           );
           if (!peopleAlias) {
