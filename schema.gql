@@ -25,6 +25,7 @@ enum Place {
   Filmin
   HBOMax
   MovistarPlus
+  Mitele
 }
 
 type TapeUserHistory {

@@ -12,4 +12,5 @@ export enum Place {
   Filmin = 11,
   HBOMax = 12,
   MovistarPlus = 13,
+  Mitele = 14,
 }
