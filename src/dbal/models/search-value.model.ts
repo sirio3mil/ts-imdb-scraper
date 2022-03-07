@@ -1,6 +1,6 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
 
-@ObjectType({ description: "people role" })
+@ObjectType({ description: "search value" })
 export class SearchValue {
   @Field()
   objectId: string;
