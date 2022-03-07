@@ -132,6 +132,16 @@ export class TapeRepository extends ObjectRepository {
     return result.recordset[0];
   }
 
+  async getTvShowChaptersBySeasonNumber(tvShowTapeId:number, seasonNumber: number): Promise<TvShowChapter[]> {
+    const result = await this.connection
+      .request()
+      .input("tvShowTapeId", sql.BigInt, tvShowTapeId)
+      .input("seasonNumber", sql.BigInt, seasonNumber)
+      .query`select tv.tapeId, tv.chapter, tv.season, tv.tvShowTapeId from TvShowChapter tv where tv.tvShowTapeId = @tvShowTapeId and tv.season = @seasonNumber`;
+
+    return result.recordset;
+  }
+
   async getCreditsOutput(tapeId: number): Promise<CreditOutput[]> {
     const result = await this.connection
       .request()

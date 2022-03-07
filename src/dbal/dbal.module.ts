@@ -7,6 +7,7 @@ import { RankingRepository } from "./repositories/ranking.repository";
 import { TapeUserHistoryDetailRepository } from "./repositories/tape-user-history-detail.repository";
 import { TapeUserHistoryRepository } from "./repositories/tape-user-history.repository";
 import { TapeUserRepository } from "./repositories/tape-user.repository";
+import { SeasonUserResolver } from "./resolvers/season-user.resolver";
 import { TapeUserHistoryResolver } from "./resolvers/tape-user-history.resolver";
 import { TapeUserResolver } from "./resolvers/tape-user.resolver";
 import { TapeResolver } from "./resolvers/tape.resolver";
@@ -26,6 +27,7 @@ const connectionFactory = {
     TapeResolver,
     TapeUserResolver,
     TapeUserHistoryResolver,
+    SeasonUserResolver,
     TapeRepository,
     TapeUserRepository,
     TapeUserHistoryRepository,

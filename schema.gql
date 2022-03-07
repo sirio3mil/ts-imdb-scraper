@@ -2,6 +2,21 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type TapeUser {
+  tapeUserId: Int!
+  tapeId: Int!
+  userId: Int!
+  tape: Tape
+  byStatus(tapeUserStatus: TapeUserStatus!): TapeUserHistory
+}
+
+"""Tape user status."""
+enum TapeUserStatus {
+  Downloaded
+  View
+  WishList
+}
+
 type TapeUserHistoryDetail {
   tapeUserHistoryDetailId: Int!
   tapeUserHistoryId: Float!
@@ -33,21 +48,6 @@ type TapeUserHistory {
   tapeUserId: Float!
   tapeUserStatus: TapeUserStatus!
   addPlace(place: Place!): TapeUserHistoryDetail!
-}
-
-"""Tape user status."""
-enum TapeUserStatus {
-  Downloaded
-  View
-  WishList
-}
-
-type TapeUser {
-  tapeUserId: Int!
-  tapeId: Int!
-  userId: Int!
-  tape: Tape
-  byStatus(tapeUserStatus: TapeUserStatus!): TapeUserHistory
 }
 
 """stored tape"""
@@ -334,4 +334,5 @@ type Mutation {
   importTape(imdbNumber: Int!): ImportOutput!
   importEpisodes(imdbNumber: Int!, seasonNumber: Int!): [ImportOutput!]!
   editTapeUser(tapeId: Int!, userId: Int!): TapeUser!
+  editSeasonUser(tvShowTapeId: Int!, seasonNumber: Int!, userId: Int!): [TapeUser!]!
 }
