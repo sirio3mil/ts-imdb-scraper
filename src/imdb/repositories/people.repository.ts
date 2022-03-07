@@ -265,7 +265,7 @@ export class PeopleRepository extends ObjectRepository {
             });
           }
         }
-        let tapePeopleRole = tapePeopleRoles.find((e) => e.roleId === roleId && e.peopleId === people.peopleId);
+        let tapePeopleRole = tapePeopleRoles.find((e) => Number(e.roleId) === roleId && Number(e.peopleId) === Number(people.peopleId));
         if (!tapePeopleRole) {
           tapePeopleRole = await this.insertTapePeopleRole({
             peopleId: people.peopleId,
