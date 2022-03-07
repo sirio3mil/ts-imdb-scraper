@@ -26,14 +26,15 @@ export class SeasonUserResolver {
   ): Promise<TapeUser[]> {
     try {
       const tvShowChapters = await this.tapeRepository.getTvShowChaptersBySeasonNumber(tvShowTapeId, seasonNumber);
+      console.log(tvShowChapters);
       const tapesUser: TapeUser[] = [];
-      tvShowChapters.forEach(async (tvShowChapter) => {
+      for (const tvShowChapter of tvShowChapters) {
         let tapeUser = await this.tapeUserRepository.getTapeUser(tvShowChapter.tapeId, userId);
         if (!tapeUser) {
           tapeUser = await this.tapeUserRepository.insertTapeUser(tvShowChapter.tapeId, userId);
         }
         tapesUser.push(tapeUser);
-      });
+      }
 
       return tapesUser;
     } catch (e) {
