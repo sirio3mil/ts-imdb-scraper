@@ -329,6 +329,7 @@ type ScrappedTape {
 
 type Query {
   getScrappedTape(imdbNumber: Int!): ScrappedTape!
+  findAllTape(query: String!): [Tape!]!
   tape(tapeId: Int!): Tape!
 }
 

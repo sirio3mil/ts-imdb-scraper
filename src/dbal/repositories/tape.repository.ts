@@ -259,4 +259,20 @@ export class TapeRepository extends ObjectRepository {
     });
     return result.recordset;
   }
+
+  async search(search: string): Promise<Tape[]> {
+    const result = await this.connection
+      .request()
+      .input("search", sql.NVarChar(250), search)
+      .query(
+        `SELECT t.tapeId
+          ,t.originalTitle
+          ,t.objectId
+        FROM [Tape] t 
+        INNER JOIN [SearchValue] s ON s.objectId = t.objectId
+        WHERE s.searchParam = @search`
+      );
+
+    return result.recordset;
+  }
 }
