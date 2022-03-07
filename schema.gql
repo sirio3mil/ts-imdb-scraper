@@ -231,6 +231,8 @@ type ScrappedRanking {
 """tape import result"""
 type ImportOutput {
   tapeId: Int!
+  imdbNumber: Int!
+  originalTitle: String!
   objectId: String!
   time: Float!
   countries: CounterOutput!

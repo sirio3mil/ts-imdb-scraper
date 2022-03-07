@@ -26,7 +26,6 @@ export class SeasonUserResolver {
   ): Promise<TapeUser[]> {
     try {
       const tvShowChapters = await this.tapeRepository.getTvShowChaptersBySeasonNumber(tvShowTapeId, seasonNumber);
-      console.log(tvShowChapters);
       const tapesUser: TapeUser[] = [];
       for (const tvShowChapter of tvShowChapters) {
         let tapeUser = await this.tapeUserRepository.getTapeUser(tvShowChapter.tapeId, userId);

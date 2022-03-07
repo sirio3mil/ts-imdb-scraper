@@ -205,6 +205,8 @@ export class ImportAggregator {
       return {
         objectId: storedTape.objectId,
         tapeId: storedTape.tapeId,
+        originalTitle: storedTape.originalTitle,
+        imdbNumber,
         time: Number(end - start) / 1e+9,
         keywords: {
           total: keywords.length,

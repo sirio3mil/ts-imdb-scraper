@@ -13,7 +13,7 @@ export class ImdbResolver {
   @Mutation(() => ImportOutput)
   async importTape(
     @Args("imdbNumber", { type: () => Int }) imdbNumber: number
-  ) {
+  ): Promise<ImportOutput> {
     return this.importAggregator.tape(imdbNumber);
   }
 
@@ -21,13 +21,14 @@ export class ImdbResolver {
   async importEpisodes(
     @Args("imdbNumber", { type: () => Int }) imdbNumber: number,
     @Args("seasonNumber", { type: () => Int }) seasonNumber: number
-  ) {
+  ): Promise<ImportOutput[]> {
     const url = this.episodeListService.createUrl(imdbNumber);
     const content = await this.episodeListService.setSeasonNumber(seasonNumber).getContent(new URL(url));
     const episodes = this.episodeListService.set$(content).getEpisodeListItems();
-    const promises: Promise<ImportOutput>[] = [];
+    const promises: ImportOutput[] = [];
     for (const episode of episodes) {
-      promises.push(this.importAggregator.tape(episode.imdbNumber));
+      const output = await this.importAggregator.tape(episode.imdbNumber);
+      promises.push(output);
     }
 
     return promises;

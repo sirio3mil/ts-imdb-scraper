@@ -7,6 +7,12 @@ export class ImportOutput {
   @Field(() => Int)
   tapeId: number;
 
+  @Field(() => Int)
+  imdbNumber: number;
+
+  @Field()
+  originalTitle: string;
+
   @Field()
   objectId: string;
 
