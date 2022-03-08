@@ -1,6 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import * as sql from "mssql";
-import { TapeUserStatus } from "../enums/tape-user-status.enum";
+import { TapeUserStatus } from "../../domain/enums/tape-user-status.enum";
 import { TapeUserHistory } from "../models/tape-user-history.model";
 import { ObjectRepository } from "./object.repository";
 

@@ -5,8 +5,8 @@ import configuration from "./config/configuration";
 import { DbalModule } from "./dbal/dbal.module";
 import { ImdbModule } from "./imdb/imdb.module";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
-import { Place } from "./dbal/enums/place.enum";
-import { TapeUserStatus } from "./dbal/enums/tape-user-status.enum";
+import { Place } from "./domain/enums/place.enum";
+import { TapeUserStatus } from "./domain/enums/tape-user-status.enum";
 
 registerEnumType(Place, {
   name: 'Place',

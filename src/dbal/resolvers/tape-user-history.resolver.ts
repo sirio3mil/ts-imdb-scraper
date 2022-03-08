@@ -4,7 +4,7 @@ import {
   ResolveField,
   Resolver,
 } from "@nestjs/graphql";
-import { Place } from "../enums/place.enum";
+import { Place } from "../../domain/enums/place.enum";
 import { TapeUserHistoryDetail } from "../models/tape-user-history-detail.model";
 import { TapeUserHistory } from "../models/tape-user-history.model";
 import { TapeUserHistoryDetailRepository } from "../repositories/tape-user-history-detail.repository";

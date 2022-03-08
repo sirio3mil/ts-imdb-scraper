@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
-import { Place } from "../enums/place.enum";
+import { Place } from "../../domain/enums/place.enum";
 
 @ObjectType()
 export class TapeUserHistoryDetail {
