@@ -29,10 +29,10 @@ import { BaseResolver } from "./base.resolver";
 @Resolver(() => Tape)
 export class TapeResolver extends BaseResolver(Tape) {
   constructor(
-    private readonly repository: TapeRepository,
+    protected readonly repository: TapeRepository,
     private readonly rankingRepository: RankingRepository
   ) {
-    super();
+    super(repository);
   }
 
   @Query(() => Tape, { name: "tape" })

@@ -15,9 +15,10 @@ import { Tape } from "../models/tape.model";
 import { TvShowChapter } from "../models/tv-show-chapter.model";
 import { TvShow } from "../models/tv-show.model";
 import { ObjectRepository } from "./object.repository";
+import { Searchable } from "src/domain/interfaces/searchable";
 
 @Injectable()
-export class TapeRepository extends ObjectRepository {
+export class TapeRepository extends ObjectRepository implements Searchable<Tape> {
   constructor(@Inject("CONNECTION") connection: sql.ConnectionPool) {
     super(connection);
   }
