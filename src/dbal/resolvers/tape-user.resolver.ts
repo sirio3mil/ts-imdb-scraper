@@ -47,12 +47,22 @@ export class TapeUserResolver {
   }
 
   @ResolveField(() => TapeUserHistory, { nullable: true })
-  async byStatus(@Args("tapeUserStatus", { type: () => TapeUserStatus }) tapeUserStatus: TapeUserStatus, @Parent() tapeUser: TapeUser): Promise<TapeUserHistory> {
-    let tapeUserHistory = await this.tapeUserHistoryRepository.getTapeUserHistory(tapeUser.tapeUserId, tapeUserStatus);
+  async addStatus(@Args("tapeUserStatus", { type: () => TapeUserStatus }) tapeUserStatus: TapeUserStatus, @Parent() tapeUser: TapeUser): Promise<TapeUserHistory> {
+    let tapeUserHistory = await this.tapeUserHistoryRepository.getTapeUserHistoryByStatus(tapeUser.tapeUserId, tapeUserStatus);
     if (!tapeUserHistory) {
       tapeUserHistory = await this.tapeUserHistoryRepository.insertTapeUserHistory(tapeUser.tapeUserId, tapeUserStatus);
     }
 
     return tapeUserHistory;
+  }
+
+  @ResolveField(() => TapeUserHistory, { nullable: true })
+  async byStatus(@Args("tapeUserStatus", { type: () => TapeUserStatus }) tapeUserStatus: TapeUserStatus, @Parent() tapeUser: TapeUser): Promise<TapeUserHistory> {
+    return this.tapeUserHistoryRepository.getTapeUserHistoryByStatus(tapeUser.tapeUserId, tapeUserStatus);
+  }
+
+  @ResolveField(() => [TapeUserHistory])
+  async history(@Parent() tapeUser: TapeUser): Promise<TapeUserHistory[]> {
+    return this.tapeUserHistoryRepository.getTapeUserHistories(tapeUser.tapeUserId);
   }
 }

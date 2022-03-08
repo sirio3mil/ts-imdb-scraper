@@ -26,4 +26,23 @@ export class TapeUserHistoryDetailRepository extends ObjectRepository {
       place
     };
   }
+
+  async getTapeUserHistoryDetailsByPlace(tapeUserHistoryId: number, place: Place): Promise<TapeUserHistoryDetail[]> {
+    const result = await this.connection
+      .request()
+      .input("tapeUserHistoryId", sql.BigInt, tapeUserHistoryId)
+      .input("placeId", sql.BigInt, place)
+      .query`select tapeUserHistoryDetailId, tapeUserHistoryId, placeId as place from TapeUserHistoryDetail where tapeUserHistoryId = @tapeUserHistoryId and placeId = @placeId order by createdAt DESC`;
+
+    return result.recordset;
+  }
+
+  async getTapeUserHistoryDetails(tapeUserHistoryId: number): Promise<TapeUserHistoryDetail[]> {
+    const result = await this.connection
+      .request()
+      .input("tapeUserHistoryId", sql.BigInt, tapeUserHistoryId)
+      .query`select tapeUserHistoryDetailId, tapeUserHistoryId, placeId as place from TapeUserHistoryDetail where tapeUserHistoryId = @tapeUserHistoryId order by createdAt DESC`;
+
+    return result.recordset;
+  }
 }

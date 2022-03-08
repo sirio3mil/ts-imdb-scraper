@@ -20,4 +20,14 @@ export class TapeUserHistoryResolver {
   async addPlace(@Args("place", { type: () => Place }) place: Place, @Parent() tapeUserHistory: TapeUserHistory): Promise<TapeUserHistoryDetail> {
     return this.detailRepository.insertTapeUserHistoryDetail(tapeUserHistory.tapeUserHistoryId, place);
   }
+
+  @ResolveField(() => [TapeUserHistoryDetail], { nullable: true })
+  async byPlace(@Args("place", { type: () => Place }) place: Place, @Parent() tapeUserHistory: TapeUserHistory): Promise<TapeUserHistoryDetail[]> {
+    return this.detailRepository.getTapeUserHistoryDetailsByPlace(tapeUserHistory.tapeUserHistoryId, place);
+  }
+
+  @ResolveField(() => [TapeUserHistoryDetail], { name: "details", nullable: true })
+  async getDetails(@Parent() tapeUserHistory: TapeUserHistory): Promise<TapeUserHistoryDetail[]> {
+    return this.detailRepository.getTapeUserHistoryDetails(tapeUserHistory.tapeUserHistoryId);
+  }
 }

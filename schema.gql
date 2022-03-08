@@ -7,7 +7,9 @@ type TapeUser {
   tapeId: Int!
   userId: Int!
   tape: Tape
+  addStatus(tapeUserStatus: TapeUserStatus!): TapeUserHistory
   byStatus(tapeUserStatus: TapeUserStatus!): TapeUserHistory
+  history: [TapeUserHistory!]!
 }
 
 """Tape user status."""
@@ -19,8 +21,8 @@ enum TapeUserStatus {
 
 type TapeUserHistoryDetail {
   tapeUserHistoryDetailId: Int!
+  place: Place
   tapeUserHistoryId: Float!
-  place: Place!
 }
 
 """The supported places."""
@@ -48,6 +50,8 @@ type TapeUserHistory {
   tapeUserId: Float!
   tapeUserStatus: TapeUserStatus!
   addPlace(place: Place!): TapeUserHistoryDetail!
+  byPlace(place: Place!): [TapeUserHistoryDetail!]
+  details: [TapeUserHistoryDetail!]
 }
 
 """stored tape"""
@@ -69,6 +73,7 @@ type Tape {
   locations: [Location!]
   certifications: [CertificationOutput!]
   tags: [Tag!]
+  byUser(userId: Int!): TapeUser
 }
 
 """stored country"""
@@ -331,6 +336,21 @@ type Query {
   getScrappedTape(imdbNumber: Int!): ScrappedTape!
   findAllTape(query: String!): [Tape!]!
   tape(tapeId: Int!): Tape!
+  filterTape(filters: FilterTapeInput!): [Tape!]!
+}
+
+input FilterTapeInput {
+  page: Int!
+  pageSize: Int!
+  userId: Int
+  place: Float
+  tapeUserStatus: Float
+  finished: Boolean
+  isTvShow: Boolean
+  isTvShowChapter: Boolean
+  visible: Boolean
+  tvShowTapeId: Int
+  seasonNumber: Int
 }
 
 type Mutation {

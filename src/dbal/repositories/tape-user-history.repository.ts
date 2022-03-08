@@ -10,7 +10,7 @@ export class TapeUserHistoryRepository extends ObjectRepository {
     super(connection);
   }
 
-  async getTapeUserHistory(tapeUserId: number, tapeUserStatus: TapeUserStatus): Promise<TapeUserHistory | null> {
+  async getTapeUserHistoryByStatus(tapeUserId: number, tapeUserStatus: TapeUserStatus): Promise<TapeUserHistory | null> {
     const result = await this.connection
       .request()
       .input("tapeUserId", sql.BigInt, tapeUserId)
@@ -38,5 +38,14 @@ export class TapeUserHistoryRepository extends ObjectRepository {
       tapeUserId,
       tapeUserStatus
     };
+  }
+
+  async getTapeUserHistories(tapeUserId: number): Promise<TapeUserHistory[]> {
+    const result = await this.connection
+      .request()
+      .input("tapeUserId", sql.BigInt, tapeUserId)
+      .query`select tapeUserHistoryId, tapeUserId, tapeUserStatusId as tapeUserStatus from TapeUserHistory where tapeUserId = @tapeUserId`;
+
+    return result.recordset;
   }
 }

@@ -8,7 +8,8 @@ export class TapeUserHistoryDetail {
 
   tapeUserHistoryId: number;
 
-  place: Place;
+  @Field(() => Place, { nullable: true })
+  place?: Place;
 }
 
 

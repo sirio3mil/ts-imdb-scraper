@@ -16,6 +16,7 @@ import { TvShowChapter } from "../models/tv-show-chapter.model";
 import { TvShow } from "../models/tv-show.model";
 import { ObjectRepository } from "./object.repository";
 import { Searchable } from "src/domain/interfaces/searchable";
+import { FilterTapeInput } from "src/domain/dtos/inputs/filter-tape.input";
 
 @Injectable()
 export class TapeRepository extends ObjectRepository implements Searchable<Tape> {
@@ -272,6 +273,87 @@ export class TapeRepository extends ObjectRepository implements Searchable<Tape>
         FROM [Tape] t 
         INNER JOIN [SearchValue] s ON s.objectId = t.objectId
         WHERE s.searchParam = @search`
+      );
+
+    return result.recordset;
+  }
+
+  async filter(filters: FilterTapeInput): Promise<Tape[]> {
+    const joins = [];
+    const where = [];
+    const orderBy = [];
+    const offset = ((filters.page - 1) * filters.pageSize);
+    const request = this.connection.request();
+    if (filters.userId) {
+      joins.push(`INNER JOIN [TapeUser] u ON u.tapeId = t.tapeId`);
+      where.push(`u.userId = @userId`);
+      request.input("userId", sql.BigInt, filters.userId);
+    }
+    if (filters.tapeUserStatus) {
+      joins.push(`INNER JOIN [TapeUser] u ON u.tapeId = t.tapeId`);
+      joins.push(`INNER JOIN [TapeUserHistory] h ON h.tapeUserId = u.tapeUserId`);
+      where.push(`h.tapeUserStatusId = @tapeUserStatusId`);
+      request.input("tapeUserStatusId", sql.TinyInt, filters.tapeUserStatus);
+    }
+    if (typeof filters.visible === 'boolean' || filters.place) {
+      joins.push(`INNER JOIN [TapeUser] u ON u.tapeId = t.tapeId`);
+      joins.push(`INNER JOIN [TapeUserHistory] h ON h.tapeUserId = u.tapeUserId`);
+      joins.push(`INNER JOIN [TapeUserHistoryDetail] d ON d.tapeUserHistoryId = h.tapeUserHistoryId`);
+      if (typeof filters.visible === 'boolean') {
+        where.push(`d.visible = @visible`);
+        request.input("visible", sql.Bit, filters.visible);
+      }
+      if (filters.place) {
+        where.push(`d.placeId = @placeId`);
+        request.input("placeId", sql.TinyInt, filters.place);
+      }
+      orderBy.push(`d.createdAt DESC`);
+    }
+    if (filters.isTvShow === false) {
+      joins.push(`INNER JOIN [TapeDetail] td ON td.tapeId = t.tapeId`);
+      where.push(`td.tvShow = @tvShow`);
+      request.input("tvShow", sql.Bit, filters.isTvShow);
+    } else if (filters.isTvShow === true) {
+      joins.push(`INNER JOIN [TapeUser] u ON u.tapeId = t.tapeId`);
+      joins.push(`INNER JOIN [usr].[OrderedSubscribedTvShows] o ON o.tapeUserId = u.tapeUserId`);
+      orderBy.push(`o.updatedAt DESC`);
+    }
+    if (typeof filters.isTvShowChapter === 'boolean') {
+      joins.push(`INNER JOIN [TapeDetail] td ON td.tapeId = t.tapeId`);
+      where.push(`td.tvShowChapter = @tvShowChapter`);
+      request.input("tvShowChapter", sql.Bit, filters.isTvShowChapter);
+    }
+    if (typeof filters.finished === 'boolean') {
+      joins.push(`INNER JOIN [TvShow] tv ON tv.tapeId = t.tapeId`);
+      where.push(`tv.finished = @finished`);
+      request.input("finished", sql.Bit, filters.finished);
+    }
+    if (filters.tvShowTapeId || filters.seasonNumber) {
+      joins.push(`INNER JOIN [TvShowChapter] e ON e.tapeId = t.tapeId`);
+      if (filters.tvShowTapeId) {
+        where.push(`e.tvShowTapeId = @tvShowTapeId`);
+        request.input("tvShowTapeId", sql.BigInt, filters.tvShowTapeId);
+      }
+      if (filters.seasonNumber) {
+        where.push(`e.season = @season`);
+        request.input("season", sql.SmallInt, filters.seasonNumber);
+      }
+      orderBy.push(`e.chapter`);
+    }
+    const queryJoins = [...new Set(joins)].join(' ');
+    const queryWhere = where.length > 0 ? `WHERE ${where.join(' AND ')}` : '';
+    const queryOrderBy = orderBy.length > 0 ? `ORDER BY ${orderBy.join(', ')}` : '';
+
+    const result = await request
+      .query(
+        `SELECT t.tapeId
+          ,t.originalTitle
+          ,t.objectId 
+        FROM [Tape] t 
+        ${queryJoins} 
+        ${queryWhere} 
+        ${queryOrderBy} 
+        OFFSET ${offset} ROWS FETCH NEXT ${filters.pageSize} ROWS ONLY`
       );
 
     return result.recordset;
