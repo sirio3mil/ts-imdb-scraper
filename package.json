@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/sirio3mil/ts-imdb-scraper#readme",
   "devDependencies": {
-    "@nestjs/cli": "^8.2.3",
+    "@nestjs/cli": "^8.2.4",
     "@nestjs/schematics": "^8.0.8",
     "@nestjs/testing": "^8.4.1",
     "@types/cheerio": "^0.22.31",
@@ -41,7 +41,7 @@
     "@typescript-eslint/parser": "^5.15.0",
     "eslint": "^8.11.0",
     "eslint-config-prettier": "^8.5.0",
-    "prettier": "^2.6.0",
+    "prettier": "^2.6.1",
     "prettier-plugin-organize-imports": "^2.3.4",
     "rimraf": "^3.0.2",
     "ts-jest": "^27.1.3",
