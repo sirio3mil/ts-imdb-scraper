@@ -60,7 +60,7 @@
     "class-validator": "^0.13.2",
     "db-migrate": "^0.11.13",
     "db-migrate-mssql": "github:sirio3mil/db-migrate-mssql",
-    "graphql": "^16.4.0",
+    "graphql": "^16.5.0",
     "graphql-subscriptions": "^2.0.0",
     "limax": "^3.0.0",
     "memory-cache": "^0.2.0",
