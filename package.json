@@ -36,7 +36,7 @@
     "@types/cheerio": "^0.22.31",
     "@types/jest": "^27.5.1",
     "@types/memory-cache": "^0.2.2",
-    "@types/mssql": "^7.1.5",
+    "@types/mssql": "^8.0.1",
     "@typescript-eslint/eslint-plugin": "^5.22.0",
     "@typescript-eslint/parser": "^5.22.0",
     "eslint": "^8.15.0",
@@ -64,7 +64,7 @@
     "graphql-subscriptions": "^2.0.0",
     "limax": "^3.0.0",
     "memory-cache": "^0.2.0",
-    "mssql": "^8.1.0",
+    "mssql": "^8.1.2",
     "ts-morph": "^14.0.0"
   }
 }
