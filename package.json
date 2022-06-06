@@ -54,7 +54,7 @@
     "@nestjs/axios": "^0.0.7",
     "@nestjs/config": "^2.0.1",
     "@nestjs/graphql": "^10.0.15",
-    "@nestjs/platform-express": "^8.4.4",
+    "@nestjs/platform-express": "^8.4.6",
     "apollo-server-express": "^3.8.2",
     "cheerio": "^1.0.0-rc.10",
     "class-validator": "^0.13.2",
