@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/sirio3mil/ts-imdb-scraper#readme",
   "devDependencies": {
-    "@nestjs/cli": "^8.2.8",
+    "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.1",
     "@nestjs/testing": "^9.0.4",
     "@types/cheerio": "^0.22.31",
