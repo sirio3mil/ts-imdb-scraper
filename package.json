@@ -36,7 +36,7 @@
     "@types/cheerio": "^0.22.31",
     "@types/jest": "^28.1.6",
     "@types/memory-cache": "^0.2.2",
-    "@types/mssql": "^8.0.2",
+    "@types/mssql": "^8.0.3",
     "@typescript-eslint/eslint-plugin": "^5.30.7",
     "@typescript-eslint/parser": "^5.30.7",
     "eslint": "^8.20.0",
