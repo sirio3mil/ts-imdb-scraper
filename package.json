@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "@apollo/gateway": "^2.0.5",
-    "@nestjs/apollo": "^10.0.19",
+    "@nestjs/apollo": "^10.0.22",
     "@nestjs/axios": "^0.1.0",
     "@nestjs/config": "^2.2.0",
     "@nestjs/graphql": "^10.0.21",
@@ -60,7 +60,7 @@
     "class-validator": "^0.13.2",
     "db-migrate": "^0.11.13",
     "db-migrate-mssql": "github:sirio3mil/db-migrate-mssql",
-    "graphql": "^16.5.0",
+    "graphql": "^16.6.0",
     "graphql-subscriptions": "^2.0.0",
     "limax": "^3.0.0",
     "memory-cache": "^0.2.0",
