@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "@apollo/gateway": "^2.1.1",
-    "@nestjs/apollo": "^10.0.22",
+    "@nestjs/apollo": "^10.1.0",
     "@nestjs/axios": "^0.1.0",
     "@nestjs/config": "^2.2.0",
     "@nestjs/graphql": "^10.1.0",
