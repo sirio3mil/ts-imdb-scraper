@@ -45,18 +45,18 @@ describe("EpisodeListService", () => {
     let items: EpisodeListItem[];
 
     beforeAll(async () => {
-      const url = `https://www.imdb.com/title/tt7632118/`;
+      const url = `https://www.imdb.com/title/tt3581920/`;
       const content = await episodeListService.getContent(new URL(url));
       items = episodeListService.set$(content).getEpisodeListItems();
     });
 
     it("should match default episode list items length", async () => {
-      expect(items.length).toEqual(6);
+      expect(items.length).toEqual(10);
     });
 
     it.each([
-      [ 'Pink Clouds', 16740610 ],
-      [ 'The Ride', 7641112 ],
+      [ 'Episode #1.10', 15741352 ],
+      [ 'Episode #1.9', 15747178 ],
     ])
     ("should match %s episode content", async (title, imdbNumber) => {
       const episode = items.find((item) => item.title === title);
@@ -67,11 +67,11 @@ describe("EpisodeListService", () => {
     });
 
     it("should detect episode air date with only a year", async () => {
-      const episode = items.find((item) => item.title === 'A Cosmic Alphabet');
+      const episode = items.find((item) => item.title === 'Episode #1.1');
       expect(episode).not.toBeNull();
       expect(episode.airDate).toBeInstanceOf(Date);
-      expect(episode.airDate.toISOString()).toEqual('2022-01-01T00:00:00.000Z');
-      expect(episode.imdbNumber).toEqual(11465826);
+      expect(episode.airDate.toISOString()).toEqual('2023-01-01T00:00:00.000Z');
+      expect(episode.imdbNumber).toEqual(11957006);
       expect(episode.fullAirDate).toBeFalsy();
     });
   });
