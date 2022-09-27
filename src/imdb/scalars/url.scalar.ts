@@ -1,22 +1,14 @@
-import { CustomScalar, Scalar } from "@nestjs/graphql";
-import { Kind, ValueNode } from "graphql";
+import { GraphQLScalarType, Kind, ValueNode } from "graphql";
 
-@Scalar("URL", () => URL)
-export class URLScalar implements CustomScalar<string, URL> {
-  description = "URL custom scalar type";
-
-  parseValue(value: string): URL {
-    return new URL(value);
-  }
-
-  serialize(value: URL): string {
-    return value.href;
-  }
-
-  parseLiteral(ast: ValueNode): URL {
+export const URLScalar = new GraphQLScalarType({
+  name: "URL",
+  description: "URL custom scalar type",
+  serialize: (value: URL) => value.href,
+  parseValue: (value: string) => new URL(value),
+  parseLiteral: (ast: ValueNode) => {
     if (ast.kind === Kind.STRING) {
       return new URL(ast.value);
     }
     return null;
   }
-}
+})

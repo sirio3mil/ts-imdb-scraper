@@ -7,6 +7,7 @@ import { ImdbModule } from "./imdb/imdb.module";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { Place } from "./domain/enums/place.enum";
 import { TapeUserStatus } from "./domain/enums/tape-user-status.enum";
+import { URLScalar } from "./imdb/scalars/url.scalar";
 
 registerEnumType(Place, {
   name: 'Place',
@@ -35,6 +36,7 @@ registerEnumType(TapeUserStatus, {
       subscriptions: {
         "graphql-ws": true,
       },
+      resolvers: { URL: URLScalar },
     }),
     ConfigModule.forRoot({
       isGlobal: true,

@@ -90,13 +90,6 @@ type CertificationOutput {
   tapeCertificationId: Int!
 }
 
-"""people alias"""
-type PeopleAlias {
-  alias: String!
-  peopleId: Int!
-  peopleAliasId: Int
-}
-
 """people detailed information"""
 type PeopleDetail {
   birthDate: Date
@@ -113,6 +106,13 @@ type PeopleDetail {
 
 """Date custom scalar type"""
 scalar Date
+
+"""people alias"""
+type PeopleAlias {
+  alias: String!
+  peopleId: Int!
+  peopleAliasId: Int
+}
 
 """people main model"""
 type People {
@@ -266,6 +266,12 @@ type ScrappedEpisode {
   tvShowID: Int!
 }
 
+"""parental guide tape certifications"""
+type ScrappedCertification {
+  certification: String!
+  country: String!
+}
+
 """person"""
 type ScrappedPerson {
   fullName: String!
@@ -298,12 +304,6 @@ type ScrappedTitle {
   language: String
   observations: String
   title: String!
-}
-
-"""parental guide tape certifications"""
-type ScrappedCertification {
-  certification: String!
-  country: String!
 }
 
 """tape"""
@@ -343,8 +343,8 @@ input FilterTapeInput {
   page: Int!
   pageSize: Int!
   userId: Int
-  place: Float
-  tapeUserStatus: Float
+  place: Place
+  tapeUserStatus: TapeUserStatus
   finished: Boolean
   isTvShow: Boolean
   isTvShowChapter: Boolean

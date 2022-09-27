@@ -46,7 +46,6 @@ const connectionFactory = {
   ],
   providers: [
     DateScalar,
-    URLScalar,
     ImdbResolver,
     TapeResolver,
     TapeService,

@@ -1,4 +1,5 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
+import { URLScalar } from "src/imdb/scalars/url.scalar";
 
 @ObjectType({ description: "person" })
 export class ScrappedPerson {
@@ -8,7 +9,7 @@ export class ScrappedPerson {
   @Field(() => Int)
   ID: number;
 
-  @Field()
+  @Field(() => URLScalar)
   url: URL;
 
   @Field({ nullable: true })
