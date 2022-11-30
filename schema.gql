@@ -104,9 +104,6 @@ type PeopleDetail {
   skip: Boolean
 }
 
-"""Date custom scalar type"""
-scalar Date
-
 """people alias"""
 type PeopleAlias {
   alias: String!
@@ -331,6 +328,9 @@ type ScrappedTape {
   ranking: ScrappedRanking
   episode: ScrappedEpisode
 }
+
+"""Date custom scalar type"""
+scalar Date
 
 type Query {
   getScrappedTape(imdbNumber: Int!): ScrappedTape!
