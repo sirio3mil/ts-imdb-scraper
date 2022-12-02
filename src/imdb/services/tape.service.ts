@@ -93,11 +93,11 @@ export class TapeService extends HtmlService {
   }
 
   getOriginalTitle(): string {
-    let title = this.$('[class^="OriginalTitle__OriginalTitleText"]');
+    let title = this.$("section").find('[data-testid="hero-title-block__original-title"]');
     if (title.length) {
       return title.text()?.replace("Original title: ", "");
     }
-    title = this.$('[class^="TitleHeader__TitleText"]');
+    title = this.$("section").find('[data-testid="hero-title-block__title"]');
     return title?.text();
   }
 
