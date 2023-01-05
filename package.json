@@ -38,7 +38,7 @@
     "@types/memory-cache": "^0.2.2",
     "@types/mssql": "^8.1.1",
     "@typescript-eslint/eslint-plugin": "^5.48.0",
-    "@typescript-eslint/parser": "^5.46.0",
+    "@typescript-eslint/parser": "^5.48.0",
     "eslint": "^8.31.0",
     "eslint-config-prettier": "^8.5.0",
     "prettier": "^2.8.1",
