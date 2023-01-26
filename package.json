@@ -49,7 +49,7 @@
     "typescript": "^4.9.4"
   },
   "dependencies": {
-    "@apollo/gateway": "^2.2.2",
+    "@apollo/gateway": "^2.3.0",
     "@nestjs/apollo": "^10.1.7",
     "@nestjs/axios": "^1.0.1",
     "@nestjs/config": "^2.2.0",
