@@ -39,7 +39,7 @@
     "@types/mssql": "^8.1.1",
     "@typescript-eslint/eslint-plugin": "^5.48.0",
     "@typescript-eslint/parser": "^5.48.2",
-    "eslint": "^8.31.0",
+    "eslint": "^8.33.0",
     "eslint-config-prettier": "^8.6.0",
     "prettier": "^2.8.3",
     "prettier-plugin-organize-imports": "^3.2.2",
