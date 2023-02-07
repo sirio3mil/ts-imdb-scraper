@@ -32,7 +32,7 @@
   "devDependencies": {
     "@nestjs/cli": "^9.2.0",
     "@nestjs/schematics": "^9.0.4",
-    "@nestjs/testing": "^9.3.1",
+    "@nestjs/testing": "^9.3.2",
     "@types/cheerio": "^0.22.31",
     "@types/jest": "^29.4.0",
     "@types/memory-cache": "^0.2.2",
