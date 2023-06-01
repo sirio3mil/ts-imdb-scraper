@@ -63,7 +63,7 @@
     "db-migrate-mssql": "github:sirio3mil/db-migrate-mssql",
     "graphql": "^16.6.0",
     "graphql-subscriptions": "^2.0.0",
-    "limax": "^4.0.0",
+    "limax": "^4.1.0",
     "memory-cache": "^0.2.0",
     "mssql": "^9.1.1",
     "ts-morph": "^18.0.0"
