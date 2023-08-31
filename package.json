@@ -52,7 +52,7 @@
     "@apollo/gateway": "^2.5.1",
     "@nestjs/apollo": "^10.2.0",
     "@nestjs/axios": "^2.0.0",
-    "@nestjs/config": "^2.3.2",
+    "@nestjs/config": "^3.0.1",
     "@nestjs/graphql": "^10.2.0",
     "@nestjs/platform-express": "^9.4.2",
     "apollo-server-express": "^3.12.0",
